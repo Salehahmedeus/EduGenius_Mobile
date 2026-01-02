@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String label;
+  final String hintText;
+  final IconData? icon;
   final bool isObscure;
+  final TextInputType? keyboardType;
+  final VoidCallback? onIconPressed;
   final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
     required this.controller,
-    required this.label,
+    required this.hintText,
+    this.icon,
     this.isObscure = false,
+    this.keyboardType,
+    this.onIconPressed,
     this.validator,
   });
 
@@ -19,10 +25,26 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       obscureText: isObscure,
+      keyboardType: keyboardType,
       validator: validator,
       decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
+        hintText: hintText,
+        filled: true,
+        fillColor: const Color(0xFFF5F5F5),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
+        ),
+        suffixIcon: icon != null
+            ? IconButton(
+                icon: Icon(icon, color: Colors.grey),
+                onPressed: onIconPressed,
+              )
+            : null,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
       ),
     );
   }

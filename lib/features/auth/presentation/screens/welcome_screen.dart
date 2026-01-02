@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../routes.dart';
+import '../../../../core/widgets/custom_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -48,26 +49,11 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               // Start Button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.login);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD32F2F),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Start',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
+              CustomButton(
+                text: 'Start',
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.login);
+                },
               ),
               const SizedBox(height: 20),
             ],

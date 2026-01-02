@@ -17,7 +17,7 @@ class UploadScreen extends StatelessWidget {
           children: [
             CustomTextField(
               controller: titleController,
-              label: 'Content Title',
+              hintText: 'Content Title',
             ),
             const SizedBox(height: 16),
             Container(
