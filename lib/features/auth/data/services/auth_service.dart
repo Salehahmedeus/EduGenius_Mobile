@@ -8,11 +8,15 @@ class AuthService {
 
   // Login
   Future<bool> login(String email, String password) async {
+    final fullUrl = '${_client.dio.options.baseUrl}${ApiEndpoints.login}';
+    print("Attempting login to: $fullUrl");
     try {
       final response = await _client.dio.post(
         ApiEndpoints.login,
         data: {'email': email, 'password': password},
       );
+
+      print("Response: ${response.statusCode} - ${response.data}");
 
       if (response.statusCode == 200) {
         final token = response.data['access_token'];
@@ -21,7 +25,38 @@ class AuthService {
       }
       return false;
     } on DioException catch (e) {
+      print("Login Error: ${e.message}");
+      if (e.response != null) {
+        print("Server Data: ${e.response?.data}");
+      }
+
       throw e.response?.data['error'] ?? 'Login failed';
+    }
+  }
+
+  // Register
+  Future<bool> register(String name, String email, String password) async {
+    try {
+      final response = await _client.dio.post(
+        ApiEndpoints.register,
+        data: {
+          'name': name,
+          'email': email,
+          'password': password,
+          'password_confirmation': password, // Usually required by Laravel
+        },
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final token = response.data['access_token'];
+        await TokenStorage.saveToken(token);
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      throw e.response?.data['message'] ??
+          e.response?.data['error'] ??
+          'Registration failed';
     }
   }
 

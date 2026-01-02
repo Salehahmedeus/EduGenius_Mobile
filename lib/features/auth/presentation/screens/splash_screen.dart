@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (token != null) {
         Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
-        Navigator.pushReplacementNamed(context, '/login');
+        Navigator.pushReplacementNamed(context, '/welcome');
       }
     }
   }

@@ -1,5 +1,7 @@
 class ApiEndpoints {
-  static const String baseUrl = 'http://edugenius.test/api';
+  // For Android Emulator, use 10.0.2.2 instead of localhost or custom domains
+  static const String baseUrl = 'http://10.0.2.2:8000/api';
+  // static const String baseUrl = 'https://edugenius.test/api';
 
   static const String login = '/login';
   static const String register = '/register';
