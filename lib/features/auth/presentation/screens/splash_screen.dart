@@ -21,7 +21,10 @@ class _SplashScreenState extends State<SplashScreen> {
       if (token != null) {
         Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
-        Navigator.pushReplacementNamed(context, '/welcome');
+        // Check if onboarding seen
+        // For now, let's force onboarding to show since we just implemented it
+        // Or properly check:
+        Navigator.pushReplacementNamed(context, '/onboarding');
       }
     }
   }

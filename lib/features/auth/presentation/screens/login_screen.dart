@@ -23,10 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     // Check terms if strictly required by design, though usually for signup
-    // if (!_agreeToTerms) {
-    //   Fluttertoast.showToast(msg: "Please agree to the terms and conditions");
-    //   return;
-    // }
+    if (!_agreeToTerms) {
+      Fluttertoast.showToast(msg: "Please agree to the terms and conditions");
+      return;
+    }
 
     setState(() => _isLoading = true);
 
@@ -39,7 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
       if (success) {
         if (mounted) {
           Fluttertoast.showToast(msg: "Login Successful!");
-          Navigator.pushReplacementNamed(context, Routes.dashboard);
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.dashboard,
+            (route) => false,
+          );
         }
       }
     } catch (e) {
@@ -58,7 +62,11 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFFD32F2F)),
-          onPressed: () => Navigator.maybePop(context),
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.welcome,
+            (route) => false,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -70,21 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizedBox(height: 20),
               // Logo
-              Container(
+              SizedBox(
                 width: 120,
                 height: 120,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: const Color(0xFFD32F2F), width: 4),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Icon(
-                    Icons.psychology,
-                    size: 70,
-                    color: Color(0xFFD32F2F),
-                  ),
-                ),
+                child: Image.asset('assets/images/logo.png'),
               ),
               const SizedBox(height: 16),
               const Text(

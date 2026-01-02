@@ -40,17 +40,10 @@ class WelcomeScreen extends StatelessWidget {
               Container(
                 width: 200,
                 height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  border: Border.all(color: const Color(0xFFD32F2F), width: 8),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: Icon(
-                    Icons.psychology, // Brain icon
-                    size: 120,
-                    color: Color(0xFFD32F2F),
-                  ),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  width: 200,
+                  height: 200,
                 ),
               ),
               const Spacer(),
@@ -60,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, Routes.login);
+                    Navigator.pushNamed(context, Routes.login);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD32F2F),
