@@ -18,11 +18,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneController = TextEditingController(); // Added phone controller
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController =
+      TextEditingController(); // Added confirm password controller
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
   bool _agreeToTerms = false;
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible =
+      false; // Added confirm password visibility state
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +138,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                     if (value.length < 6) {
                       return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                const SizedBox(height: 16),
+
+                // Confirm Password Field
+                CustomTextField(
+                  controller: _confirmPasswordController,
+                  hintText: "Confirm Password",
+                  isObscure: !_isConfirmPasswordVisible,
+                  prefixIcon: Icons.lock_outline,
+                  suffixIcon: _isConfirmPasswordVisible
+                      ? Icons.visibility_outlined
+                      : Icons.visibility_off_outlined,
+                  onSuffixIconPressed: () {
+                    setState(() {
+                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    final password = _passwordController.text;
+                    if (value != password) {
+                      return 'Passwords do not match';
                     }
                     return null;
                   },
