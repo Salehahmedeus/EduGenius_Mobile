@@ -9,6 +9,8 @@ import 'features/quiz/presentation/screens/quiz_screen.dart';
 import 'features/content/presentation/screens/upload_screen.dart';
 
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'features/auth/presentation/screens/forgot_password_screen.dart';
+import 'features/auth/presentation/screens/otp_screen.dart';
 
 class Routes {
   static const String splash = '/';
@@ -19,7 +21,10 @@ class Routes {
   static const String dashboard = '/dashboard';
   static const String aiTutor = '/ai-tutor';
   static const String quiz = '/quiz';
+
   static const String upload = '/upload';
+  static const String forgotPassword = '/forgot-password';
+  static const String otpVerify = '/otp-verify';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -32,6 +37,8 @@ class Routes {
       aiTutor: (context) => const ChatScreen(),
       quiz: (context) => const QuizScreen(),
       upload: (context) => const UploadScreen(),
+      forgotPassword: (context) => const ForgotPasswordScreen(),
+      otpVerify: (context) => const OtpScreen(),
     };
   }
 }
