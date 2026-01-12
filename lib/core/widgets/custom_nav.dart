@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 
 class CustomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -14,7 +15,7 @@ class CustomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -73,8 +74,8 @@ class CustomNavBar extends StatelessWidget {
     required int index,
   }) {
     final isActive = currentIndex == index;
-    const activeColor = Color(0xFFD32F2F);
-    const inactiveColor = Color(0xFF9E9E9E);
+    const activeColor = AppColors.primary;
+    const inactiveColor = AppColors.grey;
 
     return GestureDetector(
       onTap: () => onTap(index),
