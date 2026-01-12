@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../routes.dart';
 import '../../../../core/widgets/custom_button.dart';
 
@@ -8,7 +9,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
@@ -22,7 +23,7 @@ class WelcomeScreen extends StatelessWidget {
                     'Study Clever',
                     style: TextStyle(
                       fontSize: 32,
-                      color: Color(0xFFD32F2F), // Red color from image
+                      color: AppColors.primary, // Red color from image
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -30,7 +31,7 @@ class WelcomeScreen extends StatelessWidget {
                     'Less Time',
                     style: TextStyle(
                       fontSize: 36,
-                      color: Color(0xFFD32F2F), // Red color from image
+                      color: AppColors.primary, // Red color from image
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -25,12 +27,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFD32F2F)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.maybePop(context),
         ),
       ),
@@ -55,7 +57,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFD32F2F),
+                    color: AppColors.primary,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -121,15 +123,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         "Terms & Conditions",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Color(0xFFD32F2F),
+                          color: AppColors.primary,
                           decoration: TextDecoration.underline,
-                          decorationColor: Color(0xFFD32F2F),
+                          decorationColor: AppColors.primary,
                         ),
                       ),
                     ),
                     Checkbox(
                       value: _agreeToTerms,
-                      activeColor: const Color(0xFFD32F2F),
+                      activeColor: AppColors.primary,
                       onChanged: (value) {
                         setState(() {
                           _agreeToTerms = value ?? false;
@@ -162,7 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: const Text(
                         "Login",
                         style: TextStyle(
-                          color: Color(0xFFD32F2F),
+                          color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -182,8 +184,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     if (!_agreeToTerms) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please agree to the Terms & Conditions")),
+      CustomSnackbar.showWarning(
+        context,
+        "Please agree to the Terms & Conditions",
       );
       return;
     }
@@ -209,12 +212,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         })
         .catchError((e) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(e.toString()),
-                backgroundColor: Colors.red,
-              ),
-            );
+            CustomSnackbar.showError(context, e.toString());
           }
         })
         .whenComplete(() {

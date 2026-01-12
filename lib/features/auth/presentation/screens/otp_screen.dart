@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 // import '../../../../core/widgets/custom_text_field.dart'; // No longer needed here
 
 class OtpScreen extends StatefulWidget {
@@ -70,15 +71,12 @@ class _OtpScreenState extends State<OtpScreen> {
 
     final email = _email;
     if (email.isEmpty) {
-      Fluttertoast.showToast(
-        msg: "Email not found. Please try again.",
-        backgroundColor: Colors.red,
-      );
+      CustomSnackbar.showError(context, "Email not found. Please try again.");
       return;
     }
 
     if (_otpController.text.length != 6) {
-      Fluttertoast.showToast(msg: "Please enter a valid 6-digit OTP");
+      CustomSnackbar.showWarning(context, "Please enter a valid 6-digit OTP");
       return;
     }
 
@@ -92,7 +90,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
       if (success) {
         if (mounted) {
-          Fluttertoast.showToast(msg: "OTP Verified!");
+          CustomSnackbar.showSuccess(context, "OTP Verified!");
           Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.dashboard, // Or appropriate next screen
@@ -101,7 +99,7 @@ class _OtpScreenState extends State<OtpScreen> {
         }
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.red);
+      CustomSnackbar.showError(context, e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -116,11 +114,11 @@ class _OtpScreenState extends State<OtpScreen> {
     try {
       await _authService.sendOtp(email);
       if (mounted) {
-        Fluttertoast.showToast(msg: "OTP resent successfully");
+        CustomSnackbar.showInfo(context, "OTP resent successfully");
         startTimer();
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.red);
+      CustomSnackbar.showError(context, e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -133,31 +131,31 @@ class _OtpScreenState extends State<OtpScreen> {
       height: 60,
       textStyle: const TextStyle(
         fontSize: 22,
-        color: Color(0xFFD32F2F),
+        color: AppColors.primary,
         fontWeight: FontWeight.bold,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFEBEE), // Light red/pink background
+        color: AppColors.primaryLight, // Light red/pink background
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.transparent),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: const Color(0xFFD32F2F)),
+      border: Border.all(color: AppColors.primary),
     );
 
     final submittedPinTheme = defaultPinTheme.copyDecorationWith(
-      color: const Color(0xFFFFCDD2),
+      color: AppColors.primaryMedium,
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFD32F2F)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -179,7 +177,7 @@ class _OtpScreenState extends State<OtpScreen> {
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFD32F2F),
+                color: AppColors.primary,
               ),
             ),
             const SizedBox(height: 12),
@@ -222,7 +220,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     child: const Text(
                       "Resend Code",
                       style: TextStyle(
-                        color: Color(0xFFD32F2F),
+                        color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

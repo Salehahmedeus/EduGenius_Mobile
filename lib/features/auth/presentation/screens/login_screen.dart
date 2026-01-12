@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,7 +27,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
     // Check terms if strictly required by design, though usually for signup
     if (!_agreeToTerms) {
-      Fluttertoast.showToast(msg: "Please agree to the terms and conditions");
+      CustomSnackbar.showWarning(
+        context,
+        "Please agree to the terms and conditions",
+      );
       return;
     }
 
@@ -40,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (success) {
         if (mounted) {
-          Fluttertoast.showToast(msg: "Login Successful!");
+          CustomSnackbar.showSuccess(context, "Login Successful!");
           Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.dashboard,
@@ -49,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString(), backgroundColor: Colors.red);
+      CustomSnackbar.showError(context, e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -58,12 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Color(0xFFD32F2F)),
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.welcome,
@@ -91,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFFD32F2F),
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(height: 48),
@@ -143,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: const Text(
                     "Forgot Password?",
                     style: TextStyle(
-                      color: Color(0xFFD32F2F),
+                      color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -159,15 +163,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Terms & Conditions",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFFD32F2F),
+                        color: AppColors.primary,
                         decoration: TextDecoration.underline,
-                        decorationColor: Color(0xFFD32F2F),
+                        decorationColor: AppColors.primary,
                       ),
                     ),
                   ),
                   Checkbox(
                     value: _agreeToTerms,
-                    activeColor: const Color(0xFFD32F2F),
+                    activeColor: AppColors.primary,
                     onChanged: (value) {
                       setState(() {
                         _agreeToTerms = value ?? false;
@@ -200,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
-                        color: Color(0xFFD32F2F),
+                        color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
