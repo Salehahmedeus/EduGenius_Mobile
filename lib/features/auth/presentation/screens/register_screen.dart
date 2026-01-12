@@ -85,8 +85,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (!value.startsWith('+218')) {
                       return 'Phone number must start with +218';
                     }
-                    if (value.length < 10) {
-                      return 'Phone number must be at least 10 digits';
+                    if (value.length != 14) {
+                      return 'Phone number must be exactly 14 digits';
                     }
                     return null;
                   },
