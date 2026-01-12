@@ -78,6 +78,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: "Phone Number",
                   prefixIcon: Icons.phone_android,
                   keyboardType: TextInputType.phone,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    if (value.length < 10) {
+                      return 'Phone number must be at least 10 digits';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
 
@@ -87,8 +96,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: "Email Address",
                   prefixIcon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) =>
-                      value?.isEmpty ?? true ? 'Please enter your email' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    final emailRegex = RegExp(
+                      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+                    );
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
 
@@ -106,8 +125,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _isPasswordVisible = !_isPasswordVisible;
                     });
                   },
-                  validator: (value) =>
-                      value?.isEmpty ?? true ? 'Please enter password' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
 
