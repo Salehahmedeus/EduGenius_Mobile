@@ -19,20 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>(); // Added form key for validation
   bool _isLoading = false;
-  bool _agreeToTerms = false;
   bool _isPasswordVisible = false;
 
   void _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
-
-    // Check terms if strictly required by design, though usually for signup
-    if (!_agreeToTerms) {
-      CustomSnackbar.showWarning(
-        context,
-        "Please agree to the terms and conditions",
-      );
-      return;
-    }
 
     setState(() => _isLoading = true);
 
@@ -43,17 +33,23 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (success) {
+        // Send OTP after successful login credentials check
+        await _authService.sendOtp(_emailController.text.trim());
+
         if (mounted) {
-          CustomSnackbar.showSuccess(context, "Login Successful!");
+          CustomSnackbar.showSuccess(context, "Credentials valid. OTP sent!");
           Navigator.pushNamedAndRemoveUntil(
             context,
-            Routes.dashboard,
+            Routes.otpVerify,
             (route) => false,
+            arguments: _emailController.text.trim(),
           );
         }
       }
     } catch (e) {
-      CustomSnackbar.showError(context, e.toString());
+      if (mounted) {
+        CustomSnackbar.showError(context, e.toString());
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -163,34 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              // Terms Checkbox
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text("Agree with ", style: TextStyle(fontSize: 14)),
-                  GestureDetector(
-                    child: const Text(
-                      "Terms & Conditions",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.primary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.primary,
-                      ),
-                    ),
-                  ),
-                  Checkbox(
-                    value: _agreeToTerms,
-                    activeColor: AppColors.primary,
-                    onChanged: (value) {
-                      setState(() {
-                        _agreeToTerms = value ?? false;
-                      });
-                    },
-                  ),
-                ],
-              ),
 
+              // Removed Terms Checkbox
               const SizedBox(height: 24),
 
               // Login Button
