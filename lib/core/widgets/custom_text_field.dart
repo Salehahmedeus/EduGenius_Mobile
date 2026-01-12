@@ -4,20 +4,22 @@ import '../constants/app_colors.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
-  final IconData? icon;
+  final IconData? prefixIcon;
+  final IconData? suffixIcon;
   final bool isObscure;
   final TextInputType? keyboardType;
-  final VoidCallback? onIconPressed;
+  final VoidCallback? onSuffixIconPressed;
   final String? Function(String?)? validator;
 
   const CustomTextField({
     super.key,
     required this.controller,
     required this.hintText,
-    this.icon,
+    this.prefixIcon,
+    this.suffixIcon,
     this.isObscure = false,
     this.keyboardType,
-    this.onIconPressed,
+    this.onSuffixIconPressed,
     this.validator,
   });
 
@@ -36,10 +38,13 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
-        suffixIcon: icon != null
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: AppColors.grey)
+            : null,
+        suffixIcon: suffixIcon != null
             ? IconButton(
-                icon: Icon(icon, color: AppColors.grey),
-                onPressed: onIconPressed,
+                icon: Icon(suffixIcon, color: AppColors.grey),
+                onPressed: onSuffixIconPressed,
               )
             : null,
         contentPadding: const EdgeInsets.symmetric(

@@ -66,7 +66,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomTextField(
                   controller: _nameController,
                   hintText: "Full Name",
-                  icon: Icons.person_outline,
+                  prefixIcon: Icons.person_outline,
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter your name' : null,
                 ),
@@ -76,7 +76,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomTextField(
                   controller: _phoneController,
                   hintText: "Phone Number",
-                  icon: Icons.phone_android,
+                  prefixIcon: Icons.phone_android,
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: 16),
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomTextField(
                   controller: _emailController,
                   hintText: "Email Address",
-                  icon: Icons.email_outlined,
+                  prefixIcon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter your email' : null,
@@ -97,10 +97,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   hintText: "Password",
                   isObscure: !_isPasswordVisible,
-                  icon: _isPasswordVisible
+                  prefixIcon: Icons.lock_outline,
+                  suffixIcon: _isPasswordVisible
                       ? Icons.visibility_outlined
                       : Icons.visibility_off_outlined,
-                  onIconPressed: () {
+                  onSuffixIconPressed: () {
                     setState(() {
                       _isPasswordVisible = !_isPasswordVisible;
                     });
@@ -203,11 +204,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
         .then((success) {
           if (success && mounted) {
             // Navigate to Dashboard or Login
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.dashboard,
-              (route) => false,
-            );
+            // Send OTP and Navigate to OTP verify
+            AuthService()
+                .sendOtp(_emailController.text.trim())
+                .then((_) {
+                  if (mounted) {
+                    CustomSnackbar.showSuccess(
+                      context,
+                      "Registration successful! OTP sent.",
+                    );
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.otpVerify,
+                      (route) => false,
+                      arguments: _emailController.text.trim(),
+                    );
+                  }
+                })
+                .catchError((e) {
+                  if (mounted) {
+                    CustomSnackbar.showError(
+                      context,
+                      "Registration successful but failed to send OTP: $e",
+                    );
+                    // Optionally navigate to login or dashboard anyway if OTP isn't strict blocking,
+                    // but user requested verification.
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.login,
+                      (route) => false,
+                    );
+                  }
+                });
           }
         })
         .catchError((e) {

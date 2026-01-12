@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
               CustomTextField(
                 controller: _emailController,
                 hintText: "Email",
-                icon: Icons.email_outlined,
+                prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -120,10 +120,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _passwordController,
                 hintText: "Password",
                 isObscure: !_isPasswordVisible,
-                icon: _isPasswordVisible
+                prefixIcon: Icons.lock_outline,
+                suffixIcon: _isPasswordVisible
                     ? Icons.visibility
                     : Icons.visibility_off,
-                onIconPressed: () {
+                onSuffixIconPressed: () {
                   setState(() {
                     _isPasswordVisible = !_isPasswordVisible;
                   });
