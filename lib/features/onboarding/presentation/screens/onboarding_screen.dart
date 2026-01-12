@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/storage/app_preferences.dart';
 import '../../../../routes.dart';
 
@@ -35,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -62,7 +63,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFD32F2F),
+                            color: AppColors.primary,
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -71,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.grey,
+                            color: AppColors.grey,
                             height: 1.5,
                           ),
                         ),
@@ -96,8 +97,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         width: _currentPage == index ? 24 : 8,
                         decoration: BoxDecoration(
                           color: _currentPage == index
-                              ? const Color(0xFFD32F2F)
-                              : Colors.grey.withOpacity(0.3),
+                              ? AppColors.primary
+                              : AppColors.grey.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -122,8 +123,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFD32F2F),
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.white,
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(20),
                     ),

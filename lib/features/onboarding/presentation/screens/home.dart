@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_nav.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class AIChatScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.chat_bubble, size: 80, color: Color(0xFFD32F2F)),
+          Icon(Icons.chat_bubble, size: 80, color: AppColors.primary),
           SizedBox(height: 16),
           Text(
             'AI Chat',
@@ -70,7 +71,7 @@ class ContentScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.library_books, size: 80, color: Color(0xFFD32F2F)),
+          Icon(Icons.library_books, size: 80, color: AppColors.primary),
           SizedBox(height: 16),
           Text(
             'Content',
@@ -93,7 +94,7 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.dashboard, size: 80, color: Color(0xFFD32F2F)),
+          Icon(Icons.dashboard, size: 80, color: AppColors.primary),
           SizedBox(height: 16),
           Text(
             'Dashboard',
@@ -116,7 +117,7 @@ class QuizScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.quiz, size: 80, color: Color(0xFFD32F2F)),
+          Icon(Icons.quiz, size: 80, color: AppColors.primary),
           SizedBox(height: 16),
           Text(
             'Quiz',
@@ -139,7 +140,7 @@ class SettingsScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.settings, size: 80, color: Color(0xFFD32F2F)),
+          Icon(Icons.settings, size: 80, color: AppColors.primary),
           SizedBox(height: 16),
           Text(
             'Settings',
