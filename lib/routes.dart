@@ -3,12 +3,12 @@ import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/auth/presentation/screens/register_screen.dart';
 import 'features/auth/presentation/screens/splash_screen.dart';
 import 'features/auth/presentation/screens/welcome_screen.dart';
-import 'features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'features/ai_tutor/presentation/screens/chat_screen.dart';
 import 'features/quiz/presentation/screens/quiz_screen.dart';
 import 'features/content/presentation/screens/upload_screen.dart';
 
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
+import 'features/onboarding/presentation/screens/home_screen.dart';
 import 'features/auth/presentation/screens/forgot_password_screen.dart';
 import 'features/auth/presentation/screens/otp_screen.dart';
 
@@ -33,7 +33,7 @@ class Routes {
       welcome: (context) => const WelcomeScreen(),
       login: (context) => const LoginScreen(),
       register: (context) => const RegisterScreen(),
-      dashboard: (context) => const DashboardScreen(),
+      dashboard: (context) => const HomeScreen(),
       aiTutor: (context) => const ChatScreen(),
       quiz: (context) => const QuizScreen(),
       upload: (context) => const UploadScreen(),
