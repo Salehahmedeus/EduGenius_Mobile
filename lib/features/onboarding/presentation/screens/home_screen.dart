@@ -3,8 +3,7 @@ import '../../../../core/widgets/custom_nav.dart';
 import 'package:edugenius_mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:edugenius_mobile/features/ai_tutor/presentation/screens/chat_screen.dart';
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_screen.dart';
-import 'package:edugenius_mobile/features/content/presentation/screens/upload_screen.dart';
-// import settings screen if exists, or create placeholder
+import 'package:edugenius_mobile/features/content/presentation/screens/materials_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Real screens
   final List<Widget> _screens = [
     const ChatScreen(),
-    const UploadScreen(), // Content/Upload
+    const MaterialsScreen(), // Content/Materials
     const DashboardScreen(),
     const QuizScreen(),
     const Scaffold(
