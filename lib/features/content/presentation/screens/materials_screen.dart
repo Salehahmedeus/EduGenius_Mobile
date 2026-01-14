@@ -47,11 +47,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        Fluttertoast.showToast(
-          msg: "Error fetching materials: $e",
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );
+        CustomSnackbar.showError(context, "Error fetching materials: $e");
       }
     }
   }
