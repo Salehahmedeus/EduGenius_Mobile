@@ -4,6 +4,7 @@ import 'package:edugenius_mobile/features/dashboard/presentation/screens/dashboa
 import 'package:edugenius_mobile/features/ai_tutor/presentation/screens/chat_history_screen.dart';
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_screen.dart';
 import 'package:edugenius_mobile/features/content/presentation/screens/materials_screen.dart';
+import 'package:edugenius_mobile/features/settings/presentation/screens/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,9 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const MaterialsScreen(), // Content/Materials
     const DashboardScreen(),
     const QuizScreen(),
-    const Scaffold(
-      body: Center(child: Text("Settings")),
-    ), // Placeholder for Settings
+    const SettingsScreen(),
   ];
 
   @override
