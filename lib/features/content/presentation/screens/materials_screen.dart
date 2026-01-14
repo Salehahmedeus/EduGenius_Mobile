@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
@@ -19,9 +18,9 @@ class MaterialsScreen extends StatefulWidget {
 class _MaterialsScreenState extends State<MaterialsScreen> {
   final ContentService _contentService = ContentService();
   final TextEditingController _searchController = TextEditingController();
-  List<MaterialModel> _materials = [];
+  Map<String, List<MaterialModel>> _groupedMaterials = {};
+  int _totalCount = 0;
   bool _isLoading = false;
-  bool _isSearching = false;
   String _searchQuery = "";
 
   @override
@@ -42,7 +41,8 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       final materials = await _contentService.getMaterials();
       if (mounted) {
         setState(() {
-          _materials = materials;
+          _totalCount = materials.length;
+          _groupedMaterials = _groupMaterials(materials);
           _isLoading = false;
         });
       }
@@ -55,21 +55,19 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   }
 
   Future<void> _performSearch(String query) async {
-    if (query.isEmpty) {
-      _fetchMaterials();
-      return;
-    }
-
     setState(() {
       _isLoading = true;
       _searchQuery = query;
     });
 
     try {
-      final results = await _contentService.searchMaterials(query);
+      final results = query.isEmpty
+          ? await _contentService.getMaterials()
+          : await _contentService.searchMaterials(query);
+
       if (mounted) {
         setState(() {
-          _materials = results;
+          _groupedMaterials = _groupMaterials(results);
           _isLoading = false;
         });
       }
@@ -81,13 +79,38 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     }
   }
 
-  void _stopSearching() {
-    setState(() {
-      _isSearching = false;
-      _searchController.clear();
-      _searchQuery = "";
-    });
-    _fetchMaterials();
+  Map<String, List<MaterialModel>> _groupMaterials(
+    List<MaterialModel> materials,
+  ) {
+    Map<String, List<MaterialModel>> grouped = {};
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    // Sort by date newest first
+    materials.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+    for (var material in materials) {
+      final date = DateTime(
+        material.createdAt.year,
+        material.createdAt.month,
+        material.createdAt.day,
+      );
+      String label;
+      if (date == today) {
+        label = 'Today';
+      } else if (date == yesterday) {
+        label = 'Yesterday';
+      } else {
+        label = DateFormat('MMMM dd, yyyy').format(date);
+      }
+
+      if (!grouped.containsKey(label)) {
+        grouped[label] = [];
+      }
+      grouped[label]!.add(material);
+    }
+    return grouped;
   }
 
   Future<void> _pickAndUploadFile() async {
@@ -113,16 +136,14 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(color: AppColors.primary),
+        child: CircularProgressIndicator(color: Color(0xFF2196F3)),
       ),
     );
 
     try {
       await _contentService.uploadMaterial(file);
-      if (mounted) Navigator.pop(context); // Close loading dialog
-      if (mounted) {
-        CustomSnackbar.showSuccess(context, "Upload successful!");
-      }
+      if (mounted) Navigator.pop(context);
+      if (mounted) CustomSnackbar.showSuccess(context, "Upload successful!");
       _fetchMaterials();
     } catch (e) {
       if (mounted) {
@@ -133,171 +154,255 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   }
 
   Future<void> _deleteMaterial(int id) async {
-    bool confirm =
-        await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Delete Material'),
-            content: const Text('Are you sure you want to delete this file?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text(
-                  'Delete',
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-
-    if (!confirm) return;
-
     try {
       await _contentService.deleteMaterial(id);
-      if (mounted) {
-        CustomSnackbar.showInfo(context, "Deleted successfully");
-      }
+      if (mounted) CustomSnackbar.showInfo(context, "Deleted successfully");
       _fetchMaterials();
     } catch (e) {
-      if (mounted) {
-        CustomSnackbar.showError(context, "Delete failed: $e");
-      }
+      if (mounted) CustomSnackbar.showError(context, "Delete failed: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    const Color bgColor = Color(0xFFF9FAFB);
+    const Color borderColor = Color(0xFFE5E7EB);
+
     return Scaffold(
-      appBar: AppBar(
-        title: _isSearching
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search materials...',
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.white70),
-                ),
-                style: const TextStyle(color: Colors.white, fontSize: 18),
-                onChanged: (value) {
-                  // Optional: Real-time search with debounce
-                },
-                onSubmitted: (value) => _performSearch(value),
-              )
-            : const Text('Materials'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        actions: [
-          if (_isSearching)
-            IconButton(
-              icon: const Icon(Iconsax.close_circle),
-              onPressed: _stopSearching,
-            )
-          else
-            IconButton(
-              icon: const Icon(Iconsax.search_normal),
-              onPressed: () => setState(() => _isSearching = true),
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            _buildSearchBar(),
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF2196F3),
+                      ),
+                    )
+                  : _groupedMaterials.isEmpty
+                  ? _buildEmptyState()
+                  : RefreshIndicator(
+                      onRefresh: _fetchMaterials,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: _groupedMaterials.length,
+                        itemBuilder: (context, index) {
+                          String label = _groupedMaterials.keys.elementAt(
+                            index,
+                          );
+                          List<MaterialModel> materials =
+                              _groupedMaterials[label]!;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildDateDivider(label),
+                              ...materials
+                                  .map(
+                                    (m) => _buildMaterialCard(m, borderColor),
+                                  )
+                                  .toList(),
+                              const SizedBox(height: 10),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
             ),
-          IconButton(
-            icon: const Icon(Iconsax.refresh),
-            onPressed: _fetchMaterials,
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _pickAndUploadFile,
+        label: const Text('Upload', style: TextStyle(color: Colors.white)),
+        icon: const Icon(Iconsax.document_upload, color: Colors.white),
+        backgroundColor: const Color(0xFF2196F3),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Study Materials',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1F2937),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF2196F3).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              '$_totalCount Files',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF2196F3),
+              ),
+            ),
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.primary),
-            )
-          : _materials.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Iconsax.folder_open, size: 64, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
-                  Text(
-                    _isSearching
-                        ? 'No results for "$_searchQuery"'
-                        : 'No materials found.',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 18),
-                  ),
-                  if (_isSearching)
-                    TextButton(
-                      onPressed: _stopSearching,
-                      child: const Text('Clear Search'),
-                    ),
-                ],
-              ),
-            )
-          : RefreshIndicator(
-              onRefresh: _fetchMaterials,
-              child: ListView.builder(
-                padding: const EdgeInsets.only(top: 8, bottom: 80),
-                itemCount: _materials.length,
-                itemBuilder: (context, index) {
-                  final material = _materials[index];
-                  final isPdf = material.fileType.toLowerCase().contains('pdf');
+    );
+  }
 
-                  return Card(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: (isPdf ? Colors.red : Colors.blue).withOpacity(
-                            0.1,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          isPdf ? Iconsax.document_text : Iconsax.document,
-                          color: isPdf ? Colors.red : Colors.blue,
-                          size: 32,
-                        ),
-                      ),
-                      title: Text(
-                        material.fileName,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'Uploaded: ${DateFormat('MMM dd, yyyy').format(material.createdAt)}',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Iconsax.trash, color: Colors.grey),
-                        onPressed: () => _deleteMaterial(material.id),
-                      ),
-                    ),
-                  );
-                },
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE5E7EB)),
+        ),
+        child: TextField(
+          controller: _searchController,
+          onSubmitted: _performSearch,
+          decoration: const InputDecoration(
+            hintText: 'Search your materials...',
+            hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
+            prefixIcon: Icon(
+              Iconsax.search_normal,
+              size: 20,
+              color: Color(0xFF9CA3AF),
+            ),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(vertical: 12),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateDivider(String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        children: [
+          Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF6B7280),
               ),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _pickAndUploadFile,
-        label: const Text('Upload'),
-        icon: const Icon(Iconsax.document_upload),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+          ),
+          Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMaterialCard(MaterialModel material, Color borderColor) {
+    final isPdf = material.fileType.toLowerCase().contains('pdf');
+    final iconColor = isPdf ? const Color(0xFFF75555) : const Color(0xFF246BFD);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        onTap: () {
+          // Open material or show details
+        },
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: iconColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            isPdf ? Iconsax.document_text : Iconsax.document,
+            color: iconColor,
+            size: 24,
+          ),
+        ),
+        title: Text(
+          material.fileName,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF374151),
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+          '${material.fileType.toUpperCase()} • ${DateFormat('HH:mm').format(material.createdAt)}',
+          style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+        ),
+        trailing: PopupMenuButton<String>(
+          icon: const Icon(Iconsax.more, color: Color(0xFF6B7280), size: 18),
+          onSelected: (value) {
+            if (value == 'delete') {
+              _deleteMaterial(material.id);
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'delete',
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.folder_open, size: 80, color: Colors.grey[300]),
+          const SizedBox(height: 16),
+          Text(
+            _searchQuery.isNotEmpty
+                ? 'No results for "$_searchQuery"'
+                : 'No materials found',
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Upload a document to get started!',
+            style: TextStyle(color: Colors.grey),
+          ),
+          if (_searchQuery.isNotEmpty)
+            TextButton(
+              onPressed: () {
+                _searchController.clear();
+                _performSearch("");
+              },
+              child: const Text('Clear Search'),
+            ),
+        ],
       ),
     );
   }
