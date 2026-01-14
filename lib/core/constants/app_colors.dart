@@ -21,4 +21,11 @@ class AppColors {
   // Background colors
   static const Color background = Colors.white;
   static const Color textFieldFill = Color(0xFFF5F5F5);
+
+  // Dark Theme / Settings Redesign
+  static const Color darkBackground = Color(0xFF131315); // Deep dark
+  static const Color darkSurface = Color(0xFF1D1D21); // Group container
+  static const Color darkItem = Color(0xFF2C2C2E); // Item tile
+  static const Color darkTextPrimary = Colors.white;
+  static const Color darkTextSecondary = Color(0xFFACACAE);
 }

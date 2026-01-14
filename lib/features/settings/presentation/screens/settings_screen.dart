@@ -10,276 +10,234 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isDarkMode = false;
+  bool _isAppearanceOn = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Icon(
-            Iconsax.profile_2user,
-            color: AppColors.primary,
-            size: 28,
-          ),
-        ),
-        title: const Text(
-          'Account',
-          style: TextStyle(
-            color: AppColors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-        child: Column(
-          children: [
-            // Profile Section
-            _buildProfileSection(),
-            const SizedBox(height: 24),
-
-            // Upgrade to PRO Banner
-            _buildProBanner(),
-            const SizedBox(height: 32),
-
-            // General Section
-            _buildSectionHeader('General'),
-            const SizedBox(height: 8),
-            _buildSettingItem(
-              icon: Iconsax.user,
-              title: 'Personal Info',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              icon: Iconsax.security_safe,
-              title: 'Security',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              icon: Iconsax.global,
-              title: 'Language',
-              trailingText: 'English (US)',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              icon: Iconsax.moon1,
-              title: 'Dark Mode',
-              isSwitch: true,
-              switchValue: _isDarkMode,
-              onSwitchChanged: (val) {
-                setState(() => _isDarkMode = val);
-              },
-              onTap: () {},
-            ),
-
-            const SizedBox(height: 24),
-
-            // About Section
-            _buildSectionHeader('About'),
-            const SizedBox(height: 8),
-            _buildSettingItem(
-              icon: Iconsax.info_circle,
-              title: 'Help Center',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              icon: Iconsax.lock,
-              title: 'Privacy Policy',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              icon: Iconsax.information,
-              title: 'About EduGenius',
-              onTap: () {},
-            ),
-            _buildSettingItem(
-              icon: Iconsax.logout,
-              title: 'Logout',
-              titleColor: AppColors.primary,
-              iconColor: AppColors.primary,
-              showArrow: false,
-              onTap: () {
-                // Handle logout
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileSection() {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: AppColors.primaryMedium,
-          backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=saleh'),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
+      backgroundColor: AppColors.darkBackground,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Saleh Ahmed',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black,
+              // Header with Edit button
+              _buildHeader(),
+              const SizedBox(height: 30),
+
+              // Group 1: Messages, Archive, Devices
+              _buildGroupContainer([
+                _buildSettingItem(
+                  icon: Iconsax.bookmark,
+                  iconBg: const Color(0xFF246BFD),
+                  title: 'Save Messages',
+                  onTap: () {},
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'saleh.ahmed@example.com',
-                style: TextStyle(fontSize: 14, color: AppColors.grey),
-              ),
+                _buildDivider(),
+                _buildSettingItem(
+                  icon: Iconsax.archive_add,
+                  iconBg: const Color(0xFFF75555),
+                  title: 'Archive Chat',
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildSettingItem(
+                  icon: Iconsax.mobile,
+                  iconBg: const Color(0xFF47D16E),
+                  title: 'Devices',
+                  onTap: () {},
+                ),
+              ]),
+              const SizedBox(height: 20),
+
+              // Group 2: Notification, Privacy, Language, Appearance
+              _buildGroupContainer([
+                _buildSettingItem(
+                  icon: Iconsax.notification,
+                  iconBg: const Color(0xFFFF981F),
+                  title: 'Notification',
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildSettingItem(
+                  icon: Iconsax.lock,
+                  iconBg: const Color(0xFFACACAE),
+                  title: 'Privacy and Security',
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildSettingItem(
+                  icon: Iconsax.global,
+                  iconBg: const Color(0xFF9145FF),
+                  title: 'Language',
+                  trailing: _buildLanguageBadge(),
+                  onTap: () {},
+                ),
+                _buildDivider(),
+                _buildSettingItem(
+                  icon: Iconsax.colorfilter,
+                  iconBg: const Color(0xFF47D16E),
+                  title: 'Appearance',
+                  trailing: Switch(
+                    value: _isAppearanceOn,
+                    onChanged: (val) => setState(() => _isAppearanceOn = val),
+                    activeColor: const Color(0xFF47D16E),
+                    activeTrackColor: const Color(0xFF47D16E).withOpacity(0.3),
+                  ),
+                  onTap: () {},
+                ),
+              ]),
+              const SizedBox(height: 20),
+
+              // Group 3: Premium
+              _buildGroupContainer([
+                _buildSettingItem(
+                  icon: Iconsax.crown,
+                  iconBg: const Color(0xFF9145FF),
+                  title: 'Chat GPT 4.0 Premium',
+                  onTap: () {},
+                ),
+              ]),
+              const SizedBox(height: 20),
+
+              // Group 4: Log Out
+              _buildGroupContainer([
+                _buildSettingItem(
+                  icon: Iconsax.logout,
+                  iconBg: const Color(0xFFF75555),
+                  title: 'Log Out',
+                  onTap: () {},
+                ),
+              ]),
+              const SizedBox(height: 30),
             ],
           ),
         ),
-        Icon(Iconsax.arrow_right_3, color: AppColors.black, size: 20),
-      ],
-    );
-  }
-
-  Widget _buildProBanner() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Iconsax.star1,
-              color: AppColors.warning,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Upgrade to PRO!',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Enjoy all benefits without restrictions',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(Iconsax.arrow_right_3, color: Colors.white, size: 24),
-        ],
       ),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Row(
+  Widget _buildHeader() {
+    return Column(
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: AppColors.grey,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                'Edit',
+                style: TextStyle(
+                  color: Color(0xFF246BFD),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        CircleAvatar(
+          radius: 60,
+          backgroundColor: AppColors.darkSurface,
+          backgroundImage: const NetworkImage(
+            'https://api.dicebear.com/7.x/avataaars/png?seed=Zachery&backgroundColor=b6e3f4',
           ),
         ),
-        const SizedBox(width: 8),
-        Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
+        const SizedBox(height: 16),
+        const Text(
+          'Zachery Williamson',
+          style: TextStyle(
+            color: AppColors.darkTextPrimary,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        const Text(
+          'zachery.williamson94@gmail.com',
+          style: TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
+        ),
       ],
+    );
+  }
+
+  Widget _buildGroupContainer(List<Widget> children) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.darkSurface,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(children: children),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Divider(
+      height: 1,
+      thickness: 0.5,
+      color: Colors.white.withOpacity(0.05),
+      indent: 60,
     );
   }
 
   Widget _buildSettingItem({
     required IconData icon,
+    required Color iconBg,
     required String title,
-    String? trailingText,
-    bool isSwitch = false,
-    bool? switchValue,
-    Function(bool)? onSwitchChanged,
-    bool showArrow = true,
-    Color? titleColor,
-    Color? iconColor,
+    Widget? trailing,
     required VoidCallback onTap,
   }) {
     return ListTile(
-      onTap: isSwitch ? null : onTap,
-      contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: iconColor ?? AppColors.black, size: 24),
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: iconBg,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
       title: Text(
         title,
-        style: TextStyle(
-          color: titleColor ?? AppColors.black,
+        style: const TextStyle(
+          color: AppColors.darkTextPrimary,
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
         ),
       ),
-      trailing: isSwitch
-          ? Switch(
-              value: switchValue ?? false,
-              onChanged: onSwitchChanged,
-              activeColor: AppColors.primary,
-            )
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (trailingText != null)
-                  Text(
-                    trailingText,
-                    style: const TextStyle(
-                      color: AppColors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                if (showArrow) ...[
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Iconsax.arrow_right_3,
-                    color: AppColors.black,
-                    size: 18,
-                  ),
-                ],
-              ],
+      trailing:
+          trailing ??
+          Icon(
+            Iconsax.arrow_right_3,
+            color: Colors.white.withOpacity(0.3),
+            size: 18,
+          ),
+    );
+  }
+
+  Widget _buildLanguageBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFF246BFD).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Text(
+            'English',
+            style: TextStyle(
+              color: Color(0xFF246BFD),
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
+          ),
+          SizedBox(width: 4),
+          Icon(Iconsax.arrow_right_3, color: Color(0xFF246BFD), size: 14),
+        ],
+      ),
     );
   }
 }
