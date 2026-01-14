@@ -11,7 +11,7 @@ class ChatSessionModel {
 
   factory ChatSessionModel.fromJson(Map<String, dynamic> json) {
     return ChatSessionModel(
-      id: json['id'],
+      id: json['id'] is String ? int.parse(json['id']) : json['id'],
       contextName: json['context_name'] ?? 'New Chat',
       updatedAt: DateTime.parse(json['updated_at']),
     );

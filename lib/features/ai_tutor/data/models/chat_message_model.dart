@@ -39,7 +39,7 @@ class ChatMessageModel {
 
   /// Adapts the API response which contains both query and response in one object
   static List<ChatMessageModel> fromApiHistory(Map<String, dynamic> json) {
-    final int id = json['id'];
+    final int id = json['id'] is String ? int.parse(json['id']) : json['id'];
     final DateTime createdAt = DateTime.parse(json['created_at']);
 
     return [
