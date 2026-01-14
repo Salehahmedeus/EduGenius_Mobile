@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../core/constants/app_colors.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -15,7 +14,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -136,10 +134,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-        CircleAvatar(
+        const CircleAvatar(
           radius: 60,
-          backgroundColor: AppColors.darkSurface,
-          backgroundImage: const NetworkImage(
+          backgroundColor: Color(0xFFE5E7EB),
+          backgroundImage: NetworkImage(
             'https://api.dicebear.com/7.x/avataaars/png?seed=Zachery&backgroundColor=b6e3f4',
           ),
         ),
@@ -147,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const Text(
           'Zachery Williamson',
           style: TextStyle(
-            color: AppColors.darkTextPrimary,
+            color: Color(0xFF1F2937),
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -155,7 +153,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const SizedBox(height: 4),
         const Text(
           'zachery.williamson94@gmail.com',
-          style: TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
+          style: TextStyle(color: Color(0xFF6B7280), fontSize: 14),
         ),
       ],
     );
@@ -164,19 +162,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildGroupContainer(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
       child: Column(children: children),
     );
   }
 
   Widget _buildDivider() {
-    return Divider(
+    return const Divider(
       height: 1,
-      thickness: 0.5,
-      color: Colors.white.withOpacity(0.05),
+      thickness: 1,
+      color: Color(0xFFE5E7EB),
       indent: 60,
+      endIndent: 16,
     );
   }
 
@@ -194,25 +194,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: iconBg,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon, color: Colors.white, size: 20),
       ),
       title: Text(
         title,
         style: const TextStyle(
-          color: AppColors.darkTextPrimary,
+          color: Color(0xFF1F2937),
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),
       trailing:
           trailing ??
-          Icon(
-            Iconsax.arrow_right_3,
-            color: Colors.white.withOpacity(0.3),
-            size: 18,
-          ),
+          const Icon(Iconsax.arrow_right_3, color: Color(0xFFD1D5DB), size: 18),
     );
   }
 

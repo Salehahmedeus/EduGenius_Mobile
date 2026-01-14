@@ -146,12 +146,10 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color tutorBlue = Color(0xFF2196F3);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF9FAFB),
         foregroundColor: Colors.black,
         actions: [
           IconButton(
@@ -187,7 +185,7 @@ class ChatScreenState extends State<ChatScreen> {
                       },
                     ),
             ),
-            _buildInputArea(tutorBlue),
+            _buildInputArea(AppColors.primary),
           ],
         ),
       ),
@@ -235,7 +233,7 @@ class ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F1F1),
+          color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(16),
         ),
         child: const Text(
