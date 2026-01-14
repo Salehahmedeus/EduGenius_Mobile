@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../data/models/chat_session_model.dart';
-import '../data/services/ai_service.dart';
+import '../../data/models/chat_session_model.dart';
+import '../../data/services/ai_service.dart';
 import 'chat_screen.dart';
 
 class ChatHistoryScreen extends StatefulWidget {

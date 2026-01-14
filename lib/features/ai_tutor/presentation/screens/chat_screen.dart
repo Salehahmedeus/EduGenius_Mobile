@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../data/models/chat_message_model.dart';
-import '../data/services/ai_service.dart';
+import '../../data/models/chat_message_model.dart';
+import '../../data/services/ai_service.dart';
 
 class ChatScreen extends StatefulWidget {
   final int? conversationId;
@@ -144,10 +144,11 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
         ],
       ),
-      body: WillPopScope(
-        onWillPop: () async {
+      body: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) return;
           Navigator.pop(context, true); // Signal history screen to refresh
-          return false;
         },
         child: Column(
           children: [
