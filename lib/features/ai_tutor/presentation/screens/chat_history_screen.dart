@@ -16,7 +16,7 @@ class ChatHistoryScreen extends StatefulWidget {
 
 class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   final AiService _aiService = AiService();
-  List<ChatSessionModel> _sessions = [];
+  Map<String, List<ChatSessionModel>> _groupedSessions = {};
   bool _isLoading = true;
 
   @override
@@ -31,7 +31,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       final sessions = await _aiService.getChats();
       if (mounted) {
         setState(() {
-          _sessions = sessions;
+          _groupedSessions = _groupSessions(sessions);
           _isLoading = false;
         });
       }
@@ -43,12 +43,44 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
     }
   }
 
+  Map<String, List<ChatSessionModel>> _groupSessions(
+    List<ChatSessionModel> sessions,
+  ) {
+    Map<String, List<ChatSessionModel>> grouped = {};
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+
+    // Sort sessions by date (newest first)
+    sessions.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+    for (var session in sessions) {
+      final date = DateTime(
+        session.updatedAt.year,
+        session.updatedAt.month,
+        session.updatedAt.day,
+      );
+      String label;
+      if (date == today) {
+        label = 'Today';
+      } else if (date == yesterday) {
+        label = 'Yesterday';
+      } else {
+        label = DateFormat('MMMM dd, yyyy').format(date);
+      }
+
+      if (!grouped.containsKey(label)) {
+        grouped[label] = [];
+      }
+      grouped[label]!.add(session);
+    }
+    return grouped;
+  }
+
   Future<void> _deleteSession(int id) async {
     try {
       await _aiService.deleteChat(id);
-      setState(() {
-        _sessions.removeWhere((s) => s.id == id);
-      });
+      _fetchSessions(); // Refresh grouping
       if (mounted) CustomSnackbar.showSuccess(context, "Chat deleted");
     } catch (e) {
       if (mounted) CustomSnackbar.showError(context, ErrorHandler.parse(e));
@@ -57,95 +89,176 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color tutorBlue = Color(0xFF2196F3);
+    const Color bgColor = Color(0xFFF9FAFB);
+    const Color borderColor = Color(0xFFE5E7EB);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('AI Tutor History'),
-        backgroundColor: tutorBlue,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: tutorBlue))
-          : _sessions.isEmpty
-          ? _buildEmptyState()
-          : RefreshIndicator(
-              onRefresh: _fetchSessions,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _sessions.length,
-                itemBuilder: (context, index) {
-                  final session = _sessions[index];
-                  return Dismissible(
-                    key: Key(session.id.toString()),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      color: Colors.red,
-                      child: const Icon(Iconsax.trash, color: Colors.white),
-                    ),
-                    onDismissed: (direction) => _deleteSession(session.id),
-                    child: Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF2196F3),
                       ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        leading: const CircleAvatar(
-                          backgroundColor: Color(0xFFE3F2FD),
-                          child: Icon(Iconsax.messages_1, color: tutorBlue),
-                        ),
-                        title: Text(
-                          session.contextName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          DateFormat(
-                            'MMM dd, yyyy • HH:mm',
-                          ).format(session.updatedAt),
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                          ),
-                        ),
-                        trailing: const Icon(Iconsax.arrow_right_3, size: 16),
-                        onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ChatScreen(conversationId: session.id),
-                            ),
+                    )
+                  : _groupedSessions.isEmpty
+                  ? _buildEmptyState()
+                  : RefreshIndicator(
+                      onRefresh: _fetchSessions,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        itemCount: _groupedSessions.length,
+                        itemBuilder: (context, index) {
+                          String label = _groupedSessions.keys.elementAt(index);
+                          List<ChatSessionModel> sessions =
+                              _groupedSessions[label]!;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildDateDivider(label),
+                              ...sessions
+                                  .map((s) => _buildChatCard(s, borderColor))
+                                  .toList(),
+                              const SizedBox(height: 10),
+                            ],
                           );
-                          if (result == true) _fetchSessions();
                         },
                       ),
                     ),
-                  );
-                },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Chat History',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1F2937),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Iconsax.calendar,
+                  size: 18,
+                  color: Color(0xFF6B7280),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  DateFormat('dd MMM yyyy').format(DateTime.now()),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF6B7280),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateDivider(String label) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        children: [
+          Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF6B7280),
               ),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
+          ),
+          Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatCard(ChatSessionModel session, Color borderColor) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        onTap: () async {
           final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ChatScreen()),
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(conversationId: session.id),
+            ),
           );
           if (result == true) _fetchSessions();
         },
-        label: const Text('New Chat'),
-        icon: const Icon(Iconsax.add),
-        backgroundColor: tutorBlue,
-        foregroundColor: Colors.white,
+        title: Text(
+          session.contextName,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF374151),
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Text(
+            'Conversation with AI Tutor • ${DateFormat('HH:mm').format(session.updatedAt)}',
+            style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        trailing: PopupMenuButton<String>(
+          icon: const Icon(Iconsax.more, color: Color(0xFF6B7280)),
+          onSelected: (value) {
+            if (value == 'delete') {
+              _deleteSession(session.id);
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'delete',
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -169,6 +282,28 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           const Text(
             'Start a new conversation with your AI Tutor!',
             style: TextStyle(color: Colors.grey),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton.icon(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChatScreen()),
+              );
+              if (result == true) _fetchSessions();
+            },
+            icon: const Icon(Iconsax.add, color: Colors.white),
+            label: const Text(
+              'New Chat',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2196F3),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
           ),
         ],
       ),
