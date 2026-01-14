@@ -8,7 +8,8 @@ import '../../data/services/ai_service.dart';
 import 'chat_screen.dart';
 
 class ChatHistoryScreen extends StatefulWidget {
-  const ChatHistoryScreen({super.key});
+  final Function(int?)? onSessionSelected;
+  const ChatHistoryScreen({super.key, this.onSessionSelected});
 
   @override
   State<ChatHistoryScreen> createState() => _ChatHistoryScreenState();
@@ -119,14 +120,18 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                         ),
                         trailing: const Icon(Iconsax.arrow_right_3, size: 16),
                         onTap: () async {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ChatScreen(conversationId: session.id),
-                            ),
-                          );
-                          if (result == true) _fetchSessions();
+                          if (widget.onSessionSelected != null) {
+                            widget.onSessionSelected!(session.id);
+                          } else {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ChatScreen(conversationId: session.id),
+                              ),
+                            );
+                            if (result == true) _fetchSessions();
+                          }
                         },
                       ),
                     ),
@@ -136,11 +141,15 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
             ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const ChatScreen()),
-          );
-          if (result == true) _fetchSessions();
+          if (widget.onSessionSelected != null) {
+            widget.onSessionSelected!(null);
+          } else {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ChatScreen()),
+            );
+            if (result == true) _fetchSessions();
+          }
         },
         label: const Text('New Chat'),
         icon: const Icon(Iconsax.add),

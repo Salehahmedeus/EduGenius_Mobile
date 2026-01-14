@@ -33,7 +33,7 @@ class CustomNavBar extends StatelessWidget {
             children: [
               _buildNavItem(
                 icon: Iconsax.messages_1,
-                activeIcon: Iconsax.messages_15, // Bulkish/Bold
+                activeIcon: Iconsax.messages_15,
                 label: 'AI Chat',
                 index: 0,
               ),
