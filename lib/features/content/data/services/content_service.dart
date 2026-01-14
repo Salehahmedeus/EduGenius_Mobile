@@ -44,7 +44,8 @@ class ContentService {
   Future<List<MaterialModel>> searchMaterials(String query) async {
     try {
       final response = await _apiClient.dio.get(
-        '${ApiEndpoints.materials}/$query',
+        ApiEndpoints.searchMaterials,
+        queryParameters: {'q': query},
       );
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;

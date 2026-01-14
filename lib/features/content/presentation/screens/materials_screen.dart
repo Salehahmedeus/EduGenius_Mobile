@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../data/models/material_model.dart';
 import '../../data/services/content_service.dart';
 
@@ -16,8 +16,11 @@ class MaterialsScreen extends StatefulWidget {
 
 class _MaterialsScreenState extends State<MaterialsScreen> {
   final ContentService _contentService = ContentService();
+  final TextEditingController _searchController = TextEditingController();
   List<MaterialModel> _materials = [];
   bool _isLoading = false;
+  bool _isSearching = false;
+  String _searchQuery = "";
 
   @override
   void initState() {
@@ -25,22 +28,72 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     _fetchMaterials();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   Future<void> _fetchMaterials() async {
     setState(() => _isLoading = true);
     try {
       final materials = await _contentService.getMaterials();
-      setState(() {
-        _materials = materials;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _materials = materials;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() => _isLoading = false);
-      Fluttertoast.showToast(
-        msg: "Error fetching materials: $e",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        setState(() => _isLoading = false);
+        Fluttertoast.showToast(
+          msg: "Error fetching materials: $e",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
     }
+  }
+
+  Future<void> _performSearch(String query) async {
+    if (query.isEmpty) {
+      _fetchMaterials();
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _searchQuery = query;
+    });
+
+    try {
+      final results = await _contentService.searchMaterials(query);
+      if (mounted) {
+        setState(() {
+          _materials = results;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        Fluttertoast.showToast(
+          msg: "Search failed: $e",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      }
+    }
+  }
+
+  void _stopSearching() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+      _searchQuery = "";
+    });
+    _fetchMaterials();
   }
 
   Future<void> _pickAndUploadFile() async {
@@ -92,7 +145,6 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   }
 
   Future<void> _deleteMaterial(int id) async {
-    // Optional: Add confirmation dialog
     bool confirm =
         await showDialog(
           context: context,
@@ -139,10 +191,32 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Materials'),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Search materials...',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.white70),
+                ),
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+                onChanged: (value) {
+                  // Optional: Real-time search with debounce
+                },
+                onSubmitted: (value) => _performSearch(value),
+              )
+            : const Text('Materials'),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         actions: [
+          if (_isSearching)
+            IconButton(icon: const Icon(Icons.clear), onPressed: _stopSearching)
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () => setState(() => _isSearching = true),
+            ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _fetchMaterials,
@@ -161,9 +235,16 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                   Icon(Icons.folder_open, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
-                    'No materials found.',
+                    _isSearching
+                        ? 'No results for "$_searchQuery"'
+                        : 'No materials found.',
                     style: TextStyle(color: Colors.grey[600], fontSize: 18),
                   ),
+                  if (_isSearching)
+                    TextButton(
+                      onPressed: _stopSearching,
+                      child: const Text('Clear Search'),
+                    ),
                 ],
               ),
             )

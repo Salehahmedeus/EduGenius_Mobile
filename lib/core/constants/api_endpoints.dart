@@ -11,4 +11,5 @@ class ApiEndpoints {
   static const String profile = '/me';
   static const String materials = '/materials';
   static const String uploadMaterial = '/materials/upload';
+  static const String searchMaterials = '/materials/search';
 }
