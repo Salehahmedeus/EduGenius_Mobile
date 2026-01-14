@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/chat_message_model.dart';
 import '../../data/services/ai_service.dart';
 
@@ -56,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        Fluttertoast.showToast(msg: "Failed to load history: $e");
+        CustomSnackbar.showError(context, "Failed to load history: $e");
       }
     }
   }
@@ -75,14 +76,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _pickFile() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'docx', 'txt'],
+      );
       if (result != null && result.files.single.path != null) {
         setState(() {
           _attachedFile = File(result.files.single.path!);
         });
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: "Error picking file: $e");
+      if (mounted) {
+        CustomSnackbar.showError(context, "Error picking file: $e");
+      }
     }
   }
 
@@ -120,7 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isThinking = false);
-        Fluttertoast.showToast(msg: "Error: $e", backgroundColor: Colors.red);
+        CustomSnackbar.showError(context, "Error: $e");
       }
     }
   }

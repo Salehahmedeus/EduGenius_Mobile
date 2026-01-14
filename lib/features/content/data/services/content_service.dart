@@ -48,7 +48,15 @@ class ContentService {
         queryParameters: {'q': query},
       );
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
+        final dynamic rawData = response.data;
+        List<dynamic> data;
+        if (rawData is Map && rawData.containsKey('data')) {
+          data = rawData['data'];
+        } else if (rawData is List) {
+          data = rawData;
+        } else {
+          return [];
+        }
         return data.map((item) => MaterialModel.fromJson(item)).toList();
       }
       return [];

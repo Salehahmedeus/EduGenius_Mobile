@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/material_model.dart';
 import '../../data/services/content_service.dart';
 
@@ -78,11 +78,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        Fluttertoast.showToast(
-          msg: "Search failed: $e",
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );
+        CustomSnackbar.showError(context, "Search failed: $e");
       }
     }
   }
@@ -108,11 +104,9 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         await _uploadFile(file);
       }
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Error picking file: $e",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        CustomSnackbar.showError(context, "Error picking file: $e");
+      }
     }
   }
 
@@ -128,19 +122,15 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     try {
       await _contentService.uploadMaterial(file);
       if (mounted) Navigator.pop(context); // Close loading dialog
-      Fluttertoast.showToast(
-        msg: "Upload successful!",
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        CustomSnackbar.showSuccess(context, "Upload successful!");
+      }
       _fetchMaterials();
     } catch (e) {
-      if (mounted) Navigator.pop(context);
-      Fluttertoast.showToast(
-        msg: "Upload failed: $e",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        Navigator.pop(context);
+        CustomSnackbar.showError(context, "Upload failed: $e");
+      }
     }
   }
 
@@ -172,18 +162,14 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
     try {
       await _contentService.deleteMaterial(id);
-      Fluttertoast.showToast(
-        msg: "Deleted successfully",
-        backgroundColor: Colors.black87,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        CustomSnackbar.showInfo(context, "Deleted successfully");
+      }
       _fetchMaterials();
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Delete failed: $e",
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-      );
+      if (mounted) {
+        CustomSnackbar.showError(context, "Delete failed: $e");
+      }
     }
   }
 
