@@ -165,11 +165,9 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color bgColor = Color(0xFFF9FAFB);
     const Color borderColor = Color(0xFFE5E7EB);
 
     return Scaffold(
-      backgroundColor: bgColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -260,26 +258,12 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-        ),
-        child: TextField(
-          controller: _searchController,
-          onSubmitted: _performSearch,
-          decoration: const InputDecoration(
-            hintText: 'Search your materials...',
-            hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
-            prefixIcon: Icon(
-              Iconsax.search_normal,
-              size: 20,
-              color: Color(0xFF9CA3AF),
-            ),
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: 12),
-          ),
+      child: TextField(
+        controller: _searchController,
+        onSubmitted: _performSearch,
+        decoration: const InputDecoration(
+          hintText: 'Search your materials...',
+          prefixIcon: Icon(Iconsax.search_normal, size: 20),
         ),
       ),
     );

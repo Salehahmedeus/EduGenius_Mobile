@@ -89,11 +89,9 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color bgColor = Color(0xFFF9FAFB);
     const Color borderColor = Color(0xFFE5E7EB);
 
     return Scaffold(
-      backgroundColor: bgColor,
       body: SafeArea(
         child: Column(
           children: [

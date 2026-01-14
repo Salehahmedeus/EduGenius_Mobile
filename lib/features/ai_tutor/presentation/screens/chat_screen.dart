@@ -149,7 +149,6 @@ class ChatScreenState extends State<ChatScreen> {
     const Color tutorBlue = Color(0xFF2196F3);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
         backgroundColor: tutorBlue,

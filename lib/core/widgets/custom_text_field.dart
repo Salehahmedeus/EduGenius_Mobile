@@ -32,12 +32,6 @@ class CustomTextField extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         hintText: hintText,
-        filled: true,
-        fillColor: AppColors.textFieldFill,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
-        ),
         prefixIcon: prefixIcon != null
             ? Icon(prefixIcon, color: AppColors.grey)
             : null,
@@ -47,10 +41,6 @@ class CustomTextField extends StatelessWidget {
                 onPressed: onSuffixIconPressed,
               )
             : null,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
-        ),
       ),
     );
   }

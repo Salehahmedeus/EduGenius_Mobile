@@ -20,6 +20,7 @@ class AppColors {
 
   // Background colors
   static const Color background = Colors.white;
+  static const Color lightBackground = Color(0xFFF9FAFB);
   static const Color textFieldFill = Color(0xFFF5F5F5);
 
   // Dark Theme / Settings Redesign
