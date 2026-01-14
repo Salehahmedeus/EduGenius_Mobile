@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:file_picker/file_picker.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/chat_message_model.dart';
 import '../../data/services/ai_service.dart';
