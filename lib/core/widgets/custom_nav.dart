@@ -33,31 +33,18 @@ class CustomNavBar extends StatelessWidget {
             children: [
               _buildNavItem(
                 icon: Iconsax.messages_1,
-                activeIcon: Iconsax.messages_15,
                 label: 'AI Chat',
                 index: 0,
               ),
-              _buildNavItem(
-                icon: Iconsax.book,
-                activeIcon: Iconsax.book_1,
-                label: 'Content',
-                index: 1,
-              ),
+              _buildNavItem(icon: Iconsax.book, label: 'Content', index: 1),
               _buildNavItem(
                 icon: Iconsax.element_3,
-                activeIcon: Iconsax.element_4,
                 label: 'Dashboard',
                 index: 2,
               ),
-              _buildNavItem(
-                icon: Iconsax.note_2,
-                activeIcon: Iconsax.note_21,
-                label: 'Quiz',
-                index: 3,
-              ),
+              _buildNavItem(icon: Iconsax.note_2, label: 'Quiz', index: 3),
               _buildNavItem(
                 icon: Iconsax.setting_2,
-                activeIcon: Iconsax.setting_3,
                 label: 'Settings',
                 index: 4,
               ),
@@ -70,7 +57,6 @@ class CustomNavBar extends StatelessWidget {
 
   Widget _buildNavItem({
     required IconData icon,
-    required IconData activeIcon,
     required String label,
     required int index,
   }) {
@@ -83,18 +69,11 @@ class CustomNavBar extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive ? activeColor.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
+        color: Colors.transparent,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              isActive ? activeIcon : icon,
-              color: isActive ? activeColor : inactiveColor,
-              size: 26,
-            ),
+            Icon(icon, color: isActive ? activeColor : inactiveColor, size: 26),
             const SizedBox(height: 4),
             Text(
               label,
