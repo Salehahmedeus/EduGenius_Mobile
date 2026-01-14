@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/chat_message_model.dart';
 import '../../data/services/ai_service.dart';
@@ -236,16 +237,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildInputArea(Color themeColor) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            offset: const Offset(0, -2),
-            blurRadius: 10,
-          ),
-        ],
+        border: Border(top: BorderSide(color: Colors.grey.shade100)),
       ),
       child: SafeArea(
         child: Column(
@@ -254,56 +249,121 @@ class _ChatScreenState extends State<ChatScreen> {
             if (_attachedFile != null)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Chip(
-                  avatar: const Icon(
-                    Iconsax.paperclip,
-                    size: 16,
-                    color: Colors.blue,
-                  ),
-                  label: Text(
-                    _attachedFile!.path.split('/').last,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  onDeleted: () => setState(() => _attachedFile = null),
-                  deleteIconColor: Colors.red,
-                  backgroundColor: Colors.blue.withOpacity(0.1),
+                child: Row(
+                  children: [
+                    Chip(
+                      avatar: Icon(
+                        Iconsax.document,
+                        size: 16,
+                        color: AppColors.primary,
+                      ),
+                      label: Text(
+                        _attachedFile!.path.split('/').last,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      onDeleted: () => setState(() => _attachedFile = null),
+                      backgroundColor: AppColors.primaryLight,
+                      deleteIconColor: AppColors.primary,
+                    ),
+                  ],
                 ),
               ),
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Iconsax.paperclip, color: Colors.grey),
-                  onPressed: _pickFile,
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: TextField(
-                      controller: _messageController,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        hintText: 'Ask your tutor anything...',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                border: Border.all(color: Colors.grey.shade200),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: Icon(Iconsax.paperclip, color: AppColors.grey),
+                        onPressed: _pickFile,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            hintText: 'Message to AI Tutor...',
+                            hintStyle: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 16,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 12,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  backgroundColor: themeColor,
-                  child: IconButton(
-                    icon: const Icon(Iconsax.send_1, color: Colors.white),
-                    onPressed: _sendMessage,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Iconsax.emoji_happy,
+                          color: Colors.blueGrey.shade700,
+                        ),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Iconsax.microphone_2,
+                          color: Colors.blueGrey.shade700,
+                        ),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(width: 4),
+                      ElevatedButton.icon(
+                        onPressed: _sendMessage,
+                        icon: const Text(
+                          'Send',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        label: const Icon(
+                          Iconsax.send_1,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                ],
+              ),
             ),
           ],
         ),
