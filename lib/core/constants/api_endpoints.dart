@@ -12,4 +12,9 @@ class ApiEndpoints {
   static const String materials = '/materials';
   static const String uploadMaterial = '/materials/upload';
   static const String searchMaterials = '/materials/search';
+
+  // AI Tutor
+  static const String aiChats = '/ai/chats';
+  static const String aiHistory = '/ai/history'; // + /{id}
+  static const String aiAsk = '/ai/ask';
 }
