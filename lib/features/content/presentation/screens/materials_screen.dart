@@ -217,7 +217,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         onPressed: _pickAndUploadFile,
         label: const Text('Upload', style: TextStyle(color: Colors.white)),
         icon: const Icon(Iconsax.document_upload, color: Colors.white),
-        backgroundColor: const Color(0xFF2196F3),
+        backgroundColor: AppColors.primary,
       ),
     );
   }
@@ -239,15 +239,15 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF2196F3).withOpacity(0.1),
+              border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               '$_totalCount Files',
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF2196F3),
+                color: Colors.grey,
               ),
             ),
           ),
@@ -299,7 +299,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
   Widget _buildMaterialCard(MaterialModel material, Color borderColor) {
     final isPdf = material.fileType.toLowerCase().contains('pdf');
-    final iconColor = isPdf ? const Color(0xFFF75555) : const Color(0xFF246BFD);
+    final iconColor = isPdf ? const Color(0xFFF75555) : AppColors.primary;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -349,7 +349,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'delete',
-              child: Text('Delete', style: TextStyle(color: Colors.red)),
+              child: Text('Delete', style: TextStyle(color: AppColors.primary)),
             ),
           ],
         ),
