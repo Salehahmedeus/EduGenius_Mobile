@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
+import '../../../../core/utils/error_handler.dart';
 import '../../data/models/chat_session_model.dart';
 import '../../data/services/ai_service.dart';
 import 'chat_screen.dart';
@@ -37,10 +38,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        Fluttertoast.showToast(
-          msg: "Error loading chats: $e",
-          backgroundColor: Colors.red,
-        );
+        CustomSnackbar.showError(context, ErrorHandler.parse(e));
       }
     }
   }
@@ -51,12 +49,9 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       setState(() {
         _sessions.removeWhere((s) => s.id == id);
       });
-      Fluttertoast.showToast(msg: "Chat deleted");
+      if (mounted) CustomSnackbar.showSuccess(context, "Chat deleted");
     } catch (e) {
-      Fluttertoast.showToast(
-        msg: "Delete failed: $e",
-        backgroundColor: Colors.red,
-      );
+      if (mounted) CustomSnackbar.showError(context, ErrorHandler.parse(e));
     }
   }
 

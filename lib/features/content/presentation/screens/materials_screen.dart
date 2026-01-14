@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:edugenius_mobile/core/utils/error_handler.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/material_model.dart';
 import '../../data/services/content_service.dart';
@@ -48,7 +49,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        CustomSnackbar.showError(context, "Error fetching materials: $e");
+        CustomSnackbar.showError(context, ErrorHandler.parse(e));
       }
     }
   }
@@ -126,7 +127,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     } catch (e) {
       if (mounted) {
         Navigator.pop(context);
-        CustomSnackbar.showError(context, "Upload failed: $e");
+        CustomSnackbar.showError(context, ErrorHandler.parse(e));
       }
     }
   }

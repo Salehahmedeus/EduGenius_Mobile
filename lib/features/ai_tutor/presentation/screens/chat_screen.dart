@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:edugenius_mobile/core/utils/error_handler.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/chat_message_model.dart';
@@ -58,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        CustomSnackbar.showError(context, "Failed to load history: $e");
+        CustomSnackbar.showError(context, ErrorHandler.parse(e));
       }
     }
   }
@@ -127,7 +128,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isThinking = false);
-        CustomSnackbar.showError(context, "Error: $e");
+        CustomSnackbar.showError(context, ErrorHandler.parse(e));
       }
     }
   }

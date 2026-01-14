@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import '../constants/api_endpoints.dart';
 import '../storage/token_storage.dart';
+import '../../main.dart'; // To access navigatorKey
+import '../../routes.dart';
 
 class ApiClient {
   final Dio _dio = Dio(
@@ -26,8 +28,15 @@ class ApiClient {
           }
           return handler.next(options);
         },
-        onError: (DioException e, handler) {
-          // You can handle 401 Unauthorized globally here
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
+            // Handle 401 Unauthorized globally: Clear token and redirect to Login/Welcome
+            await TokenStorage.deleteToken();
+            navigatorKey.currentState?.pushNamedAndRemoveUntil(
+              Routes.welcome,
+              (route) => false,
+            );
+          }
           return handler.next(e);
         },
       ),
