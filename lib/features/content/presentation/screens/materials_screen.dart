@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
@@ -136,7 +137,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => const Center(
-        child: CircularProgressIndicator(color: Color(0xFF2196F3)),
+        child: CircularProgressIndicator(color: AppColors.primary),
       ),
     );
 
@@ -177,7 +178,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
               child: _isLoading
                   ? const Center(
                       child: CircularProgressIndicator(
-                        color: Color(0xFF2196F3),
+                        color: AppColors.primary,
                       ),
                     )
                   : _groupedMaterials.isEmpty

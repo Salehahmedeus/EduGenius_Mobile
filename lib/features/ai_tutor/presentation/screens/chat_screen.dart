@@ -151,8 +151,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
-        backgroundColor: tutorBlue,
-        foregroundColor: Colors.white,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
@@ -171,7 +171,9 @@ class ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: _isLoading
                   ? const Center(
-                      child: CircularProgressIndicator(color: tutorBlue),
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
                     )
                   : ListView.builder(
                       controller: _scrollController,
@@ -203,7 +205,7 @@ class ChatScreenState extends State<ChatScreen> {
           maxWidth: MediaQuery.of(context).size.width * 0.8,
         ),
         decoration: BoxDecoration(
-          color: isUser ? const Color(0xFF2196F3) : const Color(0xFFF1F1F1),
+          color: isUser ? AppColors.primary : Colors.grey.shade200,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -312,6 +314,9 @@ class ChatScreenState extends State<ChatScreen> {
                               fontSize: 16,
                             ),
                             border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            filled: false,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 4,
                               vertical: 12,
