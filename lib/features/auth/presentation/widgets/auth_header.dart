@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 class AuthHeader extends StatelessWidget {
   final String title;
@@ -11,7 +12,7 @@ class AuthHeader extends StatelessWidget {
     return Column(
       children: [
         const Icon(
-          Icons.school,
+          Iconsax.teacher,
           size: 80,
           color: Colors.blue,
         ), // Placeholder logo

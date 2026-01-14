@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key});
@@ -22,10 +23,10 @@ class QuizScreen extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        leading: const Icon(Icons.quiz, color: Colors.blue),
+        leading: const Icon(Iconsax.note_2, color: Colors.blue),
         title: Text(title),
         subtitle: Text(subtitle),
-        trailing: const Icon(Icons.arrow_forward_ios),
+        trailing: const Icon(Iconsax.arrow_right_3),
         onTap: () {
           // Navigate to quiz details
         },

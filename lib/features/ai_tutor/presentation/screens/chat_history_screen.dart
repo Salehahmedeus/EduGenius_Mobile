@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../data/models/chat_session_model.dart';
 import '../../data/services/ai_service.dart';
@@ -88,7 +89,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 20),
                       color: Colors.red,
-                      child: const Icon(Icons.delete, color: Colors.white),
+                      child: const Icon(Iconsax.trash, color: Colors.white),
                     ),
                     onDismissed: (direction) => _deleteSession(session.id),
                     child: Card(
@@ -104,10 +105,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                         ),
                         leading: const CircleAvatar(
                           backgroundColor: Color(0xFFE3F2FD),
-                          child: Icon(
-                            Icons.chat_bubble_outline,
-                            color: tutorBlue,
-                          ),
+                          child: Icon(Iconsax.messages_1, color: tutorBlue),
                         ),
                         title: Text(
                           session.contextName,
@@ -124,7 +122,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                             fontSize: 12,
                           ),
                         ),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        trailing: const Icon(Iconsax.arrow_right_3, size: 16),
                         onTap: () async {
                           final result = await Navigator.push(
                             context,
@@ -150,7 +148,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           if (result == true) _fetchSessions();
         },
         label: const Text('New Chat'),
-        icon: const Icon(Icons.add),
+        icon: const Icon(Iconsax.add),
         backgroundColor: tutorBlue,
         foregroundColor: Colors.white,
       ),
@@ -162,7 +160,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.history, size: 80, color: Colors.grey[300]),
+          Icon(Iconsax.clock, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
           const Text(
             'No chat history yet',

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/chat_message_model.dart';
@@ -144,7 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           if (_activeConversationId != null)
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Iconsax.refresh),
               onPressed: _fetchHistory,
             ),
         ],
@@ -255,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Chip(
                   avatar: const Icon(
-                    Icons.attach_file,
+                    Iconsax.paperclip,
                     size: 16,
                     color: Colors.blue,
                   ),
@@ -271,7 +272,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.attach_file, color: Colors.grey),
+                  icon: const Icon(Iconsax.paperclip, color: Colors.grey),
                   onPressed: _pickFile,
                 ),
                 Expanded(
@@ -298,7 +299,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 CircleAvatar(
                   backgroundColor: themeColor,
                   child: IconButton(
-                    icon: const Icon(Icons.send, color: Colors.white),
+                    icon: const Icon(Iconsax.send_1, color: Colors.white),
                     onPressed: _sendMessage,
                   ),
                 ),

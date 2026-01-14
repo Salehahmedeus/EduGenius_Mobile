@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
@@ -193,14 +194,17 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         foregroundColor: Colors.white,
         actions: [
           if (_isSearching)
-            IconButton(icon: const Icon(Icons.clear), onPressed: _stopSearching)
+            IconButton(
+              icon: const Icon(Iconsax.close_circle),
+              onPressed: _stopSearching,
+            )
           else
             IconButton(
-              icon: const Icon(Icons.search),
+              icon: const Icon(Iconsax.search_normal),
               onPressed: () => setState(() => _isSearching = true),
             ),
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Iconsax.refresh),
             onPressed: _fetchMaterials,
           ),
         ],
@@ -214,7 +218,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.folder_open, size: 64, color: Colors.grey[400]),
+                  Icon(Iconsax.folder_open, size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
                     _isSearching
@@ -262,9 +266,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
-                          isPdf
-                              ? Icons.picture_as_pdf
-                              : Icons.insert_drive_file,
+                          isPdf ? Iconsax.document_text : Iconsax.document,
                           color: isPdf ? Colors.red : Colors.blue,
                           size: 32,
                         ),
@@ -281,10 +283,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                         ),
                       ),
                       trailing: IconButton(
-                        icon: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.grey,
-                        ),
+                        icon: const Icon(Iconsax.trash, color: Colors.grey),
                         onPressed: () => _deleteMaterial(material.id),
                       ),
                     ),
@@ -295,7 +294,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _pickAndUploadFile,
         label: const Text('Upload'),
-        icon: const Icon(Icons.upload_file),
+        icon: const Icon(Iconsax.document_upload),
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -36,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
           onPressed: () => Navigator.maybePop(context),
         ),
       ),
@@ -70,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomTextField(
                   controller: _nameController,
                   hintText: "Full Name",
-                  prefixIcon: Icons.person_outline,
+                  prefixIcon: Iconsax.user,
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter your name' : null,
                 ),
@@ -80,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomTextField(
                   controller: _phoneController,
                   hintText: "Phone Number",
-                  prefixIcon: Icons.phone_android,
+                  prefixIcon: Iconsax.mobile,
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -101,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomTextField(
                   controller: _emailController,
                   hintText: "Email Address",
-                  prefixIcon: Icons.email_outlined,
+                  prefixIcon: Iconsax.sms,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -123,10 +124,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _passwordController,
                   hintText: "Password",
                   isObscure: !_isPasswordVisible,
-                  prefixIcon: Icons.lock_outline,
+                  prefixIcon: Iconsax.lock,
                   suffixIcon: _isPasswordVisible
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
+                      ? Iconsax.eye
+                      : Iconsax.eye_slash,
                   onSuffixIconPressed: () {
                     setState(() {
                       _isPasswordVisible = !_isPasswordVisible;
@@ -150,10 +151,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _confirmPasswordController,
                   hintText: "Confirm Password",
                   isObscure: !_isConfirmPasswordVisible,
-                  prefixIcon: Icons.lock_outline,
+                  prefixIcon: Iconsax.lock,
                   suffixIcon: _isConfirmPasswordVisible
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
+                      ? Iconsax.eye
+                      : Iconsax.eye_slash,
                   onSuffixIconPressed: () {
                     setState(() {
                       _isConfirmPasswordVisible = !_isConfirmPasswordVisible;

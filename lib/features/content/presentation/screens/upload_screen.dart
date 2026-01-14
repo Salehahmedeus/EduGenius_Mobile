@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 
@@ -30,7 +31,7 @@ class UploadScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.cloud_upload, size: 48, color: Colors.grey),
+                  Icon(Iconsax.cloud_add, size: 48, color: Colors.grey),
                   SizedBox(height: 8),
                   Text('Tap to select file'),
                 ],

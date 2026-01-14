@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../constants/app_colors.dart';
 
 class CustomSnackbar {
   static void showSuccess(BuildContext context, String message) {
-    _show(context, message, AppColors.success, Icons.check_circle);
+    _show(context, message, AppColors.success, Iconsax.tick_circle);
   }
 
   static void showError(BuildContext context, String message) {
-    _show(context, message, AppColors.error, Icons.error);
+    _show(context, message, AppColors.error, Iconsax.danger);
   }
 
   static void showInfo(BuildContext context, String message) {
-    _show(context, message, AppColors.info, Icons.info);
+    _show(context, message, AppColors.info, Iconsax.info_circle);
   }
 
   static void showWarning(BuildContext context, String message) {
-    _show(context, message, AppColors.warning, Icons.warning);
+    _show(context, message, AppColors.warning, Iconsax.warning_2);
   }
 
   static void _show(

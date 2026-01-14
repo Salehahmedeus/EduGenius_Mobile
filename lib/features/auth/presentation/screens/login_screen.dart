@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -63,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
           onPressed: () => Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.welcome,
@@ -100,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
               CustomTextField(
                 controller: _emailController,
                 hintText: "Email",
-                prefixIcon: Icons.email_outlined,
+                prefixIcon: Iconsax.sms,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -122,10 +123,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _passwordController,
                 hintText: "Password",
                 isObscure: !_isPasswordVisible,
-                prefixIcon: Icons.lock_outline,
+                prefixIcon: Iconsax.lock,
                 suffixIcon: _isPasswordVisible
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+                    ? Iconsax.eye
+                    : Iconsax.eye_slash,
                 onSuffixIconPressed: () {
                   setState(() {
                     _isPasswordVisible = !_isPasswordVisible;

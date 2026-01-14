@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 import '../../data/services/auth_service.dart';
@@ -155,7 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
           onPressed: () => Navigator.pop(context),
         ),
       ),

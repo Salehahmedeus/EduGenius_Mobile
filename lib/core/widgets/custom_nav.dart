@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../constants/app_colors.dart';
 
 class CustomNavBar extends StatelessWidget {
@@ -31,32 +32,32 @@ class CustomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
-                icon: Icons.chat_bubble_outline,
-                activeIcon: Icons.chat_bubble,
+                icon: Iconsax.messages_1,
+                activeIcon: Iconsax.messages_15, // Bulkish/Bold
                 label: 'AI Chat',
                 index: 0,
               ),
               _buildNavItem(
-                icon: Icons.library_books_outlined,
-                activeIcon: Icons.library_books,
+                icon: Iconsax.book,
+                activeIcon: Iconsax.book_1,
                 label: 'Content',
                 index: 1,
               ),
               _buildNavItem(
-                icon: Icons.dashboard_outlined,
-                activeIcon: Icons.dashboard,
+                icon: Iconsax.element_3,
+                activeIcon: Iconsax.element_4,
                 label: 'Dashboard',
                 index: 2,
               ),
               _buildNavItem(
-                icon: Icons.quiz_outlined,
-                activeIcon: Icons.quiz,
+                icon: Iconsax.note_2,
+                activeIcon: Iconsax.note_21,
                 label: 'Quiz',
                 index: 3,
               ),
               _buildNavItem(
-                icon: Icons.settings_outlined,
-                activeIcon: Icons.settings,
+                icon: Iconsax.setting_2,
+                activeIcon: Iconsax.setting_3,
                 label: 'Settings',
                 index: 4,
               ),

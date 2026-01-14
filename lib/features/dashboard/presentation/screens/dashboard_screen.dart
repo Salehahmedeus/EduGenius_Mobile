@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -38,7 +39,7 @@ class DashboardScreen extends StatelessWidget {
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_none, size: 28),
+                        icon: const Icon(Iconsax.notification, size: 28),
                         onPressed: () {},
                       ),
                       const SizedBox(width: 8),
@@ -69,16 +70,21 @@ class DashboardScreen extends StatelessWidget {
                     _buildStatCard(
                       "Uploaded",
                       "12",
-                      Icons.file_upload,
+                      Iconsax.document_upload,
                       Colors.blue,
                     ),
                     const SizedBox(width: 12),
-                    _buildStatCard("Quizzes", "5", Icons.quiz, Colors.orange),
+                    _buildStatCard(
+                      "Quizzes",
+                      "5",
+                      Iconsax.note_2,
+                      Colors.orange,
+                    ),
                     const SizedBox(width: 12),
                     _buildStatCard(
                       "Avg Score",
                       "88%",
-                      Icons.star,
+                      Iconsax.star_1,
                       Colors.green,
                     ),
                   ],
@@ -98,7 +104,7 @@ class DashboardScreen extends StatelessWidget {
                   _buildQuickAction(
                     context,
                     "Upload",
-                    Icons.upload_file,
+                    Iconsax.document_upload,
                     AppColors.primary,
                     () {
                       // Navigate to Upload tab (controlled by parent) or screen
@@ -110,14 +116,14 @@ class DashboardScreen extends StatelessWidget {
                   _buildQuickAction(
                     context,
                     "AI Chat",
-                    Icons.chat_bubble,
+                    Iconsax.messages_1,
                     Colors.purple,
                     () {},
                   ),
                   _buildQuickAction(
                     context,
                     "Take Quiz",
-                    Icons.help_outline,
+                    Iconsax.message_question,
                     Colors.teal,
                     () {},
                   ),
@@ -154,7 +160,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.lightbulb, color: AppColors.primary),
+                    const Icon(Iconsax.lamp_on, color: AppColors.primary),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -179,7 +185,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                     const Icon(
-                      Icons.arrow_forward_ios,
+                      Iconsax.arrow_right_3,
                       size: 16,
                       color: AppColors.primary,
                     ),
@@ -282,7 +288,7 @@ class DashboardScreen extends StatelessWidget {
               color: Colors.grey[100],
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.description, color: Colors.grey),
+            child: const Icon(Iconsax.document, color: Colors.grey),
           ),
           const SizedBox(width: 12),
           Expanded(

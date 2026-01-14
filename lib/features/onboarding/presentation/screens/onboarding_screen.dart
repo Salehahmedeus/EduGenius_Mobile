@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/storage/app_preferences.dart';
 import '../../../../routes.dart';
@@ -128,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       shape: const CircleBorder(),
                       padding: const EdgeInsets.all(20),
                     ),
-                    child: const Icon(Icons.arrow_forward),
+                    child: const Icon(Iconsax.arrow_right_3),
                   ),
                 ],
               ),
