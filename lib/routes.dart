@@ -5,6 +5,7 @@ import 'features/auth/presentation/screens/splash_screen.dart';
 import 'features/auth/presentation/screens/welcome_screen.dart';
 import 'features/ai_tutor/presentation/screens/chat_screen.dart';
 import 'features/quiz/presentation/screens/quiz_screen.dart';
+import 'features/quiz/presentation/screens/quiz_setup_screen.dart';
 import 'features/content/presentation/screens/upload_screen.dart';
 
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -21,6 +22,7 @@ class Routes {
   static const String dashboard = '/dashboard';
   static const String aiTutor = '/ai-tutor';
   static const String quiz = '/quiz';
+  static const String quizSetup = '/quiz-setup';
 
   static const String upload = '/upload';
   static const String forgotPassword = '/forgot-password';
@@ -36,6 +38,7 @@ class Routes {
       dashboard: (context) => const HomeScreen(),
       aiTutor: (context) => const ChatScreen(),
       quiz: (context) => const QuizScreen(),
+      quizSetup: (context) => const QuizSetupScreen(),
       upload: (context) => const UploadScreen(),
       forgotPassword: (context) => const ForgotPasswordScreen(),
       otpVerify: (context) => const OtpScreen(),

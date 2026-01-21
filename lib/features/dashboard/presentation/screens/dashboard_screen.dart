@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -8,234 +9,333 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 1. Header Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Dark Header Section
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
+              decoration: const BoxDecoration(
+                color: Color(0xFF131E29), // Dark Navy matching photo
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
+                  // New Top Bar
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Icon(Iconsax.menu_1, color: Colors.white, size: 28),
+                      const Text(
+                        "Dashboard",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 1.5),
+                        ),
+                        child: const CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.transparent,
+                          child: Icon(
+                            Iconsax.user,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Greeting & Headline
+                  const Text(
+                    "Good Morning! Inam 👋",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    "Let's see what can I do for you?",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Mosaic Cards Section
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Hello, Saleh!", // Static for now
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.black,
+                      // Left: AI Voice Generator (Large)
+                      Expanded(
+                        flex: 1,
+                        child: _buildMosaicCard(
+                          title: "AI Voice Generator",
+                          subtitle: "Let's see\nwhat can I do\nfor you?",
+                          color: const Color(0xFFFFCC33), // Golden Yellow
+                          imagePath:
+                              'C:/Users/Administrator/.gemini/antigravity/brain/7ac5ae6e-4ea9-43a1-bd99-e2d524234c73/3d_guitar_illustration_1768412635209.png',
+                          isLarge: true,
+                          icon: Iconsax.microphone_2,
                         ),
-                      ),
-                      Text(
-                        "Ready to learn something new?",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Iconsax.notification, size: 28),
-                        onPressed: () {},
                       ),
                       const SizedBox(width: 8),
-                      const CircleAvatar(
-                        radius: 20,
-                        backgroundColor: AppColors.primary,
-                        child: Text(
-                          "SA",
-                          style: TextStyle(color: Colors.white),
+                      // Right Column: TTS & Music Maker
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          children: [
+                            _buildMosaicCard(
+                              title: "Text-to-speech",
+                              color: const Color(0xFFFF7A4F), // Salmon Orange
+                              imagePath:
+                                  'C:/Users/Administrator/.gemini/antigravity/brain/7ac5ae6e-4ea9-43a1-bd99-e2d524234c73/3d_chat_bubble_illustration_1768412649803.png',
+                              icon: Iconsax.message_text,
+                            ),
+                            const SizedBox(height: 8),
+                            _buildMosaicCard(
+                              title: "Music Maker",
+                              color: const Color(0xFF7F3DFF), // Purple
+                              imagePath:
+                                  'C:/Users/Administrator/.gemini/antigravity/brain/7ac5ae6e-4ea9-43a1-bd99-e2d524234c73/3d_megaphone_illustration_1768412663044.png',
+                              icon: Iconsax.user,
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+            ),
+            const SizedBox(height: 30),
 
-              // 2. Stats Overview
-              const Text(
-                "Your Progress",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildStatCard(
-                      "Uploaded",
-                      "12",
-                      Iconsax.document_upload,
-                      Colors.blue,
-                    ),
-                    const SizedBox(width: 12),
-                    _buildStatCard(
-                      "Quizzes",
-                      "5",
-                      Iconsax.note_2,
-                      Colors.orange,
-                    ),
-                    const SizedBox(width: 12),
-                    _buildStatCard(
-                      "Avg Score",
-                      "88%",
-                      Iconsax.star_1,
-                      Colors.green,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // 3. Quick Actions
-              const Text(
-                "Quick Actions",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildQuickAction(
-                    context,
-                    "Upload",
-                    Iconsax.document_upload,
-                    AppColors.primary,
-                    () {
-                      // Navigate to Upload tab (controlled by parent) or screen
-                      // For now, parent controls tabs, but we can't easily switch tab from here without provider/callback.
-                      // But we can push to specific screens if they are separate.
-                      // Since standard tabs are indexed, maybe just show snackbar "Go to Content tab"
-                    },
-                  ),
-                  _buildQuickAction(
-                    context,
-                    "AI Chat",
-                    Iconsax.messages_1,
-                    Colors.purple,
-                    () {},
-                  ),
-                  _buildQuickAction(
-                    context,
-                    "Take Quiz",
-                    Iconsax.message_question,
-                    Colors.teal,
-                    () {},
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // 4. Recent Activity
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                  // 3. Quick Actions
                   const Text(
-                    "Continue Learning",
+                    "Quick Actions",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  TextButton(onPressed: () {}, child: const Text("See All")),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildQuickAction(
+                        context,
+                        "Upload",
+                        Iconsax.document_upload,
+                        AppColors.primary,
+                        () {
+                          // Navigate to Upload tab (controlled by parent) or screen
+                          // For now, parent controls tabs, but we can't easily switch tab from here without provider/callback.
+                          // But we can push to specific screens if they are separate.
+                          // Since standard tabs are indexed, maybe just show snackbar "Go to Content tab"
+                        },
+                      ),
+                      _buildQuickAction(
+                        context,
+                        "AI Chat",
+                        Iconsax.messages_1,
+                        Colors.purple,
+                        () {},
+                      ),
+                      _buildQuickAction(
+                        context,
+                        "Take Quiz",
+                        Iconsax.message_question,
+                        Colors.teal,
+                        () {},
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  // 4. Recent Activity
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Continue Learning",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text("See All"),
+                      ),
+                    ],
+                  ),
+                  _buildRecentItem(
+                    "Flutter Architecture.pdf",
+                    "PDF • 2 hours ago",
+                    0.75,
+                  ),
+                  _buildRecentItem(
+                    "Laravel Basics Quiz",
+                    "Quiz • Yesterday",
+                    1.0,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // 5. Recommendations
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLight.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Iconsax.lamp_on, color: AppColors.primary),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Recommendation",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                "Review 'Solid Principles' to improve your score.",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.primary.withOpacity(0.8),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(
+                          Iconsax.arrow_right_3,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-              _buildRecentItem(
-                "Flutter Architecture.pdf",
-                "PDF • 2 hours ago",
-                0.75,
-              ),
-              _buildRecentItem("Laravel Basics Quiz", "Quiz • Yesterday", 1.0),
-
-              const SizedBox(height: 24),
-
-              // 5. Recommendations
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryLight.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Iconsax.lamp_on, color: AppColors.primary),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Recommendation",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Review 'Solid Principles' to improve your score.",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: AppColors.primary.withOpacity(0.8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(
-                      Iconsax.arrow_right_3,
-                      size: 16,
-                      color: AppColors.primary,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildStatCard(
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildMosaicCard({
+    required String title,
+    String? subtitle,
+    required Color color,
+    required String imagePath,
+    bool isLarge = false,
+    required IconData icon,
+  }) {
     return Container(
-      width: 120,
-      padding: const EdgeInsets.all(16),
+      height: isLarge ? 280 : 136, // Slightly taller for premium feel
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [color, color.withOpacity(0.8)],
+        ),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: color.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+          // 3D Illustration
+          Positioned(
+            right: isLarge ? -20 : -10,
+            bottom: isLarge ? -10 : -5,
+            width: isLarge ? 200 : 110,
+            height: isLarge ? 200 : 110,
+            child: Transform.rotate(
+              angle: isLarge ? -0.1 : 0, // Slight tilt for dynamism
+              child: Image.file(File(imagePath), fit: BoxFit.contain),
             ),
-            child: Icon(icon, color: color, size: 24),
           ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+
+          // Content Layer
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Icon Chip
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.25),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 20),
+                ),
+                const SizedBox(height: 12),
+                // Feature Label (Small/Light)
+                Text(
+                  title.toUpperCase(),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                if (isLarge && subtitle != null) ...[
+                  const Spacer(),
+                  // Main Typography (Bold/Large)
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.w900,
+                      height: 1.1,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
-          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
         ],
       ),
     );

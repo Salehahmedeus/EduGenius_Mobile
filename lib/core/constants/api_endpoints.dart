@@ -17,4 +17,10 @@ class ApiEndpoints {
   static const String aiChats = '/ai/chats';
   static const String aiHistory = '/ai/history'; // + /{id}
   static const String aiAsk = '/ai/ask';
+
+  // Quiz
+  static const String quizGenerate = '/quiz/generate';
+  static const String quizSubmit = '/quiz/submit';
+  static const String quizHistory = '/quiz/all';
+  static const String quizDetail = '/quiz'; // + /{id}
 }

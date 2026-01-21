@@ -1,0 +1,622 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../data/models/quiz_model.dart';
+import '../../data/models/question_model.dart';
+import '../../data/models/quiz_result_model.dart';
+import '../../data/services/quiz_service.dart';
+import 'quiz_result_screen.dart';
+
+/// Screen for taking a quiz - displays questions one at a time
+class QuizTakingScreen extends StatefulWidget {
+  final QuizModel quiz;
+
+  const QuizTakingScreen({super.key, required this.quiz});
+
+  @override
+  State<QuizTakingScreen> createState() => _QuizTakingScreenState();
+}
+
+class _QuizTakingScreenState extends State<QuizTakingScreen> {
+  final QuizService _quizService = QuizService();
+  final PageController _pageController = PageController();
+
+  Map<int, String> _answers = {};
+  int _currentQuestionIndex = 0;
+  bool _isSubmitting = false;
+
+  List<QuestionModel> get questions => widget.quiz.questions;
+  bool get isLastQuestion => _currentQuestionIndex == questions.length - 1;
+  bool get canProceed =>
+      _answers.containsKey(questions[_currentQuestionIndex].id);
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _selectAnswer(int questionId, String answer) {
+    setState(() {
+      _answers[questionId] = answer;
+    });
+  }
+
+  void _nextQuestion() {
+    if (!canProceed) {
+      Fluttertoast.showToast(
+        msg: 'Please select an answer',
+        backgroundColor: Colors.orange,
+      );
+      return;
+    }
+
+    if (isLastQuestion) {
+      _showSubmitConfirmation();
+    } else {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _previousQuestion() {
+    if (_currentQuestionIndex > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _showSubmitConfirmation() {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Iconsax.info_circle, color: colorScheme.primary),
+            const SizedBox(width: 12),
+            Text(
+              'Submit Quiz',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Are you sure you want to submit your quiz?',
+              style: GoogleFonts.outfit(),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Iconsax.tick_circle, color: Colors.green, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${_answers.length}/${questions.length} questions answered',
+                    style: GoogleFonts.outfit(fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Review',
+              style: GoogleFonts.outfit(color: colorScheme.outline),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _submitQuiz();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              'Submit',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submitQuiz() async {
+    try {
+      setState(() => _isSubmitting = true);
+
+      final result = await _quizService.submitQuiz(
+        quizId: widget.quiz.id,
+        answers: _answers,
+      );
+
+      setState(() => _isSubmitting = false);
+
+      if (!mounted) return;
+
+      // Navigate to results screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              QuizResultScreen(result: result, quiz: widget.quiz),
+        ),
+      );
+    } catch (e) {
+      setState(() => _isSubmitting = false);
+      Fluttertoast.showToast(
+        msg: 'Failed to submit quiz. Please try again.',
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+
+  void _showExitConfirmation() {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            Icon(Iconsax.warning_2, color: Colors.orange),
+            const SizedBox(width: 12),
+            Text(
+              'Exit Quiz?',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+        content: Text(
+          'Your progress will be lost. Are you sure you want to exit?',
+          style: GoogleFonts.outfit(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.outfit(color: colorScheme.outline),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              'Exit',
+              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, result) {
+        if (!didPop) {
+          _showExitConfirmation();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: colorScheme.surface,
+        appBar: _buildAppBar(colorScheme),
+        body: _isSubmitting
+            ? _buildSubmittingState(colorScheme)
+            : _buildQuizContent(colorScheme),
+      ),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(ColorScheme colorScheme) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        icon: Icon(Iconsax.close_circle, color: colorScheme.onSurface),
+        onPressed: _showExitConfirmation,
+      ),
+      title: Column(
+        children: [
+          Text(
+            widget.quiz.topic,
+            style: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            'Question ${_currentQuestionIndex + 1} of ${questions.length}',
+            style: GoogleFonts.outfit(fontSize: 12, color: colorScheme.outline),
+          ),
+        ],
+      ),
+      centerTitle: true,
+      actions: [
+        Container(
+          margin: const EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: widget.quiz.difficultyLabel == 'Easy'
+                ? Colors.green.withOpacity(0.1)
+                : widget.quiz.difficultyLabel == 'Medium'
+                ? Colors.orange.withOpacity(0.1)
+                : Colors.red.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            widget.quiz.difficultyLabel,
+            style: GoogleFonts.outfit(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: widget.quiz.difficultyLabel == 'Easy'
+                  ? Colors.green
+                  : widget.quiz.difficultyLabel == 'Medium'
+                  ? Colors.orange
+                  : Colors.red,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSubmittingState(ColorScheme colorScheme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Submitting Quiz...',
+            style: GoogleFonts.outfit(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Please wait while we analyze your answers',
+            style: GoogleFonts.outfit(color: colorScheme.outline),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuizContent(ColorScheme colorScheme) {
+    return Column(
+      children: [
+        // Progress indicator
+        _buildProgressIndicator(colorScheme),
+
+        // Questions PageView
+        Expanded(
+          child: PageView.builder(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: questions.length,
+            onPageChanged: (index) {
+              setState(() => _currentQuestionIndex = index);
+            },
+            itemBuilder: (context, index) {
+              return _buildQuestionCard(questions[index], colorScheme);
+            },
+          ),
+        ),
+
+        // Navigation buttons
+        _buildNavigationButtons(colorScheme),
+      ],
+    );
+  }
+
+  Widget _buildProgressIndicator(ColorScheme colorScheme) {
+    final progress = (_currentQuestionIndex + 1) / questions.length;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 8,
+              backgroundColor: colorScheme.surfaceContainerHighest,
+              valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestionCard(QuestionModel question, ColorScheme colorScheme) {
+    final selectedAnswer = _answers[question.id];
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Question number badge
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Question ${_currentQuestionIndex + 1}',
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: colorScheme.primary,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Question text
+          Text(
+            question.questionText,
+            style: GoogleFonts.outfit(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: colorScheme.onSurface,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Options
+          ...question.options.asMap().entries.map((entry) {
+            final index = entry.key;
+            final option = entry.value;
+            final isSelected = selectedAnswer == option;
+            final optionLabel = String.fromCharCode(65 + index); // A, B, C, D
+
+            return _buildOptionTile(
+              option: option,
+              label: optionLabel,
+              isSelected: isSelected,
+              colorScheme: colorScheme,
+              onTap: () => _selectAnswer(question.id, option),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionTile({
+    required String option,
+    required String label,
+    required bool isSelected,
+    required ColorScheme colorScheme,
+    required VoidCallback onTap,
+  }) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? colorScheme.primary.withOpacity(0.1)
+            : colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isSelected
+              ? colorScheme.primary
+              : colorScheme.outline.withOpacity(0.1),
+          width: isSelected ? 2 : 1,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.surfaceContainerHighest,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? colorScheme.primary
+                          : colorScheme.outline.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      label,
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w600,
+                        color: isSelected
+                            ? colorScheme.onPrimary
+                            : colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    option,
+                    style: GoogleFonts.outfit(
+                      fontSize: 15,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                if (isSelected)
+                  Icon(
+                    Iconsax.tick_circle5,
+                    color: colorScheme.primary,
+                    size: 24,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavigationButtons(ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            // Previous button
+            if (_currentQuestionIndex > 0)
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: _previousQuestion,
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    side: BorderSide(
+                      color: colorScheme.outline.withOpacity(0.3),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Iconsax.arrow_left_2, size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Previous',
+                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            if (_currentQuestionIndex > 0) const SizedBox(width: 12),
+
+            // Next/Submit button
+            Expanded(
+              flex: _currentQuestionIndex > 0 ? 1 : 2,
+              child: ElevatedButton(
+                onPressed: canProceed ? _nextQuestion : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isLastQuestion
+                      ? Colors.green
+                      : colorScheme.primary,
+                  disabledBackgroundColor: colorScheme.outline.withOpacity(0.3),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  elevation: canProceed ? 2 : 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      isLastQuestion ? 'Submit' : 'Next',
+                      style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      isLastQuestion
+                          ? Iconsax.tick_circle
+                          : Iconsax.arrow_right_3,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
