@@ -12,11 +12,11 @@ class UploadScreen extends StatelessWidget {
     final titleController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         title: const Text('Upload Content'),
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.black,
+        backgroundColor: AppColors.getBackground(context),
+        foregroundColor: AppColors.getTextPrimary(context),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,7 +31,7 @@ class UploadScreen extends StatelessWidget {
               height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.grey),
+                border: Border.all(color: AppColors.getBorder(context)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(

@@ -33,11 +33,14 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: prefixIcon != null
-            ? Icon(prefixIcon, color: AppColors.grey)
+            ? Icon(prefixIcon, color: AppColors.getTextSecondary(context))
             : null,
         suffixIcon: suffixIcon != null
             ? IconButton(
-                icon: Icon(suffixIcon, color: AppColors.grey),
+                icon: Icon(
+                  suffixIcon,
+                  color: AppColors.getTextSecondary(context),
+                ),
                 onPressed: onSuffixIconPressed,
               )
             : null,

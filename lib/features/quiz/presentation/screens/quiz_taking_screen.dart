@@ -86,7 +86,10 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             const SizedBox(width: 12),
             Text(
               'Submit Quiz',
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w600,
+                color: AppColors.getTextPrimary(context),
+              ),
             ),
           ],
         ),
@@ -96,13 +99,15 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           children: [
             Text(
               'Are you sure you want to submit your quiz?',
-              style: GoogleFonts.outfit(),
+              style: GoogleFonts.outfit(
+                color: AppColors.getTextPrimary(context),
+              ),
             ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.lightGrey,
+                color: AppColors.getSurface(context),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -111,7 +116,10 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                   const SizedBox(width: 8),
                   Text(
                     '${_answers.length}/${questions.length} questions answered',
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.w500),
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.getTextPrimary(context),
+                    ),
                   ),
                 ],
               ),
@@ -123,7 +131,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Review',
-              style: GoogleFonts.outfit(color: AppColors.grey),
+              style: GoogleFonts.outfit(
+                color: AppColors.getTextSecondary(context),
+              ),
             ),
           ),
           ElevatedButton(
@@ -190,20 +200,25 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             const SizedBox(width: 12),
             Text(
               'Exit Quiz?',
-              style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+              style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w600,
+                color: AppColors.getTextPrimary(context),
+              ),
             ),
           ],
         ),
         content: Text(
           'Your progress will be lost. Are you sure you want to exit?',
-          style: GoogleFonts.outfit(),
+          style: GoogleFonts.outfit(color: AppColors.getTextPrimary(context)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: GoogleFonts.outfit(color: AppColors.grey),
+              style: GoogleFonts.outfit(
+                color: AppColors.getTextSecondary(context),
+              ),
             ),
           ),
           ElevatedButton(
@@ -238,7 +253,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.getBackground(context),
         appBar: _buildAppBar(),
         body: _isSubmitting ? _buildSubmittingState() : _buildQuizContent(),
       ),
@@ -250,7 +265,10 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(Iconsax.close_circle, color: AppColors.black),
+        icon: Icon(
+          Iconsax.close_circle,
+          color: AppColors.getTextPrimary(context),
+        ),
         onPressed: _showExitConfirmation,
       ),
       title: Column(
@@ -260,14 +278,17 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             style: GoogleFonts.outfit(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             'Question ${_currentQuestionIndex + 1} of ${questions.length}',
-            style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
+            style: GoogleFonts.outfit(
+              fontSize: 12,
+              color: AppColors.getTextSecondary(context),
+            ),
           ),
         ],
       ),
@@ -320,13 +341,15 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             style: GoogleFonts.outfit(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Please wait while we analyze your answers',
-            style: GoogleFonts.outfit(color: AppColors.grey),
+            style: GoogleFonts.outfit(
+              color: AppColors.getTextSecondary(context),
+            ),
           ),
         ],
       ),
@@ -348,6 +371,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                 style: GoogleFonts.outfit(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
+                  color: AppColors.getTextPrimary(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -406,7 +430,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
-              backgroundColor: AppColors.lightGrey,
+              backgroundColor: AppColors.getSurface(context),
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
           ),
@@ -447,7 +471,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             style: GoogleFonts.outfit(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
               height: 1.4,
             ),
           ),
@@ -484,7 +508,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
       decoration: BoxDecoration(
         color: isSelected
             ? AppColors.primary.withOpacity(0.1)
-            : AppColors.lightGrey.withOpacity(0.5),
+            : AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isSelected
@@ -507,7 +531,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : AppColors.lightGrey,
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.getBackground(context),
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: isSelected
@@ -520,7 +546,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                       label,
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? AppColors.white : AppColors.black,
+                        color: isSelected
+                            ? AppColors.white
+                            : AppColors.getTextPrimary(context),
                       ),
                     ),
                   ),
@@ -534,7 +562,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                       fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.w400,
-                      color: AppColors.black,
+                      color: AppColors.getTextPrimary(context),
                     ),
                   ),
                 ),
@@ -556,7 +584,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.getBackground(context),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -575,7 +603,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                   onPressed: _previousQuestion,
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+                    side: BorderSide(color: AppColors.getBorder(context)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -587,7 +615,10 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'Previous',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.getTextPrimary(context),
+                        ),
                       ),
                     ],
                   ),

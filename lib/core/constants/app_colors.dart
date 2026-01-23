@@ -32,7 +32,25 @@ class AppColors {
   static const Color darkTextSecondary = Color(0xFFACACAE);
   static const Color darkBorder = Color(0xFF2C2C2E);
 
-  // Helper method to get theme colors (optional but useful)
+  // Helper method to get theme colors
   static bool isDark(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark;
+
+  static Color getBackground(BuildContext context) =>
+      isDark(context) ? darkBackground : background;
+
+  static Color getSurface(BuildContext context) =>
+      isDark(context) ? darkSurface : white;
+
+  static Color getItemColor(BuildContext context) =>
+      isDark(context) ? darkItem : white;
+
+  static Color getTextPrimary(BuildContext context) =>
+      isDark(context) ? darkTextPrimary : black;
+
+  static Color getTextSecondary(BuildContext context) =>
+      isDark(context) ? darkTextSecondary : grey;
+
+  static Color getBorder(BuildContext context) =>
+      isDark(context) ? darkBorder : lightGrey;
 }

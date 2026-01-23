@@ -54,7 +54,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -62,13 +62,16 @@ class _QuizScreenState extends State<QuizScreen> {
           'Quizzes',
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w600,
-            color: AppColors.black,
+            color: AppColors.getTextPrimary(context),
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Iconsax.refresh, color: AppColors.black),
+            icon: Icon(
+              Iconsax.refresh,
+              color: AppColors.getTextPrimary(context),
+            ),
             onPressed: _loadQuizHistory,
           ),
         ],
@@ -132,7 +135,7 @@ class _QuizScreenState extends State<QuizScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
+                color: AppColors.getTextPrimary(context),
               ),
             ),
             const SizedBox(height: 8),
@@ -141,7 +144,7 @@ class _QuizScreenState extends State<QuizScreen> {
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
                 fontSize: 14,
-                color: AppColors.grey,
+                color: AppColors.getTextSecondary(context),
                 height: 1.5,
               ),
             ),
@@ -185,9 +188,11 @@ class _QuizScreenState extends State<QuizScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.lightGrey.withOpacity(0.5),
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
+        border: Border.all(
+          color: AppColors.getBorder(context).withOpacity(0.5),
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -227,7 +232,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             style: GoogleFonts.outfit(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.black,
+                              color: AppColors.getTextPrimary(context),
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -237,7 +242,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             '${quiz.questions.length} questions',
                             style: GoogleFonts.outfit(
                               fontSize: 12,
-                              color: AppColors.grey,
+                              color: AppColors.getTextSecondary(context),
                             ),
                           ),
                         ],
@@ -306,7 +311,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.lightGrey,
+                        color: AppColors.getItemColor(context),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -317,7 +322,7 @@ class _QuizScreenState extends State<QuizScreen> {
                             size: 12,
                             color: isCompleted
                                 ? AppColors.success
-                                : AppColors.grey,
+                                : AppColors.getTextSecondary(context),
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -327,7 +332,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               fontWeight: FontWeight.w500,
                               color: isCompleted
                                   ? AppColors.success
-                                  : AppColors.grey,
+                                  : AppColors.getTextSecondary(context),
                             ),
                           ),
                         ],
@@ -339,7 +344,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         DateFormat('MMM d, yyyy').format(quiz.createdAt!),
                         style: GoogleFonts.outfit(
                           fontSize: 11,
-                          color: AppColors.grey,
+                          color: AppColors.getTextSecondary(context),
                         ),
                       ),
                   ],

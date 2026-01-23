@@ -58,7 +58,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         title: Text(
           'Dashboard',
@@ -174,14 +174,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Text(
               'Welcome back,',
-              style: GoogleFonts.outfit(fontSize: 14, color: AppColors.grey),
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: AppColors.getTextSecondary(context),
+              ),
             ),
             Text(
               user.name,
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: AppColors.black,
+                color: AppColors.getTextPrimary(context),
               ),
             ),
           ],
@@ -233,9 +236,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.lightGrey.withOpacity(0.5),
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
+        border: Border.all(
+          color: AppColors.getBorder(context).withOpacity(0.5),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,13 +259,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             style: GoogleFonts.outfit(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
+            style: GoogleFonts.outfit(
+              fontSize: 12,
+              color: AppColors.getTextSecondary(context),
+            ),
           ),
         ],
       ),
@@ -312,7 +320,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   rec.text,
                   style: GoogleFonts.outfit(
                     fontSize: 16,
-                    color: AppColors.black,
+                    color: AppColors.getTextPrimary(context),
                     height: 1.4,
                   ),
                 ),
@@ -345,7 +353,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   insight,
                   style: GoogleFonts.outfit(
                     fontSize: 14,
-                    color: AppColors.black,
+                    color: AppColors.getTextPrimary(context),
                     height: 1.5,
                   ),
                 ),
@@ -368,7 +376,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Center(
           child: Text(
             'No performance data',
-            style: GoogleFonts.outfit(color: AppColors.grey),
+            style: GoogleFonts.outfit(
+              color: AppColors.getTextSecondary(context),
+            ),
           ),
         ),
       );
@@ -384,7 +394,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       height: 250,
       padding: const EdgeInsets.only(right: 20, top: 20, bottom: 10),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.grey.withOpacity(0.1)),
         boxShadow: [

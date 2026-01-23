@@ -91,7 +91,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -138,29 +138,33 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Chat History',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(color: AppColors.getBorder(context)),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(Iconsax.calendar, size: 18, color: AppColors.grey),
+                Icon(
+                  Iconsax.calendar,
+                  size: 18,
+                  color: AppColors.getTextSecondary(context),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat('dd MMM yyyy').format(DateTime.now()),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.grey,
+                    color: AppColors.getTextSecondary(context),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -181,15 +185,15 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(color: AppColors.getBorder(context)),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: AppColors.grey,
+                color: AppColors.getTextSecondary(context),
               ),
             ),
           ),
@@ -203,8 +207,8 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.lightGrey),
+        color: AppColors.getSurface(context),
+        border: Border.all(color: AppColors.getBorder(context)),
         borderRadius: BorderRadius.circular(16),
       ),
       child: ListTile(
@@ -220,10 +224,10 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
         },
         title: Text(
           session.contextName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: AppColors.black,
+            color: AppColors.getTextPrimary(context),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -232,13 +236,16 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           padding: const EdgeInsets.only(top: 4.0),
           child: Text(
             'Conversation with AI Tutor • ${DateFormat('HH:mm').format(session.updatedAt)}',
-            style: const TextStyle(fontSize: 13, color: AppColors.grey),
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.getTextSecondary(context),
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
         trailing: PopupMenuButton<String>(
-          icon: const Icon(Iconsax.more, color: AppColors.grey),
+          icon: Icon(Iconsax.more, color: AppColors.getTextSecondary(context)),
           onSelected: (value) {
             if (value == 'delete') {
               _deleteSession(session.id);
@@ -260,7 +267,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.clock, size: 80, color: AppColors.lightGrey),
+          Icon(Iconsax.clock, size: 80, color: AppColors.getSurface(context)),
           const SizedBox(height: 16),
           const Text(
             'No chat history yet',
@@ -271,9 +278,9 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Start a new conversation with your AI Tutor!',
-            style: TextStyle(color: AppColors.grey),
+            style: TextStyle(color: AppColors.getTextSecondary(context)),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(

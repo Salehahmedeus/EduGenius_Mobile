@@ -124,7 +124,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -136,7 +136,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           'Create Quiz',
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w600,
-            color: AppColors.black,
+            color: AppColors.getTextPrimary(context),
           ),
         ),
         centerTitle: true,
@@ -157,21 +157,28 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Iconsax.document_upload, size: 80, color: AppColors.grey),
+              Icon(
+                Iconsax.document_upload,
+                size: 80,
+                color: AppColors.getTextSecondary(context),
+              ),
               const SizedBox(height: 16),
               Text(
                 'No Materials Found',
                 style: GoogleFonts.outfit(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.black,
+                  color: AppColors.getTextPrimary(context),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Upload some study materials first to generate a quiz.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(fontSize: 14, color: AppColors.grey),
+                style: GoogleFonts.outfit(
+                  fontSize: 14,
+                  color: AppColors.getTextSecondary(context),
+                ),
               ),
             ],
           ),
@@ -206,9 +213,11 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.lightGrey.withOpacity(0.5),
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
+        border: Border.all(
+          color: AppColors.getBorder(context).withOpacity(0.5),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,7 +231,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                 style: GoogleFonts.outfit(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.black,
+                  color: AppColors.getTextPrimary(context),
                 ),
               ),
             ],
@@ -231,7 +240,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: AppColors.getBackground(context),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.grey.withOpacity(0.2)),
             ),
@@ -258,7 +267,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                           _getDifficultyLabel(difficulty),
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w500,
-                            color: AppColors.black,
+                            color: AppColors.getTextPrimary(context),
                           ),
                         ),
                       ],
@@ -291,7 +300,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
+                color: AppColors.getTextPrimary(context),
               ),
             ),
             const Spacer(),
@@ -339,12 +348,12 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       decoration: BoxDecoration(
         color: isSelected
             ? AppColors.primary.withOpacity(0.1)
-            : AppColors.lightGrey.withOpacity(0.5),
+            : AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
               ? AppColors.primary
-              : AppColors.grey.withOpacity(0.1),
+              : AppColors.getBorder(context).withOpacity(0.5),
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -388,7 +397,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                         material.fileName,
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w500,
-                          color: AppColors.black,
+                          color: AppColors.getTextPrimary(context),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -398,7 +407,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                         material.fileType.toUpperCase(),
                         style: GoogleFonts.outfit(
                           fontSize: 12,
-                          color: AppColors.grey,
+                          color: AppColors.getTextSecondary(context),
                         ),
                       ),
                     ],

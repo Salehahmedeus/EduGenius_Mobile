@@ -167,7 +167,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -223,26 +223,26 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Study Materials',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(color: AppColors.getBorder(context)),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               '$_totalCount Files',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.grey,
+                color: AppColors.getTextSecondary(context),
               ),
             ),
           ),
@@ -274,15 +274,15 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(color: AppColors.getBorder(context)),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: AppColors.grey,
+                color: AppColors.getTextSecondary(context),
               ),
             ),
           ),
@@ -299,8 +299,8 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.lightGrey),
+        color: AppColors.getSurface(context),
+        border: Border.all(color: AppColors.getBorder(context)),
         borderRadius: BorderRadius.circular(16),
       ),
       child: ListTile(
@@ -322,20 +322,27 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         ),
         title: Text(
           material.fileName,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: AppColors.black,
+            color: AppColors.getTextPrimary(context),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
           '${material.fileType.toUpperCase()} • ${DateFormat('HH:mm').format(material.createdAt)}',
-          style: const TextStyle(fontSize: 12, color: AppColors.grey),
+          style: TextStyle(
+            fontSize: 12,
+            color: AppColors.getTextSecondary(context),
+          ),
         ),
         trailing: PopupMenuButton<String>(
-          icon: const Icon(Iconsax.more, color: AppColors.grey, size: 18),
+          icon: Icon(
+            Iconsax.more,
+            color: AppColors.getTextSecondary(context),
+            size: 18,
+          ),
           onSelected: (value) {
             if (value == 'delete') {
               _deleteMaterial(material.id);
@@ -357,22 +364,26 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.folder_open, size: 80, color: AppColors.lightGrey),
+          Icon(
+            Iconsax.folder_open,
+            size: 80,
+            color: AppColors.getSurface(context),
+          ),
           const SizedBox(height: 16),
           Text(
             _searchQuery.isNotEmpty
                 ? 'No results for "$_searchQuery"'
                 : 'No materials found',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
-              color: AppColors.grey,
+              color: AppColors.getTextSecondary(context),
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Upload a document to get started!',
-            style: TextStyle(color: AppColors.grey),
+            style: TextStyle(color: AppColors.getTextSecondary(context)),
           ),
           if (_searchQuery.isNotEmpty)
             TextButton(

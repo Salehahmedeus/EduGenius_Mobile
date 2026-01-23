@@ -69,7 +69,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -84,12 +84,15 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
+                color: AppColors.getTextPrimary(context),
               ),
             ),
             Text(
               'Question ${_currentQuestionIndex + 1} of ${details.length}',
-              style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                color: AppColors.getTextSecondary(context),
+              ),
             ),
           ],
         ),
@@ -247,7 +250,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             style: GoogleFonts.outfit(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
               height: 1.4,
             ),
           ),
@@ -336,8 +339,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
       trailingIcon = Iconsax.close_circle5;
       iconColor = AppColors.error;
     } else {
-      backgroundColor = AppColors.lightGrey.withOpacity(0.5);
-      borderColor = AppColors.grey.withOpacity(0.1);
+      backgroundColor = AppColors.getSurface(context);
+      borderColor = AppColors.getBorder(context).withOpacity(0.5);
     }
 
     return Container(
@@ -358,7 +361,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   ? AppColors.success
                   : isUserAnswer
                   ? AppColors.error
-                  : AppColors.lightGrey,
+                  : AppColors.getSurface(context),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -369,7 +372,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   fontSize: 12,
                   color: isCorrectAnswer || isUserAnswer
                       ? AppColors.white
-                      : AppColors.black,
+                      : AppColors.getTextPrimary(context),
                 ),
               ),
             ),
@@ -422,7 +425,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             explanation,
             style: GoogleFonts.outfit(
               fontSize: 14,
-              color: AppColors.black.withOpacity(0.8),
+              color: AppColors.getTextPrimary(context).withOpacity(0.8),
               height: 1.5,
             ),
           ),
@@ -435,7 +438,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.getBackground(context),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -458,7 +461,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+                    side: BorderSide(color: AppColors.getBorder(context)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -470,7 +473,10 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'Previous',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.getTextPrimary(context),
+                        ),
                       ),
                     ],
                   ),

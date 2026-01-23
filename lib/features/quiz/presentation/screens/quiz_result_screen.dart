@@ -22,7 +22,7 @@ class QuizResultScreen extends StatelessWidget {
     final scorePercent = result.score / 100;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.getBackground(context),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -31,19 +31,19 @@ class QuizResultScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Result header
-              _buildResultHeader(colorScheme),
+              _buildResultHeader(context, colorScheme),
               const SizedBox(height: 40),
 
               // Score Circle
-              _buildScoreCircle(colorScheme, scorePercent),
+              _buildScoreCircle(context, colorScheme, scorePercent),
               const SizedBox(height: 32),
 
               // Score details
-              _buildScoreDetails(colorScheme),
+              _buildScoreDetails(context, colorScheme),
               const SizedBox(height: 32),
 
               // AI Feedback
-              _buildFeedbackCard(colorScheme),
+              _buildFeedbackCard(context, colorScheme),
               const SizedBox(height: 32),
 
               // Action buttons
@@ -55,7 +55,7 @@ class QuizResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResultHeader(ColorScheme colorScheme) {
+  Widget _buildResultHeader(BuildContext context, ColorScheme colorScheme) {
     final isGreatScore = result.score >= 80;
     final isGoodScore = result.score >= 60;
 
@@ -103,13 +103,20 @@ class QuizResultScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: GoogleFonts.outfit(fontSize: 16, color: AppColors.grey),
+          style: GoogleFonts.outfit(
+            fontSize: 16,
+            color: AppColors.getTextSecondary(context),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildScoreCircle(ColorScheme colorScheme, double scorePercent) {
+  Widget _buildScoreCircle(
+    BuildContext context,
+    ColorScheme colorScheme,
+    double scorePercent,
+  ) {
     Color progressColor;
     if (result.score >= 80) {
       progressColor = AppColors.success;
@@ -127,7 +134,7 @@ class QuizResultScreen extends StatelessWidget {
       animationDuration: 1200,
       circularStrokeCap: CircularStrokeCap.round,
       progressColor: progressColor,
-      backgroundColor: AppColors.lightGrey,
+      backgroundColor: AppColors.getSurface(context),
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -136,23 +143,26 @@ class QuizResultScreen extends StatelessWidget {
             style: GoogleFonts.outfit(
               fontSize: 42,
               fontWeight: FontWeight.bold,
-              color: AppColors.black,
+              color: AppColors.getTextPrimary(context),
             ),
           ),
           Text(
             'Score',
-            style: GoogleFonts.outfit(fontSize: 16, color: AppColors.grey),
+            style: GoogleFonts.outfit(
+              fontSize: 16,
+              color: AppColors.getTextSecondary(context),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildScoreDetails(ColorScheme colorScheme) {
+  Widget _buildScoreDetails(BuildContext context, ColorScheme colorScheme) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.lightGrey.withOpacity(0.5),
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -164,6 +174,7 @@ class QuizResultScreen extends StatelessWidget {
             value: '${result.correctAnswers}',
             color: AppColors.success,
             colorScheme: colorScheme,
+            context: context,
           ),
           Container(
             height: 50,
@@ -176,6 +187,7 @@ class QuizResultScreen extends StatelessWidget {
             value: '${result.totalQuestions - result.correctAnswers}',
             color: AppColors.error,
             colorScheme: colorScheme,
+            context: context,
           ),
           Container(
             height: 50,
@@ -188,6 +200,7 @@ class QuizResultScreen extends StatelessWidget {
             value: '${result.totalQuestions}',
             color: AppColors.primary,
             colorScheme: colorScheme,
+            context: context,
           ),
         ],
       ),
@@ -200,6 +213,7 @@ class QuizResultScreen extends StatelessWidget {
     required String value,
     required Color color,
     required ColorScheme colorScheme,
+    required BuildContext context,
   }) {
     return Column(
       children: [
@@ -210,18 +224,21 @@ class QuizResultScreen extends StatelessWidget {
           style: GoogleFonts.outfit(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: AppColors.black,
+            color: AppColors.getTextPrimary(context),
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
+          style: GoogleFonts.outfit(
+            fontSize: 12,
+            color: AppColors.getTextSecondary(context),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildFeedbackCard(ColorScheme colorScheme) {
+  Widget _buildFeedbackCard(BuildContext context, ColorScheme colorScheme) {
     if (result.feedback == null || result.feedback!.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -264,7 +281,7 @@ class QuizResultScreen extends StatelessWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.black,
+                  color: AppColors.getTextPrimary(context),
                 ),
               ),
             ],
@@ -274,7 +291,7 @@ class QuizResultScreen extends StatelessWidget {
             result.feedback!,
             style: GoogleFonts.outfit(
               fontSize: 14,
-              color: AppColors.black.withOpacity(0.8),
+              color: AppColors.getTextPrimary(context).withOpacity(0.8),
               height: 1.5,
             ),
           ),

@@ -149,8 +149,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
-        backgroundColor: AppColors.background,
-        foregroundColor: AppColors.black,
+        backgroundColor: AppColors.getBackground(context),
+        foregroundColor: AppColors.getTextPrimary(context),
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
@@ -203,7 +203,7 @@ class ChatScreenState extends State<ChatScreen> {
           maxWidth: MediaQuery.of(context).size.width * 0.8,
         ),
         decoration: BoxDecoration(
-          color: isUser ? AppColors.primary : AppColors.lightGrey,
+          color: isUser ? AppColors.primary : AppColors.getSurface(context),
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -233,12 +233,15 @@ class ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: AppColors.lightGrey,
+          color: AppColors.getSurface(context),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Text(
+        child: Text(
           'Thinking...',
-          style: TextStyle(color: AppColors.grey, fontStyle: FontStyle.italic),
+          style: TextStyle(
+            color: AppColors.getTextSecondary(context),
+            fontStyle: FontStyle.italic,
+          ),
         ),
       ),
     );
@@ -248,8 +251,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.lightGrey)),
+        color: AppColors.getBackground(context),
+        border: Border(top: BorderSide(color: AppColors.getBorder(context))),
       ),
       child: SafeArea(
         child: Column(
@@ -268,9 +271,9 @@ class ChatScreenState extends State<ChatScreen> {
                       ),
                       label: Text(
                         _attachedFile!.path.split('/').last,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.black,
+                          color: AppColors.getTextPrimary(context),
                         ),
                       ),
                       onDeleted: () => setState(() => _attachedFile = null),
@@ -282,12 +285,12 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: AppColors.getSurface(context),
                 borderRadius: BorderRadius.circular(32),
-                border: Border.all(color: AppColors.lightGrey),
+                border: Border.all(color: AppColors.getBorder(context)),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.black.withOpacity(0.02),
+                    color: AppColors.getTextPrimary(context).withOpacity(0.02),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -301,17 +304,23 @@ class ChatScreenState extends State<ChatScreen> {
                     children: [
                       const SizedBox(width: 8),
                       IconButton(
-                        icon: Icon(Iconsax.paperclip, color: AppColors.grey),
+                        icon: Icon(
+                          Iconsax.paperclip,
+                          color: AppColors.getTextSecondary(context),
+                        ),
                         onPressed: _pickFile,
                       ),
                       Expanded(
                         child: TextField(
                           controller: _messageController,
                           maxLines: null,
+                          style: TextStyle(
+                            color: AppColors.getTextPrimary(context),
+                          ),
                           decoration: InputDecoration(
                             hintText: 'Message to AI Tutor...',
                             hintStyle: TextStyle(
-                              color: AppColors.grey,
+                              color: AppColors.getTextSecondary(context),
                               fontSize: 16,
                             ),
                             border: InputBorder.none,
@@ -332,11 +341,17 @@ class ChatScreenState extends State<ChatScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        icon: Icon(Iconsax.emoji_happy, color: AppColors.grey),
+                        icon: Icon(
+                          Iconsax.emoji_happy,
+                          color: AppColors.getTextSecondary(context),
+                        ),
                         onPressed: () {},
                       ),
                       IconButton(
-                        icon: Icon(Iconsax.microphone_2, color: AppColors.grey),
+                        icon: Icon(
+                          Iconsax.microphone_2,
+                          color: AppColors.getTextSecondary(context),
+                        ),
                         onPressed: () {},
                       ),
                       const SizedBox(width: 4),
