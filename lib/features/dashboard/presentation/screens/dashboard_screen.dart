@@ -527,9 +527,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     // Truncate topic name
                     String name = topics[index].topic;
                     if (name.length > 5) name = '${name.substring(0, 5)}...';
-                    return SideTitleWidget(
-                      axisSide: meta.axisSide,
-                      space: 4,
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
                         name,
                         style: TextStyle(
