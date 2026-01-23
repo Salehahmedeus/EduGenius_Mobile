@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/constants/app_colors.dart';
 
 import '../../../content/data/services/content_service.dart';
 import '../../../content/data/models/material_model.dart';
@@ -44,7 +45,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       setState(() => _isLoadingMaterials = false);
       Fluttertoast.showToast(
         msg: 'Failed to load materials',
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
       );
     }
   }
@@ -53,7 +54,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     if (_selectedMaterialIds.isEmpty) {
       Fluttertoast.showToast(
         msg: 'Please select at least one material',
-        backgroundColor: Colors.orange,
+        backgroundColor: AppColors.warning,
       );
       return;
     }
@@ -85,7 +86,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       // This will tell us if it's a "Timeout", "FormatException", or something else
       Fluttertoast.showToast(
         msg: "Error: $e",
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.error,
         toastLength: Toast.LENGTH_LONG, // Keep it on screen longer
       );
     }
@@ -107,13 +108,13 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   Color _getDifficultyColor(int difficulty) {
     switch (difficulty) {
       case 1:
-        return Colors.green;
+        return AppColors.success;
       case 2:
-        return Colors.orange;
+        return AppColors.warning;
       case 3:
-        return Colors.red;
+        return AppColors.error;
       default:
-        return Colors.green;
+        return AppColors.success;
     }
   }
 
@@ -123,19 +124,19 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Iconsax.arrow_left, color: colorScheme.onSurface),
+          icon: Icon(Iconsax.arrow_left, color: AppColors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Create Quiz',
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
+            color: AppColors.black,
           ),
         ),
         centerTitle: true,
@@ -156,28 +157,21 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Iconsax.document_upload,
-                size: 80,
-                color: colorScheme.outline,
-              ),
+              Icon(Iconsax.document_upload, size: 80, color: AppColors.grey),
               const SizedBox(height: 16),
               Text(
                 'No Materials Found',
                 style: GoogleFonts.outfit(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
+                  color: AppColors.black,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Upload some study materials first to generate a quiz.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(
-                  fontSize: 14,
-                  color: colorScheme.outline,
-                ),
+                style: GoogleFonts.outfit(fontSize: 14, color: AppColors.grey),
               ),
             ],
           ),
@@ -212,23 +206,23 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: AppColors.lightGrey.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Iconsax.chart_2, color: colorScheme.primary, size: 20),
+              Icon(Iconsax.chart_2, color: AppColors.primary, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Difficulty Level',
                 style: GoogleFonts.outfit(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
+                  color: AppColors.black,
                 ),
               ),
             ],
@@ -237,15 +231,15 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: colorScheme.surface,
+              color: AppColors.background,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
+              border: Border.all(color: AppColors.grey.withOpacity(0.2)),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 value: _selectedDifficulty,
                 isExpanded: true,
-                icon: Icon(Iconsax.arrow_down_1, color: colorScheme.primary),
+                icon: Icon(Iconsax.arrow_down_1, color: AppColors.primary),
                 items: [1, 2, 3].map((difficulty) {
                   return DropdownMenuItem<int>(
                     value: difficulty,
@@ -264,7 +258,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                           _getDifficultyLabel(difficulty),
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w500,
-                            color: colorScheme.onSurface,
+                            color: AppColors.black,
                           ),
                         ),
                       ],
@@ -297,7 +291,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
+                color: AppColors.black,
               ),
             ),
             const Spacer(),
@@ -312,7 +306,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                 style: GoogleFonts.outfit(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: colorScheme.primary,
+                  color: AppColors.primary,
                 ),
               ),
             ),
@@ -344,13 +338,13 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: isSelected
-            ? colorScheme.primary.withOpacity(0.1)
-            : colorScheme.surfaceContainerHighest.withOpacity(0.5),
+            ? AppColors.primary.withOpacity(0.1)
+            : AppColors.lightGrey.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected
-              ? colorScheme.primary
-              : colorScheme.outline.withOpacity(0.1),
+              ? AppColors.primary
+              : AppColors.grey.withOpacity(0.1),
           width: isSelected ? 2 : 1,
         ),
       ),
@@ -375,8 +369,8 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? colorScheme.primary.withOpacity(0.2)
-                        : colorScheme.primary.withOpacity(0.1),
+                        ? AppColors.primary.withOpacity(0.2)
+                        : AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -394,7 +388,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                         material.fileName,
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w500,
-                          color: colorScheme.onSurface,
+                          color: AppColors.black,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -404,7 +398,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                         material.fileType.toUpperCase(),
                         style: GoogleFonts.outfit(
                           fontSize: 12,
-                          color: colorScheme.outline,
+                          color: AppColors.grey,
                         ),
                       ),
                     ],
@@ -421,7 +415,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                       }
                     });
                   },
-                  activeColor: colorScheme.primary,
+                  activeColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
@@ -462,11 +456,11 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
         child: ElevatedButton(
           onPressed: isEnabled ? _generateQuiz : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: colorScheme.primary,
-            disabledBackgroundColor: colorScheme.outline.withOpacity(0.3),
-            foregroundColor: colorScheme.onPrimary,
+            backgroundColor: AppColors.primary,
+            disabledBackgroundColor: AppColors.grey.withOpacity(0.3),
+            foregroundColor: AppColors.white,
             elevation: isEnabled ? 4 : 0,
-            shadowColor: colorScheme.primary.withOpacity(0.4),
+            shadowColor: AppColors.primary.withOpacity(0.4),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -481,7 +475,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          colorScheme.onPrimary,
+                          AppColors.white,
                         ),
                       ),
                     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import '../../../../core/constants/app_colors.dart';
 
 import '../../data/models/quiz_model.dart';
 import '../../data/models/quiz_result_model.dart';
@@ -21,7 +22,7 @@ class QuizResultScreen extends StatelessWidget {
     final scorePercent = result.score / 100;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -65,17 +66,17 @@ class QuizResultScreen extends StatelessWidget {
 
     if (isGreatScore) {
       icon = Iconsax.medal_star5;
-      iconColor = Colors.amber;
+      iconColor = AppColors.warning; // amber-like
       title = 'Excellent!';
       subtitle = 'You\'ve mastered this topic!';
     } else if (isGoodScore) {
       icon = Iconsax.like_15;
-      iconColor = Colors.green;
+      iconColor = AppColors.success;
       title = 'Good Job!';
       subtitle = 'Keep up the good work!';
     } else {
       icon = Iconsax.book_1;
-      iconColor = Colors.blue;
+      iconColor = AppColors.info;
       title = 'Keep Learning!';
       subtitle = 'Review the material and try again.';
     }
@@ -96,13 +97,13 @@ class QuizResultScreen extends StatelessWidget {
           style: GoogleFonts.outfit(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
+            color: AppColors.black,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           subtitle,
-          style: GoogleFonts.outfit(fontSize: 16, color: colorScheme.outline),
+          style: GoogleFonts.outfit(fontSize: 16, color: AppColors.grey),
         ),
       ],
     );
@@ -111,11 +112,11 @@ class QuizResultScreen extends StatelessWidget {
   Widget _buildScoreCircle(ColorScheme colorScheme, double scorePercent) {
     Color progressColor;
     if (result.score >= 80) {
-      progressColor = Colors.green;
+      progressColor = AppColors.success;
     } else if (result.score >= 60) {
-      progressColor = Colors.orange;
+      progressColor = AppColors.warning;
     } else {
-      progressColor = Colors.red;
+      progressColor = AppColors.error;
     }
 
     return CircularPercentIndicator(
@@ -126,7 +127,7 @@ class QuizResultScreen extends StatelessWidget {
       animationDuration: 1200,
       circularStrokeCap: CircularStrokeCap.round,
       progressColor: progressColor,
-      backgroundColor: colorScheme.surfaceContainerHighest,
+      backgroundColor: AppColors.lightGrey,
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -135,12 +136,12 @@ class QuizResultScreen extends StatelessWidget {
             style: GoogleFonts.outfit(
               fontSize: 42,
               fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
+              color: AppColors.black,
             ),
           ),
           Text(
             'Score',
-            style: GoogleFonts.outfit(fontSize: 16, color: colorScheme.outline),
+            style: GoogleFonts.outfit(fontSize: 16, color: AppColors.grey),
           ),
         ],
       ),
@@ -151,7 +152,7 @@ class QuizResultScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: AppColors.lightGrey.withOpacity(0.5),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -161,31 +162,31 @@ class QuizResultScreen extends StatelessWidget {
             icon: Iconsax.tick_circle,
             label: 'Correct',
             value: '${result.correctAnswers}',
-            color: Colors.green,
+            color: AppColors.success,
             colorScheme: colorScheme,
           ),
           Container(
             height: 50,
             width: 1,
-            color: colorScheme.outline.withOpacity(0.2),
+            color: AppColors.grey.withOpacity(0.2),
           ),
           _buildStatItem(
             icon: Iconsax.close_circle,
             label: 'Wrong',
             value: '${result.totalQuestions - result.correctAnswers}',
-            color: Colors.red,
+            color: AppColors.error,
             colorScheme: colorScheme,
           ),
           Container(
             height: 50,
             width: 1,
-            color: colorScheme.outline.withOpacity(0.2),
+            color: AppColors.grey.withOpacity(0.2),
           ),
           _buildStatItem(
             icon: Iconsax.document_text,
             label: 'Total',
             value: '${result.totalQuestions}',
-            color: colorScheme.primary,
+            color: AppColors.primary,
             colorScheme: colorScheme,
           ),
         ],
@@ -209,12 +210,12 @@ class QuizResultScreen extends StatelessWidget {
           style: GoogleFonts.outfit(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: colorScheme.onSurface,
+            color: AppColors.black,
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.outfit(fontSize: 12, color: colorScheme.outline),
+          style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
         ),
       ],
     );
@@ -231,14 +232,14 @@ class QuizResultScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            colorScheme.primary.withOpacity(0.1),
-            colorScheme.secondary.withOpacity(0.1),
+            AppColors.primary.withOpacity(0.1),
+            AppColors.primaryMedium.withOpacity(0.1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,12 +249,12 @@ class QuizResultScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.2),
+                  color: AppColors.primary.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   Iconsax.magic_star,
-                  color: colorScheme.primary,
+                  color: AppColors.primary,
                   size: 20,
                 ),
               ),
@@ -263,7 +264,7 @@ class QuizResultScreen extends StatelessWidget {
                 style: GoogleFonts.outfit(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
+                  color: AppColors.black,
                 ),
               ),
             ],
@@ -273,7 +274,7 @@ class QuizResultScreen extends StatelessWidget {
             result.feedback!,
             style: GoogleFonts.outfit(
               fontSize: 14,
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: AppColors.black.withOpacity(0.8),
               height: 1.5,
             ),
           ),
@@ -300,8 +301,8 @@ class QuizResultScreen extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -335,7 +336,7 @@ class QuizResultScreen extends StatelessWidget {
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+              side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),

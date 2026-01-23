@@ -5,6 +5,7 @@ import 'package:iconsax/iconsax.dart';
 import '../../data/models/dashboard_home_model.dart';
 import '../../data/models/dashboard_stats_model.dart';
 import '../../data/services/dashboard_service.dart';
+import '../../../../core/constants/app_colors.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -56,11 +57,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
           'Dashboard',
@@ -82,8 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // User Greeting
-                  _buildGreeting(colorScheme),
+                  _buildGreeting(),
                   const SizedBox(height: 32),
 
                   // Progress Overview
@@ -95,12 +92,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildProgressCards(colorScheme),
+                  _buildProgressCards(),
                   const SizedBox(height: 32),
 
                   // Recommendation
                   if (_homeData!.recommendation.hasRecommendation) ...[
-                    _buildRecommendationCard(colorScheme),
+                    _buildRecommendationCard(),
                     const SizedBox(height: 32),
                   ],
 
@@ -116,7 +113,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      _buildInsightsList(colorScheme),
+                      _buildInsightsList(),
                       const SizedBox(height: 32),
                     ],
 
@@ -129,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildPerformanceChart(colorScheme),
+                    _buildPerformanceChart(),
                     const SizedBox(height: 32),
 
                     // Topic Strengths
@@ -141,12 +138,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildTopicStrengthChart(colorScheme),
+                    _buildTopicStrengthChart(),
                     const SizedBox(height: 32),
                   ],
 
                   // Report Button
-                  _buildReportButton(context, colorScheme),
+                  _buildReportButton(context),
                   // Add extra padding at bottom
                   const SizedBox(height: 40),
                 ],
@@ -155,19 +152,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildGreeting(ColorScheme colorScheme) {
+  Widget _buildGreeting() {
     final user = _homeData!.user;
     return Row(
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundColor: colorScheme.primary,
+          backgroundColor: AppColors.primary,
           child: Text(
             user.avatarInitials,
             style: GoogleFonts.outfit(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: colorScheme.onPrimary,
+              color: AppColors.white,
             ),
           ),
         ),
@@ -177,17 +174,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Text(
               'Welcome back,',
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                color: colorScheme.outline,
-              ),
+              style: GoogleFonts.outfit(fontSize: 14, color: AppColors.grey),
             ),
             Text(
               user.name,
               style: GoogleFonts.outfit(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: colorScheme.onSurface,
+                color: AppColors.black,
               ),
             ),
           ],
@@ -196,7 +190,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildProgressCards(ColorScheme colorScheme) {
+  Widget _buildProgressCards() {
     final progress = _homeData!.progress;
     return Row(
       children: [
@@ -205,8 +199,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             'Quizzes',
             '${progress.quizCount}',
             Iconsax.task_square,
-            Colors.blue,
-            colorScheme,
+            AppColors.info,
           ),
         ),
         const SizedBox(width: 12),
@@ -215,8 +208,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             'Avg Score',
             '${progress.averageScore.toStringAsFixed(0)}%',
             Iconsax.chart_21,
-            Colors.green,
-            colorScheme,
+            AppColors.success,
           ),
         ),
         const SizedBox(width: 12),
@@ -225,8 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             'Uploaded',
             '${progress.uploadedCount}',
             Iconsax.document_upload,
-            Colors.orange,
-            colorScheme,
+            AppColors.warning,
           ),
         ),
       ],
@@ -238,14 +229,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String value,
     IconData icon,
     Color color,
-    ColorScheme colorScheme,
   ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        color: AppColors.lightGrey.withOpacity(0.5),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,34 +254,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
             style: GoogleFonts.outfit(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
+              color: AppColors.black,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: GoogleFonts.outfit(fontSize: 12, color: colorScheme.outline),
+            style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRecommendationCard(ColorScheme colorScheme) {
+  Widget _buildRecommendationCard() {
     final rec = _homeData!.recommendation;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            colorScheme.primary.withOpacity(0.1),
-            colorScheme.secondary.withOpacity(0.1),
+            AppColors.primary.withOpacity(0.1),
+            AppColors.primaryMedium.withOpacity(0.1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Row(
         children: [
@@ -303,7 +293,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Icon(
                       Iconsax.magic_star,
-                      color: colorScheme.primary,
+                      color: AppColors.primary,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
@@ -312,7 +302,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: GoogleFonts.outfit(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: colorScheme.primary,
+                        color: AppColors.primary,
                       ),
                     ),
                   ],
@@ -322,7 +312,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   rec.text,
                   style: GoogleFonts.outfit(
                     fontSize: 16,
-                    color: colorScheme.onSurface,
+                    color: AppColors.black,
                     height: 1.4,
                   ),
                 ),
@@ -334,28 +324,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildInsightsList(ColorScheme colorScheme) {
+  Widget _buildInsightsList() {
     return Column(
       children: _statsData!.insights.map((insight) {
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: colorScheme.primary.withOpacity(0.05),
+            color: AppColors.primary.withOpacity(0.05),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: colorScheme.primary.withOpacity(0.1)),
+            border: Border.all(color: AppColors.primary.withOpacity(0.1)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Iconsax.lamp_on, color: colorScheme.primary, size: 20),
+              Icon(Iconsax.lamp_on, color: AppColors.primary, size: 20),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   insight,
                   style: GoogleFonts.outfit(
                     fontSize: 14,
-                    color: colorScheme.onSurface,
+                    color: AppColors.black,
                     height: 1.5,
                   ),
                 ),
@@ -367,18 +357,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildPerformanceChart(ColorScheme colorScheme) {
+  Widget _buildPerformanceChart() {
     if (_statsData == null || _statsData!.charts.performanceTrend.isEmpty) {
       return Container(
         height: 200,
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: AppColors.lightGrey.withOpacity(0.3),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
           child: Text(
             'No performance data',
-            style: GoogleFonts.outfit(color: colorScheme.outline),
+            style: GoogleFonts.outfit(color: AppColors.grey),
           ),
         ),
       );
@@ -394,9 +384,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       height: 250,
       padding: const EdgeInsets.only(right: 20, top: 20, bottom: 10),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -416,7 +406,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 getTitlesWidget: (value, meta) {
                   return Text(
                     value.toInt().toString(),
-                    style: TextStyle(color: colorScheme.outline, fontSize: 10),
+                    style: TextStyle(color: AppColors.grey, fontSize: 10),
                   );
                 },
               ),
@@ -438,13 +428,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             LineChartBarData(
               spots: points,
               isCurved: true,
-              color: colorScheme.primary,
+              color: AppColors.primary,
               barWidth: 4,
               isStrokeCapRound: true,
               dotData: FlDotData(show: true),
               belowBarData: BarAreaData(
                 show: true,
-                color: colorScheme.primary.withOpacity(0.1),
+                color: AppColors.primary.withOpacity(0.1),
               ),
             ),
           ],
@@ -453,18 +443,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildTopicStrengthChart(ColorScheme colorScheme) {
+  Widget _buildTopicStrengthChart() {
     if (_statsData == null || _statsData!.charts.topicStrengths.isEmpty) {
       return Container(
         height: 200,
         decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          color: AppColors.lightGrey.withOpacity(0.3),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
           child: Text(
             'No topic data',
-            style: GoogleFonts.outfit(color: colorScheme.outline),
+            style: GoogleFonts.outfit(color: AppColors.grey),
           ),
         ),
       );
@@ -476,9 +466,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       height: 300,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: AppColors.background,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -494,19 +484,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              getTooltipColor: (_) => colorScheme.inverseSurface,
+              getTooltipColor: (_) => AppColors.black,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${topics[groupIndex].topic}\n',
                   TextStyle(
-                    color: colorScheme.onInverseSurface,
+                    color: AppColors.white,
                     fontWeight: FontWeight.bold,
                   ),
                   children: <TextSpan>[
                     TextSpan(
                       text: '${rod.toY.round()}%',
                       style: TextStyle(
-                        color: colorScheme.primary, // tooltip text color
+                        color: AppColors.primary, // tooltip text color
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
@@ -531,10 +521,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
                         name,
-                        style: TextStyle(
-                          color: colorScheme.outline,
-                          fontSize: 10,
-                        ),
+                        style: TextStyle(color: AppColors.grey, fontSize: 10),
                       ),
                     );
                   }
@@ -555,8 +542,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 BarChartRodData(
                   toY: e.value.avgScore,
                   color: e.value.avgScore >= 80
-                      ? Colors.green
-                      : (e.value.avgScore >= 60 ? Colors.orange : Colors.red),
+                      ? AppColors.success
+                      : (e.value.avgScore >= 60
+                            ? AppColors.warning
+                            : AppColors.error),
                   width: 20,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(6),
@@ -564,7 +553,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: 100,
-                    color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+                    color: AppColors.lightGrey.withOpacity(0.3),
                   ),
                 ),
               ],
@@ -575,7 +564,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildReportButton(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildReportButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 56,
@@ -598,7 +587,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+          side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),

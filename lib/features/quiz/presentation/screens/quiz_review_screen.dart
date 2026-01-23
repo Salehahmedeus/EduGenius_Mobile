@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/constants/app_colors.dart';
 
 import '../../data/models/quiz_model.dart';
 import '../../data/models/quiz_result_model.dart';
@@ -68,12 +69,12 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Iconsax.arrow_left, color: colorScheme.onSurface),
+          icon: Icon(Iconsax.arrow_left, color: AppColors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -83,15 +84,12 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
+                color: AppColors.black,
               ),
             ),
             Text(
               'Question ${_currentQuestionIndex + 1} of ${details.length}',
-              style: GoogleFonts.outfit(
-                fontSize: 12,
-                color: colorScheme.outline,
-              ),
+              style: GoogleFonts.outfit(fontSize: 12, color: AppColors.grey),
             ),
           ],
         ),
@@ -152,18 +150,20 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                 width: isCurrent ? 28 : 20,
                 height: isCurrent ? 28 : 20,
                 decoration: BoxDecoration(
-                  color: detail.isCorrect
-                      ? Colors.green.withOpacity(isCurrent ? 1 : 0.3)
-                      : Colors.red.withOpacity(isCurrent ? 1 : 0.3),
+                  color:
+                      (detail.isCorrect ? AppColors.success : AppColors.error)
+                          .withOpacity(isCurrent ? 1 : 0.3),
                   shape: BoxShape.circle,
                   border: isCurrent
-                      ? Border.all(color: colorScheme.surface, width: 2)
+                      ? Border.all(color: AppColors.background, width: 2)
                       : null,
                   boxShadow: isCurrent
                       ? [
                           BoxShadow(
                             color:
-                                (detail.isCorrect ? Colors.green : Colors.red)
+                                (detail.isCorrect
+                                        ? AppColors.success
+                                        : AppColors.error)
                                     .withOpacity(0.4),
                             blurRadius: 8,
                             spreadRadius: 1,
@@ -178,8 +178,10 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                       fontSize: isCurrent ? 12 : 10,
                       fontWeight: FontWeight.w600,
                       color: isCurrent
-                          ? Colors.white
-                          : (detail.isCorrect ? Colors.green : Colors.red),
+                          ? AppColors.white
+                          : (detail.isCorrect
+                                ? AppColors.success
+                                : AppColors.error),
                     ),
                   ),
                 ),
@@ -195,8 +197,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     QuestionResultDetail detail,
     ColorScheme colorScheme,
   ) {
-    final originalQuestion = (_quizDetail ?? widget.quiz)
-        .questions
+    final originalQuestion = (_quizDetail ?? widget.quiz).questions
         .where((q) => q.id == detail.questionId)
         .firstOrNull;
     final questionText = (originalQuestion?.questionText ?? detail.questionText)
@@ -212,8 +213,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: detail.isCorrect
-                  ? Colors.green.withOpacity(0.1)
-                  : Colors.red.withOpacity(0.1),
+                  ? AppColors.success.withOpacity(0.1)
+                  : AppColors.error.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -222,7 +223,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                 Icon(
                   detail.isCorrect ? Iconsax.tick_circle : Iconsax.close_circle,
                   size: 16,
-                  color: detail.isCorrect ? Colors.green : Colors.red,
+                  color: detail.isCorrect ? AppColors.success : AppColors.error,
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -230,7 +231,9 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   style: GoogleFonts.outfit(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: detail.isCorrect ? Colors.green : Colors.red,
+                    color: detail.isCorrect
+                        ? AppColors.success
+                        : AppColors.error,
                   ),
                 ),
               ],
@@ -244,7 +247,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             style: GoogleFonts.outfit(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: colorScheme.onSurface,
+              color: AppColors.black,
               height: 1.4,
             ),
           ),
@@ -268,8 +271,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     ColorScheme colorScheme,
   ) {
     // Try to find the original question for full options list
-    final originalQuestion = (_quizDetail ?? widget.quiz)
-        .questions
+    final originalQuestion = (_quizDetail ?? widget.quiz).questions
         .where((q) => q.id == detail.questionId)
         .firstOrNull;
 
@@ -324,18 +326,18 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     Color? iconColor;
 
     if (isCorrectAnswer) {
-      backgroundColor = Colors.green.withOpacity(0.1);
-      borderColor = Colors.green;
+      backgroundColor = AppColors.success.withOpacity(0.1);
+      borderColor = AppColors.success;
       trailingIcon = Iconsax.tick_circle5;
-      iconColor = Colors.green;
+      iconColor = AppColors.success;
     } else if (isUserAnswer && !isCorrectAnswer) {
-      backgroundColor = Colors.red.withOpacity(0.1);
-      borderColor = Colors.red;
+      backgroundColor = AppColors.error.withOpacity(0.1);
+      borderColor = AppColors.error;
       trailingIcon = Iconsax.close_circle5;
-      iconColor = Colors.red;
+      iconColor = AppColors.error;
     } else {
-      backgroundColor = colorScheme.surfaceContainerHighest.withOpacity(0.5);
-      borderColor = colorScheme.outline.withOpacity(0.1);
+      backgroundColor = AppColors.lightGrey.withOpacity(0.5);
+      borderColor = AppColors.grey.withOpacity(0.1);
     }
 
     return Container(
@@ -353,10 +355,10 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             height: 36,
             decoration: BoxDecoration(
               color: isCorrectAnswer
-                  ? Colors.green
+                  ? AppColors.success
                   : isUserAnswer
-                  ? Colors.red
-                  : colorScheme.surfaceContainerHighest,
+                  ? AppColors.error
+                  : AppColors.lightGrey,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -366,8 +368,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
                   color: isCorrectAnswer || isUserAnswer
-                      ? Colors.white
-                      : colorScheme.onSurface,
+                      ? AppColors.white
+                      : AppColors.black,
                 ),
               ),
             ),
@@ -379,7 +381,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: colorScheme.onSurface,
+                color: AppColors.black,
               ),
             ),
           ),
@@ -394,23 +396,23 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: AppColors.info.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue.withOpacity(0.2)),
+        border: Border.all(color: AppColors.info.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Iconsax.lamp_on, color: Colors.blue, size: 20),
+              Icon(Iconsax.lamp_on, color: AppColors.info, size: 20),
               const SizedBox(width: 8),
               Text(
                 'Explanation',
                 style: GoogleFonts.outfit(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Colors.blue,
+                  color: AppColors.info,
                 ),
               ),
             ],
@@ -420,7 +422,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             explanation,
             style: GoogleFonts.outfit(
               fontSize: 14,
-              color: colorScheme.onSurface.withOpacity(0.8),
+              color: AppColors.black.withOpacity(0.8),
               height: 1.5,
             ),
           ),
@@ -433,7 +435,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: AppColors.background,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -456,9 +458,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: BorderSide(
-                      color: colorScheme.outline.withOpacity(0.3),
-                    ),
+                    side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -489,8 +489,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    foregroundColor: colorScheme.onPrimary,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -514,8 +514,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    foregroundColor: colorScheme.onPrimary,
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
