@@ -57,6 +57,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _fetchHistory() async {
+    if (_activeConversationId == null) return;
     setState(() => _isLoading = true);
     try {
       final history = await _aiService.getMessages(_activeConversationId!);
@@ -76,13 +77,17 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void _scrollToBottom() {
+    if (!mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+        try {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        } catch (_) {}
       }
     });
   }
@@ -147,7 +152,12 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Iconsax.arrow_left),
+          onPressed: () => Navigator.maybePop(context, true),
+        ),
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
         backgroundColor: AppColors.getBackground(context),
         foregroundColor: AppColors.getTextPrimary(context),
@@ -160,9 +170,9 @@ class ChatScreenState extends State<ChatScreen> {
       ),
       body: PopScope(
         canPop: false,
-        onPopInvoked: (didPop) {
+        onPopInvokedWithResult: (bool didPop, dynamic result) {
           if (didPop) return;
-          Navigator.pop(context, true); // Signal history screen to refresh
+          Navigator.pop(context, true);
         },
         child: Column(
           children: [
@@ -173,6 +183,8 @@ class ChatScreenState extends State<ChatScreen> {
                         color: AppColors.primary,
                       ),
                     )
+                  : _messages.isEmpty
+                  ? _buildEmptyState()
                   : ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(16),
@@ -188,6 +200,45 @@ class ChatScreenState extends State<ChatScreen> {
             _buildInputArea(AppColors.primary),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Iconsax.message_question,
+              size: 40,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'How can I help you today?',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.getTextPrimary(context),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Ask anything about your study materials',
+            style: TextStyle(
+              fontSize: 14,
+              color: AppColors.getTextSecondary(context),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -219,7 +270,10 @@ class ChatScreenState extends State<ChatScreen> {
             : MarkdownBody(
                 data: message.text,
                 styleSheet: MarkdownStyleSheet(
-                  p: const TextStyle(color: AppColors.black, fontSize: 16),
+                  p: TextStyle(
+                    color: AppColors.getTextPrimary(context),
+                    fontSize: 16,
+                  ),
                 ),
               ),
       ),
@@ -298,6 +352,7 @@ class ChatScreenState extends State<ChatScreen> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -355,30 +410,36 @@ class ChatScreenState extends State<ChatScreen> {
                         onPressed: () {},
                       ),
                       const SizedBox(width: 4),
-                      ElevatedButton.icon(
-                        onPressed: _sendMessage,
-                        icon: const Text(
-                          'Send',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),
-                        ),
-                        label: const Icon(
-                          Iconsax.send_1,
-                          color: AppColors.white,
-                          size: 20,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
+                      Material(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(24),
+                        child: InkWell(
+                          onTap: _sendMessage,
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 12,
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Send',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Icon(
+                                  Iconsax.send_1,
+                                  color: AppColors.white,
+                                  size: 20,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

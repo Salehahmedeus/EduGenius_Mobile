@@ -16,10 +16,12 @@ class CustomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.getBackground(context),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: AppColors.isDark(context)
+                ? Colors.black.withOpacity(0.3)
+                : Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -32,18 +34,31 @@ class CustomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
+                context,
                 icon: Iconsax.messages_1,
                 label: 'AI Chat',
                 index: 0,
               ),
-              _buildNavItem(icon: Iconsax.book, label: 'Content', index: 1),
               _buildNavItem(
+                context,
+                icon: Iconsax.book,
+                label: 'Content',
+                index: 1,
+              ),
+              _buildNavItem(
+                context,
                 icon: Iconsax.element_3,
                 label: 'Dashboard',
                 index: 2,
               ),
-              _buildNavItem(icon: Iconsax.note_2, label: 'Quiz', index: 3),
               _buildNavItem(
+                context,
+                icon: Iconsax.note_2,
+                label: 'Quiz',
+                index: 3,
+              ),
+              _buildNavItem(
+                context,
                 icon: Iconsax.setting_2,
                 label: 'Settings',
                 index: 4,
@@ -55,14 +70,15 @@ class CustomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem({
+  Widget _buildNavItem(
+    BuildContext context, {
     required IconData icon,
     required String label,
     required int index,
   }) {
     final isActive = currentIndex == index;
-    const activeColor = AppColors.primary;
-    const inactiveColor = AppColors.grey;
+    final activeColor = AppColors.primary;
+    final inactiveColor = AppColors.getTextSecondary(context);
 
     return GestureDetector(
       onTap: () => onTap(index),

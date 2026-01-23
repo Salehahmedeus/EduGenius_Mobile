@@ -39,22 +39,31 @@ class ChatMessageModel {
 
   /// Adapts the API response which contains both query and response in one object
   static List<ChatMessageModel> fromApiHistory(Map<String, dynamic> json) {
-    final int id = json['id'] is String ? int.parse(json['id']) : json['id'];
-    final DateTime createdAt = DateTime.parse(json['created_at']);
+    try {
+      final id = json['id'] is String
+          ? int.tryParse(json['id'])
+          : json['id'] as int?;
+      final createdAtStr = json['created_at'] as String?;
+      final createdAt = createdAtStr != null
+          ? DateTime.parse(createdAtStr)
+          : DateTime.now();
 
-    return [
-      ChatMessageModel.user(
-        id: id,
-        text: json['user_query'],
-        createdAt: createdAt,
-      ),
-      ChatMessageModel.ai(
-        id: id,
-        text: json['ai_response'],
-        createdAt: createdAt.add(
-          const Duration(milliseconds: 100),
-        ), // Slight offset for sorting
-      ),
-    ];
+      return [
+        ChatMessageModel.user(
+          id: id,
+          text: json['user_query'] ?? "",
+          createdAt: createdAt,
+        ),
+        ChatMessageModel.ai(
+          id: id,
+          text: json['ai_response'] ?? "",
+          createdAt: createdAt.add(
+            const Duration(milliseconds: 100),
+          ), // Slight offset for sorting
+        ),
+      ];
+    } catch (e) {
+      return [];
+    }
   }
 }

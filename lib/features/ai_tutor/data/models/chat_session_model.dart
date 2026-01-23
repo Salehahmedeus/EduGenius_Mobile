@@ -10,10 +10,17 @@ class ChatSessionModel {
   });
 
   factory ChatSessionModel.fromJson(Map<String, dynamic> json) {
+    final updatedAtStr = json['updated_at'] as String?;
+    final updatedAt = updatedAtStr != null
+        ? DateTime.parse(updatedAtStr)
+        : DateTime.now();
+
     return ChatSessionModel(
-      id: json['id'] is String ? int.parse(json['id']) : json['id'],
+      id: json['id'] is String
+          ? (int.tryParse(json['id']) ?? 0)
+          : (json['id'] ?? 0),
       contextName: json['context_name'] ?? 'New Chat',
-      updatedAt: DateTime.parse(json['updated_at']),
+      updatedAt: updatedAt,
     );
   }
 }

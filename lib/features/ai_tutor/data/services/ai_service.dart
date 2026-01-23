@@ -11,9 +11,12 @@ class AiService {
   Future<List<ChatSessionModel>> getChats() async {
     try {
       final response = await _apiClient.dio.get(ApiEndpoints.aiChats);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.data != null) {
         final List<dynamic> data = response.data;
-        return data.map((item) => ChatSessionModel.fromJson(item)).toList();
+        return data
+            .where((item) => item != null)
+            .map((item) => ChatSessionModel.fromJson(item))
+            .toList();
       }
       return [];
     } catch (e) {
@@ -26,7 +29,7 @@ class AiService {
       final response = await _apiClient.dio.get(
         '${ApiEndpoints.aiHistory}/$id',
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && response.data != null) {
         final List<dynamic> data = response.data;
         final List<ChatMessageModel> messages = [];
         for (var item in data) {

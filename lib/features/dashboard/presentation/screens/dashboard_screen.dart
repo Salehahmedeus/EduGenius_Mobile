@@ -396,7 +396,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
+        border: Border.all(color: AppColors.getBorder(context)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -416,7 +416,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 getTitlesWidget: (value, meta) {
                   return Text(
                     value.toInt().toString(),
-                    style: TextStyle(color: AppColors.grey, fontSize: 10),
+                    style: TextStyle(
+                      color: AppColors.getTextSecondary(context),
+                      fontSize: 10,
+                    ),
                   );
                 },
               ),
@@ -464,7 +467,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Center(
           child: Text(
             'No topic data',
-            style: GoogleFonts.outfit(color: AppColors.grey),
+            style: GoogleFonts.outfit(
+              color: AppColors.getTextSecondary(context),
+            ),
           ),
         ),
       );
@@ -476,9 +481,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       height: 300,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.grey.withOpacity(0.1)),
+        border: Border.all(color: AppColors.getBorder(context)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -494,7 +499,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              getTooltipColor: (_) => AppColors.black,
+              getTooltipColor: (_) => AppColors.isDark(context)
+                  ? AppColors.darkItem
+                  : AppColors.black,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${topics[groupIndex].topic}\n',
@@ -531,7 +538,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
                         name,
-                        style: TextStyle(color: AppColors.grey, fontSize: 10),
+                        style: TextStyle(
+                          color: AppColors.getTextSecondary(context),
+                          fontSize: 10,
+                        ),
                       ),
                     );
                   }
@@ -563,7 +573,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: 100,
-                    color: AppColors.lightGrey.withOpacity(0.3),
+                    color: AppColors.getBorder(context).withOpacity(0.3),
                   ),
                 ),
               ],
@@ -597,7 +607,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+          side: BorderSide(color: AppColors.getBorder(context)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -612,6 +622,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
+                color: AppColors.getTextPrimary(context),
               ),
             ),
           ],

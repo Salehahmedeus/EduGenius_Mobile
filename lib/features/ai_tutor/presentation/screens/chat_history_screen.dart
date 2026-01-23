@@ -92,10 +92,23 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Chat History'),
+        backgroundColor: AppColors.getBackground(context),
+        foregroundColor: AppColors.getTextPrimary(context),
+        elevation: 0,
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Iconsax.refresh),
+            onPressed: _fetchSessions,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
             Expanded(
               child: _isLoading
                   ? const Center(
@@ -129,49 +142,20 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Chat History',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: AppColors.getTextPrimary(context),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.getBorder(context)),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Iconsax.calendar,
-                  size: 18,
-                  color: AppColors.getTextSecondary(context),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  DateFormat('dd MMM yyyy').format(DateTime.now()),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.getTextSecondary(context),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ChatScreen()),
+          );
+          if (result == true) _fetchSessions();
+        },
+        label: const Text(
+          'New Chat',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        icon: const Icon(Iconsax.add, color: Colors.white),
+        backgroundColor: AppColors.primary,
       ),
     );
   }
@@ -283,25 +267,37 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
             style: TextStyle(color: AppColors.getTextSecondary(context)),
           ),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChatScreen()),
-              );
-              if (result == true) _fetchSessions();
-            },
-            icon: const Icon(Iconsax.add, color: Colors.white),
-            label: const Text(
-              'New Chat',
-              style: TextStyle(color: Colors.white),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          Material(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatScreen()),
+                );
+                if (result == true) _fetchSessions();
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Iconsax.add, color: Colors.white, size: 20),
+                    SizedBox(width: 8),
+                    Text(
+                      'New Chat',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
