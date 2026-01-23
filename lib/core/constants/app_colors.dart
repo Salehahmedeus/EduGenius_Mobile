@@ -29,4 +29,9 @@ class AppColors {
   static const Color darkItem = Color(0xFF2C2C2E); // Item tile
   static const Color darkTextPrimary = Colors.white;
   static const Color darkTextSecondary = Color(0xFFACACAE);
+  static const Color darkBorder = Color(0xFF2C2C2E);
+
+  // Helper method to get theme colors (optional but useful)
+  static bool isDark(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark;
 }
