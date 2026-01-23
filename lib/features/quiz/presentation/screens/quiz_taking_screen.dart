@@ -27,8 +27,10 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
   bool _isSubmitting = false;
 
   List<QuestionModel> get questions => widget.quiz.questions;
-  bool get isLastQuestion => _currentQuestionIndex == questions.length - 1;
+  bool get isLastQuestion =>
+      questions.isNotEmpty && _currentQuestionIndex == questions.length - 1;
   bool get canProceed =>
+      questions.isNotEmpty &&
       _answers.containsKey(questions[_currentQuestionIndex].id);
 
   @override
@@ -340,6 +342,39 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
   }
 
   Widget _buildQuizContent(ColorScheme colorScheme) {
+    if (questions.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Iconsax.danger, size: 48, color: Colors.orange),
+              const SizedBox(height: 16),
+              Text(
+                'No Questions Found',
+                style: GoogleFonts.outfit(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'We couldn\'t load any questions for this quiz. Please try again or contact support.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.outfit(color: colorScheme.outline),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Go Back'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Column(
       children: [
         // Progress indicator
@@ -367,6 +402,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
   }
 
   Widget _buildProgressIndicator(ColorScheme colorScheme) {
+    if (questions.isEmpty) return const SizedBox.shrink();
     final progress = (_currentQuestionIndex + 1) / questions.length;
 
     return Padding(
