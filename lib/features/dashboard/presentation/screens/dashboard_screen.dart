@@ -1,9 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../data/models/dashboard_home_model.dart';
+import '../../data/models/dashboard_stats_model.dart';
 import '../../data/services/dashboard_service.dart';
-import 'dashboard_stats_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,29 +15,41 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final DashboardService _dashboardService = DashboardService();
-  DashboardHomeModel? _dashboardData;
+  DashboardHomeModel? _homeData;
+  DashboardStatsModel? _statsData;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadDashboardData();
+    _loadData();
   }
 
-  Future<void> _loadDashboardData() async {
+  Future<void> _loadData() async {
     try {
       setState(() => _isLoading = true);
-      final data = await _dashboardService.getDashboardHome();
+
+      // Load both in parallel
+      final homeFuture = _dashboardService.getDashboardHome();
+      final statsFuture = _dashboardService.getDashboardStats();
+
+      final results = await Future.wait([homeFuture, statsFuture]);
+
       if (mounted) {
         setState(() {
-          _dashboardData = data;
+          _homeData = results[0] as DashboardHomeModel;
+          _statsData = results[1] as DashboardStatsModel;
           _isLoading = false;
         });
       }
     } catch (e) {
       if (mounted) {
+        // Fallback: Try loading just home if stats fail or vice versa,
+        // but for now simple error handling
         setState(() => _isLoading = false);
-        // Handle error (toast or snackbar)
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading dashboard: $e')));
       }
     }
   }
@@ -57,15 +70,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         elevation: 0,
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Iconsax.refresh),
-            onPressed: _loadDashboardData,
-          ),
+          IconButton(icon: const Icon(Iconsax.refresh), onPressed: _loadData),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _dashboardData == null
+          : _homeData == null
           ? const Center(child: Text("Failed to load data"))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -78,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                   // Progress Overview
                   Text(
-                    'Progress Overview',
+                    'Overview',
                     style: GoogleFonts.outfit(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -89,13 +99,56 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 32),
 
                   // Recommendation
-                  if (_dashboardData!.recommendation.hasRecommendation)
+                  if (_homeData!.recommendation.hasRecommendation) ...[
                     _buildRecommendationCard(colorScheme),
+                    const SizedBox(height: 32),
+                  ],
 
-                  const SizedBox(height: 32),
+                  // Stats Section Content
+                  if (_statsData != null) ...[
+                    // Insights
+                    if (_statsData!.insights.isNotEmpty) ...[
+                      Text(
+                        'AI Insights',
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildInsightsList(colorScheme),
+                      const SizedBox(height: 32),
+                    ],
 
-                  // Actions
-                  _buildActionButtons(context, colorScheme),
+                    // Performance Trend Chart
+                    Text(
+                      'Performance Trend',
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPerformanceChart(colorScheme),
+                    const SizedBox(height: 32),
+
+                    // Topic Strengths
+                    Text(
+                      'Topic Strengths',
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTopicStrengthChart(colorScheme),
+                    const SizedBox(height: 32),
+                  ],
+
+                  // Report Button
+                  _buildReportButton(context, colorScheme),
+                  // Add extra padding at bottom
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -103,7 +156,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildGreeting(ColorScheme colorScheme) {
-    final user = _dashboardData!.user;
+    final user = _homeData!.user;
     return Row(
       children: [
         CircleAvatar(
@@ -144,7 +197,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildProgressCards(ColorScheme colorScheme) {
-    final progress = _dashboardData!.progress;
+    final progress = _homeData!.progress;
     return Row(
       children: [
         Expanded(
@@ -225,7 +278,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildRecommendationCard(ColorScheme colorScheme) {
-    final rec = _dashboardData!.recommendation;
+    final rec = _homeData!.recommendation;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -255,7 +308,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Recommendation',
+                      'AI Recommendation',
                       style: GoogleFonts.outfit(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -281,94 +334,291 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, ColorScheme colorScheme) {
+  Widget _buildInsightsList(ColorScheme colorScheme) {
     return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DashboardStatsScreen(),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              elevation: 2,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Iconsax.chart_square, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'View Detailed Statistics',
+      children: _statsData!.insights.map((insight) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colorScheme.primary.withOpacity(0.1)),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Iconsax.lamp_on, color: colorScheme.primary, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  insight,
                   style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: colorScheme.onSurface,
+                    height: 1.5,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildPerformanceChart(ColorScheme colorScheme) {
+    if (_statsData == null || _statsData!.charts.performanceTrend.isEmpty) {
+      return Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: Text(
+            'No performance data',
+            style: GoogleFonts.outfit(color: colorScheme.outline),
           ),
         ),
+      );
+    }
 
-        const SizedBox(height: 16),
+    final points = _statsData!.charts.performanceTrend
+        .asMap()
+        .entries
+        .map((e) => FlSpot(e.key.toDouble(), e.value.avgScore))
+        .toList();
 
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: OutlinedButton(
-            onPressed: () async {
-              // Generate Report Logic
-              try {
-                await _dashboardService.generateReport();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Report generated successfully'),
+    return Container(
+      height: 250,
+      padding: const EdgeInsets.only(right: 20, top: 20, bottom: 10),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(show: false),
+          titlesData: FlTitlesData(
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 40,
+                getTitlesWidget: (value, meta) {
+                  return Text(
+                    value.toInt().toString(),
+                    style: TextStyle(color: colorScheme.outline, fontSize: 10),
+                  );
+                },
+              ),
+            ),
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: false,
+              ), // Hide date labels for simplicity
+            ),
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          ),
+          borderData: FlBorderData(show: false),
+          minX: 0,
+          maxX: (points.length - 1).toDouble(),
+          minY: 0,
+          maxY: 100,
+          lineBarsData: [
+            LineChartBarData(
+              spots: points,
+              isCurved: true,
+              color: colorScheme.primary,
+              barWidth: 4,
+              isStrokeCapRound: true,
+              dotData: FlDotData(show: true),
+              belowBarData: BarAreaData(
+                show: true,
+                color: colorScheme.primary.withOpacity(0.1),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopicStrengthChart(ColorScheme colorScheme) {
+    if (_statsData == null || _statsData!.charts.topicStrengths.isEmpty) {
+      return Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Center(
+          child: Text(
+            'No topic data',
+            style: GoogleFonts.outfit(color: colorScheme.outline),
+          ),
+        ),
+      );
+    }
+
+    final topics = _statsData!.charts.topicStrengths;
+
+    return Container(
+      height: 300,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceAround,
+          maxY: 100,
+          barTouchData: BarTouchData(
+            enabled: true,
+            touchTooltipData: BarTouchTooltipData(
+              getTooltipColor: (_) => colorScheme.inverseSurface,
+              getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                return BarTooltipItem(
+                  '${topics[groupIndex].topic}\n',
+                  TextStyle(
+                    color: colorScheme.onInverseSurface,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '${rod.toY.round()}%',
+                      style: TextStyle(
+                        color: colorScheme.primary, // tooltip text color
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to generate report: $e')),
-                  );
-                }
-              }
-            },
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                  ],
+                );
+              },
+            ),
+          ),
+          titlesData: FlTitlesData(
+            show: true,
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (double value, TitleMeta meta) {
+                  final index = value.toInt();
+                  if (index >= 0 && index < topics.length) {
+                    // Truncate topic name
+                    String name = topics[index].topic;
+                    if (name.length > 5) name = '${name.substring(0, 5)}...';
+                    return SideTitleWidget(
+                      axisSide: meta.axisSide,
+                      space: 4,
+                      child: Text(
+                        name,
+                        style: TextStyle(
+                          color: colorScheme.outline,
+                          fontSize: 10,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Iconsax.document_download, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Generate Progress Report',
-                  style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          ),
+          gridData: FlGridData(show: false),
+          borderData: FlBorderData(show: false),
+          barGroups: topics.asMap().entries.map((e) {
+            return BarChartGroupData(
+              x: e.key,
+              barRods: [
+                BarChartRodData(
+                  toY: e.value.avgScore,
+                  color: e.value.avgScore >= 80
+                      ? Colors.green
+                      : (e.value.avgScore >= 60 ? Colors.orange : Colors.red),
+                  width: 20,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(6),
+                  ),
+                  backDrawRodData: BackgroundBarChartRodData(
+                    show: true,
+                    toY: 100,
+                    color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
                   ),
                 ),
               ],
-            ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReportButton(BuildContext context, ColorScheme colorScheme) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: OutlinedButton(
+        onPressed: () async {
+          // Generate Report Logic
+          try {
+            await _dashboardService.generateReport();
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Report generated successfully')),
+              );
+            }
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Failed to generate report: $e')),
+              );
+            }
+          }
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
-      ],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Iconsax.document_download, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              'Generate Progress Report',
+              style: GoogleFonts.outfit(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
