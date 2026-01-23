@@ -1,4 +1,5 @@
 import 'question_model.dart';
+import 'quiz_result_model.dart';
 
 /// Status enum for quiz state
 enum QuizStatus { pending, completed }
@@ -13,6 +14,7 @@ class QuizModel {
   final List<QuestionModel> questions;
   final DateTime? createdAt;
   final DateTime? completedAt;
+  final QuizResultModel? result;
 
   QuizModel({
     required this.id,
@@ -23,17 +25,13 @@ class QuizModel {
     this.questions = const [],
     this.createdAt,
     this.completedAt,
+    this.result,
   });
 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
     // Guard against non-map inputs
     if (json.isEmpty) {
-      return QuizModel(
-        id: 0,
-        topic: '',
-        difficulty: 1,
-        questions: const [],
-      );
+      return QuizModel(id: 0, topic: '', difficulty: 1, questions: const []);
     }
 
     // Parse status string to enum
@@ -50,53 +48,59 @@ class QuizModel {
     }
 
     // Parse questions list; backend may send list or map
-    final questionsList = _parseQuestions(json['questions'] ?? json['quiz_questions']);
+    final questionsList = _parseQuestions(
+      json['questions'] ?? json['quiz_questions'],
+    );
 
     return QuizModel(
-        id: json['id'] is String
+      id: json['id'] is String
           ? int.tryParse(json['id']) ?? 0
           : (json['id'] ?? 0),
-        topic: json['topic']?.toString() ?? '',
-        difficulty: json['difficulty'] is String
+      topic: json['topic']?.toString() ?? '',
+      difficulty: json['difficulty'] is String
           ? int.tryParse(json['difficulty']) ?? 1
           : (json['difficulty'] ?? 1),
       status: quizStatus,
-        score: json['score'] is String
+      score: json['score'] is String
           ? double.tryParse(json['score'])
           : (json['score']?.toDouble()),
       questions: questionsList,
       createdAt: _parseDate(json['created_at']),
       completedAt: _parseDate(json['completed_at']),
+      result: json['result'] != null
+          ? QuizResultModel.fromJson(Map<String, dynamic>.from(json['result']))
+          : null,
     );
   }
 
-    static List<QuestionModel> _parseQuestions(dynamic questionsData) {
-      if (questionsData is List) {
-        return questionsData
-            .map((q) {
-              if (q is Map) {
-                return QuestionModel.fromJson(Map<String, dynamic>.from(q));
-              }
-              return null;
-            })
-            .whereType<QuestionModel>()
-            .toList();
-      }
-
-      if (questionsData is Map) {
-        return questionsData.values
-            .map((q) {
-              if (q is Map) {
-                return QuestionModel.fromJson(Map<String, dynamic>.from(q));
-              }
-              return null;
-            })
-            .whereType<QuestionModel>()
-            .toList();
-      }
-
-      return [];
+  static List<QuestionModel> _parseQuestions(dynamic questionsData) {
+    if (questionsData is List) {
+      return questionsData
+          .map((q) {
+            if (q is Map) {
+              return QuestionModel.fromJson(Map<String, dynamic>.from(q));
+            }
+            return null;
+          })
+          .whereType<QuestionModel>()
+          .toList();
     }
+
+    if (questionsData is Map) {
+      return questionsData.values
+          .map((q) {
+            if (q is Map) {
+              return QuestionModel.fromJson(Map<String, dynamic>.from(q));
+            }
+            return null;
+          })
+          .whereType<QuestionModel>()
+          .toList();
+    }
+
+    return [];
+  }
+
   static DateTime? _parseDate(dynamic value) {
     if (value == null) return null;
     if (value is DateTime) return value;
@@ -117,6 +121,7 @@ class QuizModel {
       'questions': questions.map((q) => q.toJson()).toList(),
       'created_at': createdAt?.toIso8601String(),
       'completed_at': completedAt?.toIso8601String(),
+      'result': result?.toJson(),
     };
   }
 

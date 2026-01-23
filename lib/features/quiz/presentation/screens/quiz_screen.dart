@@ -406,45 +406,46 @@ class _QuizScreenState extends State<QuizScreen> {
       // PATH B: COMPLETED QUIZ -> GO TO REVIEW SCREEN
       // ============================================
 
-      // 1. Fetch Review Data (Score + Answers)
-      final data = await _quizService.getQuizReviewData(quiz.id);
+      // 1. Fetch full quiz details (includes questions + options)
+      final fullQuiz = await _quizService.getQuizDetail(quiz.id);
 
       if (mounted) Navigator.pop(context); // Close loading
 
-      // 2. Parse Data for Review
-      final List<dynamic> questionsRaw = data['questions'] ?? [];
+      // 2. Build review details from questions (options shown from fullQuiz)
+      // 2. Build review details
+      QuizResultModel result;
 
-      // Map to Question Result Details
-      final List<QuestionResultDetail> details = questionsRaw.map((q) {
-        return QuestionResultDetail(
-          questionId: 0,
-          questionText: q['question']?.toString() ?? '',
-          userAnswer: q['user_answer']?.toString() ?? '(See Explanation)',
-          correctAnswer: q['correct_answer']?.toString() ?? '',
-          isCorrect:
-              true, // Backend logic determines score, we assume true for study mode
-          explanation: q['explanation']?.toString(),
+      if (fullQuiz.result != null) {
+        result = fullQuiz.result!;
+      } else {
+        // Fallback: Build review details from questions if no result attached
+        final totalQuestions = fullQuiz.questions.length;
+        final score = quiz.score ?? 0;
+        final correctAnswers = totalQuestions == 0
+            ? 0
+            : ((score / 100) * totalQuestions).round();
+
+        final List<QuestionResultDetail> details = fullQuiz.questions.map((q) {
+          return QuestionResultDetail(
+            questionId: q.id,
+            questionText: q.questionText,
+            userAnswer: '',
+            correctAnswer: q.correctAnswer ?? '',
+            isCorrect: true,
+            explanation: q.explanation,
+          );
+        }).toList();
+
+        // Create Result Model
+        result = QuizResultModel(
+          quizId: quiz.id,
+          score: score,
+          totalQuestions: totalQuestions,
+          correctAnswers: correctAnswers,
+          feedback: "Review Mode",
+          details: details,
         );
-      }).toList();
-
-      // Create Result Model
-      final result = QuizResultModel(
-        quizId: quiz.id,
-        score: double.tryParse(data['score'].toString()) ?? 0.0,
-        totalQuestions: int.tryParse(data['total'].toString()) ?? 0,
-        correctAnswers: int.tryParse(data['correct'].toString()) ?? 0,
-        feedback: "Review Mode",
-        details: details,
-      );
-
-      // Create Quiz Model (for context)
-      final fullQuiz = QuizModel(
-        id: quiz.id,
-        topic: data['topic'] ?? quiz.topic,
-        difficulty: data['difficulty'] ?? 1,
-        questions: [], // We don't need raw questions here, details has them
-        status: QuizStatus.completed,
-      );
+      }
 
       if (!mounted) return;
 

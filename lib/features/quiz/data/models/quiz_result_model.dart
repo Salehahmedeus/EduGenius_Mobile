@@ -22,7 +22,11 @@ class QuestionResultDetail {
           ? int.tryParse(json['question_id']) ?? 0
           : (json['question_id'] ?? json['id'] ?? 0),
       questionText: json['question_text'] ?? json['question'] ?? '',
-      userAnswer: json['user_answer'] ?? json['selected_answer'] ?? '',
+      userAnswer:
+          json['user_answer'] ??
+          json['selected_option'] ??
+          json['selected_answer'] ??
+          '',
       correctAnswer: json['correct_answer']?.toString() ?? '',
       isCorrect: json['is_correct'] ?? false,
       explanation: json['explanation'],
@@ -61,7 +65,11 @@ class QuizResultModel {
 
   factory QuizResultModel.fromJson(Map<String, dynamic> json) {
     List<QuestionResultDetail> detailsList = [];
-    final detailsData = json['details'] ?? json['questions'] ?? json['results'];
+    final detailsData =
+        json['attempt_details'] ??
+        json['details'] ??
+        json['questions'] ??
+        json['results'];
     if (detailsData is List) {
       detailsList = detailsData
           .whereType<Map<String, dynamic>>()

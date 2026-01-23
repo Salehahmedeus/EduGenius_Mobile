@@ -1,427 +1,374 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../data/models/dashboard_home_model.dart';
+import '../../data/services/dashboard_service.dart';
+import 'dashboard_stats_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final DashboardService _dashboardService = DashboardService();
+  DashboardHomeModel? _dashboardData;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDashboardData();
+  }
+
+  Future<void> _loadDashboardData() async {
+    try {
+      setState(() => _isLoading = true);
+      final data = await _dashboardService.getDashboardHome();
+      if (mounted) {
+        setState(() {
+          _dashboardData = data;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        // Handle error (toast or snackbar)
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Dark Header Section
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
-              decoration: const BoxDecoration(
-                color: Color(0xFF131E29), // Dark Navy matching photo
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
-              ),
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        title: Text(
+          'Dashboard',
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Iconsax.refresh),
+            onPressed: _loadDashboardData,
+          ),
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _dashboardData == null
+          ? const Center(child: Text("Failed to load data"))
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // New Top Bar
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Icon(Iconsax.menu_1, color: Colors.white, size: 28),
-                      const Text(
-                        "Dashboard",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 1.5),
-                        ),
-                        child: const CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.transparent,
-                          child: Icon(
-                            Iconsax.user,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
+                  // User Greeting
+                  _buildGreeting(colorScheme),
+                  const SizedBox(height: 32),
 
-                  // Greeting & Headline
-                  const Text(
-                    "Good Morning! Inam 👋",
-                    style: TextStyle(
+                  // Progress Overview
+                  Text(
+                    'Progress Overview',
+                    style: GoogleFonts.outfit(
                       fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white70,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    "Let's see what can I do for you?",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      height: 1.2,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
+                  _buildProgressCards(colorScheme),
+                  const SizedBox(height: 32),
 
-                  // Mosaic Cards Section
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left: AI Voice Generator (Large)
-                      Expanded(
-                        flex: 1,
-                        child: _buildMosaicCard(
-                          title: "AI Voice Generator",
-                          subtitle: "Let's see\nwhat can I do\nfor you?",
-                          color: const Color(0xFFFFCC33), // Golden Yellow
-                          imagePath:
-                              'C:/Users/Administrator/.gemini/antigravity/brain/7ac5ae6e-4ea9-43a1-bd99-e2d524234c73/3d_guitar_illustration_1768412635209.png',
-                          isLarge: true,
-                          icon: Iconsax.microphone_2,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Right Column: TTS & Music Maker
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          children: [
-                            _buildMosaicCard(
-                              title: "Text-to-speech",
-                              color: const Color(0xFFFF7A4F), // Salmon Orange
-                              imagePath:
-                                  'C:/Users/Administrator/.gemini/antigravity/brain/7ac5ae6e-4ea9-43a1-bd99-e2d524234c73/3d_chat_bubble_illustration_1768412649803.png',
-                              icon: Iconsax.message_text,
-                            ),
-                            const SizedBox(height: 8),
-                            _buildMosaicCard(
-                              title: "Music Maker",
-                              color: const Color(0xFF7F3DFF), // Purple
-                              imagePath:
-                                  'C:/Users/Administrator/.gemini/antigravity/brain/7ac5ae6e-4ea9-43a1-bd99-e2d524234c73/3d_megaphone_illustration_1768412663044.png',
-                              icon: Iconsax.user,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Recommendation
+                  if (_dashboardData!.recommendation.hasRecommendation)
+                    _buildRecommendationCard(colorScheme),
+
+                  const SizedBox(height: 32),
+
+                  // Actions
+                  _buildActionButtons(context, colorScheme),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
+    );
+  }
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 3. Quick Actions
-                  const Text(
-                    "Quick Actions",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildQuickAction(
-                        context,
-                        "Upload",
-                        Iconsax.document_upload,
-                        AppColors.primary,
-                        () {
-                          // Navigate to Upload tab (controlled by parent) or screen
-                          // For now, parent controls tabs, but we can't easily switch tab from here without provider/callback.
-                          // But we can push to specific screens if they are separate.
-                          // Since standard tabs are indexed, maybe just show snackbar "Go to Content tab"
-                        },
-                      ),
-                      _buildQuickAction(
-                        context,
-                        "AI Chat",
-                        Iconsax.messages_1,
-                        Colors.purple,
-                        () {},
-                      ),
-                      _buildQuickAction(
-                        context,
-                        "Take Quiz",
-                        Iconsax.message_question,
-                        Colors.teal,
-                        () {},
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 4. Recent Activity
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Continue Learning",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("See All"),
-                      ),
-                    ],
-                  ),
-                  _buildRecentItem(
-                    "Flutter Architecture.pdf",
-                    "PDF • 2 hours ago",
-                    0.75,
-                  ),
-                  _buildRecentItem(
-                    "Laravel Basics Quiz",
-                    "Quiz • Yesterday",
-                    1.0,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // 5. Recommendations
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryLight.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Iconsax.lamp_on, color: AppColors.primary),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Recommendation",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "Review 'Solid Principles' to improve your score.",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.primary.withOpacity(0.8),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(
-                          Iconsax.arrow_right_3,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+  Widget _buildGreeting(ColorScheme colorScheme) {
+    final user = _dashboardData!.user;
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundColor: colorScheme.primary,
+          child: Text(
+            user.avatarInitials,
+            style: GoogleFonts.outfit(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onPrimary,
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome back,',
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                color: colorScheme.outline,
+              ),
+            ),
+            Text(
+              user.name,
+              style: GoogleFonts.outfit(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
               ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildMosaicCard({
-    required String title,
-    String? subtitle,
-    required Color color,
-    required String imagePath,
-    bool isLarge = false,
-    required IconData icon,
-  }) {
-    return Container(
-      height: isLarge ? 280 : 136, // Slightly taller for premium feel
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [color, color.withOpacity(0.8)],
+  Widget _buildProgressCards(ColorScheme colorScheme) {
+    final progress = _dashboardData!.progress;
+    return Row(
+      children: [
+        Expanded(
+          child: _buildStatCard(
+            'Quizzes',
+            '${progress.quizCount}',
+            Iconsax.task_square,
+            Colors.blue,
+            colorScheme,
+          ),
         ),
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildStatCard(
+            'Avg Score',
+            '${progress.averageScore.toStringAsFixed(0)}%',
+            Iconsax.chart_21,
+            Colors.green,
+            colorScheme,
           ),
-        ],
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // 3D Illustration
-          Positioned(
-            right: isLarge ? -20 : -10,
-            bottom: isLarge ? -10 : -5,
-            width: isLarge ? 200 : 110,
-            height: isLarge ? 200 : 110,
-            child: Transform.rotate(
-              angle: isLarge ? -0.1 : 0, // Slight tilt for dynamism
-              child: Image.file(File(imagePath), fit: BoxFit.contain),
-            ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildStatCard(
+            'Uploaded',
+            '${progress.uploadedCount}',
+            Iconsax.document_upload,
+            Colors.orange,
+            colorScheme,
           ),
-
-          // Content Layer
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Icon Chip
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(icon, color: Colors.white, size: 20),
-                ),
-                const SizedBox(height: 12),
-                // Feature Label (Small/Light)
-                Text(
-                  title.toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                if (isLarge && subtitle != null) ...[
-                  const Spacer(),
-                  // Main Typography (Bold/Large)
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      height: 1.1,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildQuickAction(
-    BuildContext context,
+  Widget _buildStatCard(
     String label,
+    String value,
     IconData icon,
     Color color,
-    VoidCallback onTap,
+    ColorScheme colorScheme,
   ) {
-    return InkWell(
-      onTap: onTap,
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 60,
-            height: 60,
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: color, size: 28),
+            child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: GoogleFonts.outfit(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            style: GoogleFonts.outfit(fontSize: 12, color: colorScheme.outline),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildRecentItem(String title, String subtitle, double progress) {
+  Widget _buildRecommendationCard(ColorScheme colorScheme) {
+    final rec = _dashboardData!.recommendation;
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primary.withOpacity(0.1),
+            colorScheme.secondary.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(Iconsax.document, color: Colors.grey),
-          ),
-          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Icon(
+                      Iconsax.magic_star,
+                      color: colorScheme.primary,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Recommendation',
+                      style: GoogleFonts.outfit(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Text(
-                  subtitle,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  rec.text,
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    color: colorScheme.onSurface,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
           ),
-          if (progress > 0)
-            SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                value: progress,
-                strokeWidth: 3,
-                backgroundColor: Colors.grey[200],
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  AppColors.primary,
-                ),
-              ),
-            ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, ColorScheme colorScheme) {
+    return Column(
+      children: [
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DashboardStatsScreen(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              elevation: 2,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Iconsax.chart_square, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'View Detailed Statistics',
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        SizedBox(
+          width: double.infinity,
+          height: 56,
+          child: OutlinedButton(
+            onPressed: () async {
+              // Generate Report Logic
+              try {
+                await _dashboardService.generateReport();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Report generated successfully'),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to generate report: $e')),
+                  );
+                }
+              }
+            },
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Iconsax.document_download, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Generate Progress Report',
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

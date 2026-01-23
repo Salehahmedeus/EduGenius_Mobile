@@ -45,6 +45,7 @@ dependencies:
   flutter_markdown: ^0.7.3
   iconsax: ^0.0.8
   percent_indicator: ^4.2.3
+  fl_chart: ^1.1.1
 
 dev_dependencies:
   flutter_test:

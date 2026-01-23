@@ -25,4 +25,9 @@ class ApiEndpoints {
   static const String quizHistory =
       '/quiz/all'; // or /quiz/all based on your backend
   static const String quizDetail = '/quiz'; // for /quiz/{id}
+
+  // Dashboard
+  static const String dashboardStats = '/dashboard/stats';
+  static const String dashboardHome = '/dashboard/home';
+  static const String dashboardReport = '/dashboard/report';
 }
