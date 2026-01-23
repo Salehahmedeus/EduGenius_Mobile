@@ -58,58 +58,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildHeader(isDark),
               const SizedBox(height: 30),
 
-              // Group 1: Messages, Archive, Devices
+              // Group 1: Academic Profile
+              _buildGroupTitle(isDark, 'Academic Profile'),
               _buildGroupContainer(isDark, [
                 _buildSettingItem(
                   isDark,
-                  icon: Iconsax.bookmark,
+                  icon: Iconsax.teacher,
                   iconBg: const Color(0xFF246BFD),
-                  title: 'Save Messages',
+                  title: 'Study Level',
+                  trailing: _buildBadge('University'),
                   onTap: () {},
                 ),
                 _buildDivider(isDark),
                 _buildSettingItem(
                   isDark,
-                  icon: Iconsax.archive_add,
-                  iconBg: const Color(0xFFF75555),
-                  title: 'Archive Chat',
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.mobile,
+                  icon: Iconsax.book_1,
                   iconBg: const Color(0xFF47D16E),
-                  title: 'Devices',
+                  title: 'My Subjects',
                   onTap: () {},
                 ),
               ]),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
-              // Group 2: Notification, Privacy, Language, Appearance
+              // Group 2: AI Tutor Preferences
+              _buildGroupTitle(isDark, 'AI Tutor Preferences'),
+              _buildGroupContainer(isDark, [
+                _buildSettingItem(
+                  isDark,
+                  icon: Iconsax.status_up,
+                  iconBg: const Color(0xFF9145FF),
+                  title: 'Response Style',
+                  trailing: _buildBadge('Detailed'),
+                  onTap: () {},
+                ),
+                _buildDivider(isDark),
+                _buildSettingItem(
+                  isDark,
+                  icon: Iconsax.volume_high,
+                  iconBg: const Color(0xFFFF981F),
+                  title: 'Tutor Voice',
+                  onTap: () {},
+                ),
+              ]),
+              const SizedBox(height: 24),
+
+              // Group 3: App Settings
+              _buildGroupTitle(isDark, 'App Settings'),
               _buildGroupContainer(isDark, [
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.notification,
-                  iconBg: const Color(0xFFFF981F),
-                  title: 'Notification',
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.lock,
                   iconBg: const Color(0xFFACACAE),
-                  title: 'Privacy and Security',
+                  title: 'Notifications',
                   onTap: () {},
                 ),
                 _buildDivider(isDark),
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.global,
-                  iconBg: const Color(0xFF9145FF),
+                  iconBg: const Color(0xFF246BFD),
                   title: 'Language',
-                  trailing: _buildLanguageBadge(),
+                  trailing: _buildBadge('English'),
                   onTap: () {},
                 ),
                 _buildDivider(isDark),
@@ -132,22 +141,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: () {},
                 ),
               ]),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
-              // Group 3: Premium
+              // Group 4: Account & Support
+              _buildGroupTitle(isDark, 'Support'),
               _buildGroupContainer(isDark, [
                 _buildSettingItem(
                   isDark,
-                  icon: Iconsax.crown,
-                  iconBg: const Color(0xFF9145FF),
-                  title: 'Chat GPT 4.0 Premium',
+                  icon: Iconsax.info_circle,
+                  iconBg: const Color(0xFFACACAE),
+                  title: 'Help Center',
                   onTap: () {},
                 ),
-              ]),
-              const SizedBox(height: 20),
-
-              // Group 4: Log Out
-              _buildGroupContainer(isDark, [
+                _buildDivider(isDark),
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.logout,
@@ -222,6 +228,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildGroupTitle(bool isDark, String title) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          color: isDark ? AppColors.darkTextSecondary : const Color(0xFF6B7280),
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+
   Widget _buildGroupContainer(bool isDark, List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
@@ -284,26 +306,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildLanguageBadge() {
+  Widget _buildBadge(String label) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.secondary.withOpacity(0.1),
+        color: AppColors.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: const [
+        children: [
           Text(
-            'English',
-            style: TextStyle(
-              color: AppColors.secondary,
+            label,
+            style: const TextStyle(
+              color: AppColors.primary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(width: 4),
-          Icon(Iconsax.arrow_right_3, color: AppColors.secondary, size: 14),
+          const SizedBox(width: 4),
+          const Icon(Iconsax.arrow_right_3, color: AppColors.primary, size: 14),
         ],
       ),
     );

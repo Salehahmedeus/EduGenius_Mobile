@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../data/models/dashboard_home_model.dart';
@@ -67,86 +68,96 @@ class _DashboardScreenState extends State<DashboardScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Iconsax.refresh), onPressed: _loadData),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _homeData == null
           ? const Center(child: Text("Failed to load data"))
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGreeting(),
-                  const SizedBox(height: 32),
-
-                  // Progress Overview
-                  Text(
-                    'Overview',
-                    style: GoogleFonts.outfit(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildProgressCards(),
-                  const SizedBox(height: 32),
-
-                  // Recommendation
-                  if (_homeData!.recommendation.hasRecommendation) ...[
-                    _buildRecommendationCard(),
+          : LiquidPullToRefresh(
+              onRefresh: _loadData,
+              color: AppColors.primary,
+              backgroundColor: AppColors.getSurface(context),
+              showChildOpacityTransition: false,
+              springAnimationDurationInMilliseconds: 500,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                physics:
+                    const AlwaysScrollableScrollPhysics(), // Required for pull to refresh
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildGreeting(),
                     const SizedBox(height: 32),
-                  ],
 
-                  // Stats Section Content
-                  if (_statsData != null) ...[
-                    // Insights
-                    if (_statsData!.insights.isNotEmpty) ...[
-                      Text(
-                        'AI Insights',
-                        style: GoogleFonts.outfit(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    // Progress Overview
+                    Text(
+                      'Overview',
+                      style: GoogleFonts.outfit(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.getTextPrimary(context),
                       ),
-                      const SizedBox(height: 16),
-                      _buildInsightsList(),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildProgressCards(),
+                    const SizedBox(height: 32),
+
+                    // Recommendation
+                    if (_homeData!.recommendation.hasRecommendation) ...[
+                      _buildRecommendationCard(),
                       const SizedBox(height: 32),
                     ],
 
-                    // Performance Trend Chart
-                    Text(
-                      'Performance Trend',
-                      style: GoogleFonts.outfit(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildPerformanceChart(),
-                    const SizedBox(height: 32),
+                    // Stats Section Content
+                    if (_statsData != null) ...[
+                      // Insights
+                      if (_statsData!.insights.isNotEmpty) ...[
+                        Text(
+                          'AI Insights',
+                          style: GoogleFonts.outfit(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.getTextPrimary(context),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildInsightsList(),
+                        const SizedBox(height: 32),
+                      ],
 
-                    // Topic Strengths
-                    Text(
-                      'Topic Strengths',
-                      style: GoogleFonts.outfit(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                      // Performance Trend Chart
+                      Text(
+                        'Performance Trend',
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.getTextPrimary(context),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTopicStrengthChart(),
-                    const SizedBox(height: 32),
+                      const SizedBox(height: 16),
+                      _buildPerformanceChart(),
+                      const SizedBox(height: 32),
+
+                      // Topic Strengths
+                      Text(
+                        'Topic Strengths',
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.getTextPrimary(context),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildTopicStrengthChart(),
+                      const SizedBox(height: 32),
+                    ],
+
+                    // Report Button
+                    _buildReportButton(context),
+                    // Add extra padding at bottom
+                    const SizedBox(height: 40),
                   ],
-
-                  // Report Button
-                  _buildReportButton(context),
-                  // Add extra padding at bottom
-                  const SizedBox(height: 40),
-                ],
+                ),
               ),
             ),
     );

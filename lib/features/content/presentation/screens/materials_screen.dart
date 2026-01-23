@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
@@ -182,8 +183,12 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                     )
                   : _groupedMaterials.isEmpty
                   ? _buildEmptyState()
-                  : RefreshIndicator(
+                  : LiquidPullToRefresh(
                       onRefresh: _fetchMaterials,
+                      color: AppColors.primary,
+                      backgroundColor: AppColors.getSurface(context),
+                      showChildOpacityTransition: false,
+                      springAnimationDurationInMilliseconds: 500,
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         itemCount: _groupedMaterials.length,

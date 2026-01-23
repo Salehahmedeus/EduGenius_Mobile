@@ -1,5 +1,6 @@
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:intl/intl.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
@@ -99,12 +100,6 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
         foregroundColor: AppColors.getTextPrimary(context),
         elevation: 0,
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Iconsax.refresh),
-            onPressed: _fetchSessions,
-          ),
-        ],
       ),
       body: SafeArea(
         child: Column(
@@ -118,8 +113,12 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                     )
                   : _groupedSessions.isEmpty
                   ? _buildEmptyState()
-                  : RefreshIndicator(
+                  : LiquidPullToRefresh(
                       onRefresh: _fetchSessions,
+                      color: AppColors.primary,
+                      backgroundColor: AppColors.getSurface(context),
+                      showChildOpacityTransition: false,
+                      springAnimationDurationInMilliseconds: 500,
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         itemCount: _groupedSessions.length,

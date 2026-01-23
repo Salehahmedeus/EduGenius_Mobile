@@ -161,12 +161,7 @@ class ChatScreenState extends State<ChatScreen> {
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
         backgroundColor: AppColors.getBackground(context),
         foregroundColor: AppColors.getTextPrimary(context),
-        actions: [
-          IconButton(
-            icon: const Icon(Iconsax.refresh),
-            onPressed: _activeConversationId != null ? _fetchHistory : null,
-          ),
-        ],
+        actions: [],
       ),
       body: PopScope(
         canPop: false,

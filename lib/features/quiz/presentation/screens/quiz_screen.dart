@@ -2,6 +2,7 @@ import 'package:edugenius_mobile/features/quiz/data/models/quiz_result_model.dar
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_review_screen.dart';
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_taking_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -66,15 +67,6 @@ class _QuizScreenState extends State<QuizScreen> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Iconsax.refresh,
-              color: AppColors.getTextPrimary(context),
-            ),
-            onPressed: _loadQuizHistory,
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -102,8 +94,12 @@ class _QuizScreenState extends State<QuizScreen> {
       return _buildEmptyState(colorScheme);
     }
 
-    return RefreshIndicator(
+    return LiquidPullToRefresh(
       onRefresh: _loadQuizHistory,
+      color: AppColors.primary,
+      backgroundColor: AppColors.getSurface(context),
+      showChildOpacityTransition: false,
+      springAnimationDurationInMilliseconds: 500,
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: _quizHistory.length,
