@@ -166,9 +166,8 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Color borderColor = Color(0xFFE5E7EB);
-
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -198,9 +197,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildDateDivider(label),
-                              ...materials.map(
-                                (m) => _buildMaterialCard(m, borderColor),
-                              ),
+                              ...materials.map((m) => _buildMaterialCard(m)),
                               const SizedBox(height: 10),
                             ],
                           );
@@ -231,13 +228,13 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1F2937),
+              color: AppColors.black,
             ),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.shade300),
+              border: Border.all(color: AppColors.lightGrey),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -245,7 +242,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey,
+                color: AppColors.grey,
               ),
             ),
           ),
@@ -277,7 +274,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              border: Border.all(color: AppColors.lightGrey),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -285,7 +282,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF6B7280),
+                color: AppColors.grey,
               ),
             ),
           ),
@@ -295,15 +292,15 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     );
   }
 
-  Widget _buildMaterialCard(MaterialModel material, Color borderColor) {
+  Widget _buildMaterialCard(MaterialModel material) {
     final isPdf = material.fileType.toLowerCase().contains('pdf');
-    final iconColor = isPdf ? const Color(0xFFF75555) : AppColors.primary;
+    final iconColor = isPdf ? AppColors.error : AppColors.primary;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: borderColor),
+        color: AppColors.white,
+        border: Border.all(color: AppColors.lightGrey),
         borderRadius: BorderRadius.circular(16),
       ),
       child: ListTile(
@@ -328,17 +325,17 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           style: const TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF374151),
+            color: AppColors.black,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
           '${material.fileType.toUpperCase()} • ${DateFormat('HH:mm').format(material.createdAt)}',
-          style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+          style: const TextStyle(fontSize: 12, color: AppColors.grey),
         ),
         trailing: PopupMenuButton<String>(
-          icon: const Icon(Iconsax.more, color: Color(0xFF6B7280), size: 18),
+          icon: const Icon(Iconsax.more, color: AppColors.grey, size: 18),
           onSelected: (value) {
             if (value == 'delete') {
               _deleteMaterial(material.id);
@@ -347,7 +344,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'delete',
-              child: Text('Delete', style: TextStyle(color: AppColors.primary)),
+              child: Text('Delete', style: TextStyle(color: AppColors.error)),
             ),
           ],
         ),
@@ -360,7 +357,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.folder_open, size: 80, color: Colors.grey[300]),
+          Icon(Iconsax.folder_open, size: 80, color: AppColors.lightGrey),
           const SizedBox(height: 16),
           Text(
             _searchQuery.isNotEmpty
@@ -368,14 +365,14 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                 : 'No materials found',
             style: const TextStyle(
               fontSize: 18,
-              color: Colors.grey,
+              color: AppColors.grey,
               fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 8),
           const Text(
             'Upload a document to get started!',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: AppColors.grey),
           ),
           if (_searchQuery.isNotEmpty)
             TextButton(

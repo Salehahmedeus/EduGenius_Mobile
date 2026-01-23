@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
@@ -11,7 +12,12 @@ class UploadScreen extends StatelessWidget {
     final titleController = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Upload Content')),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Upload Content'),
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.black,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -25,13 +31,13 @@ class UploadScreen extends StatelessWidget {
               height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+                border: Border.all(color: AppColors.grey),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Iconsax.cloud_add, size: 48, color: Colors.grey),
+                  Icon(Iconsax.cloud_add, size: 48, color: AppColors.grey),
                   SizedBox(height: 8),
                   Text('Tap to select file'),
                 ],

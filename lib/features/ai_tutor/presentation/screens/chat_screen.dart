@@ -149,8 +149,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_activeConversationId != null ? 'Chat' : 'New Chat'),
-        backgroundColor: const Color(0xFFF9FAFB),
-        foregroundColor: Colors.black,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.black,
         actions: [
           IconButton(
             icon: const Icon(Iconsax.refresh),
@@ -203,7 +203,7 @@ class ChatScreenState extends State<ChatScreen> {
           maxWidth: MediaQuery.of(context).size.width * 0.8,
         ),
         decoration: BoxDecoration(
-          color: isUser ? AppColors.primary : Colors.grey.shade200,
+          color: isUser ? AppColors.primary : AppColors.lightGrey,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -214,12 +214,12 @@ class ChatScreenState extends State<ChatScreen> {
         child: isUser
             ? Text(
                 message.text,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                style: const TextStyle(color: AppColors.white, fontSize: 16),
               )
             : MarkdownBody(
                 data: message.text,
                 styleSheet: MarkdownStyleSheet(
-                  p: const TextStyle(color: Colors.black87, fontSize: 16),
+                  p: const TextStyle(color: AppColors.black, fontSize: 16),
                 ),
               ),
       ),
@@ -233,12 +233,12 @@ class ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
+          color: AppColors.lightGrey,
           borderRadius: BorderRadius.circular(16),
         ),
         child: const Text(
           'Thinking...',
-          style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+          style: TextStyle(color: AppColors.grey, fontStyle: FontStyle.italic),
         ),
       ),
     );
@@ -248,8 +248,8 @@ class ChatScreenState extends State<ChatScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey.shade100)),
+        color: AppColors.white,
+        border: Border(top: BorderSide(color: AppColors.lightGrey)),
       ),
       child: SafeArea(
         child: Column(
@@ -268,7 +268,10 @@ class ChatScreenState extends State<ChatScreen> {
                       ),
                       label: Text(
                         _attachedFile!.path.split('/').last,
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.black,
+                        ),
                       ),
                       onDeleted: () => setState(() => _attachedFile = null),
                       backgroundColor: AppColors.primaryLight,
@@ -279,12 +282,12 @@ class ChatScreenState extends State<ChatScreen> {
               ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(32),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: AppColors.lightGrey),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
+                    color: AppColors.black.withOpacity(0.02),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -308,7 +311,7 @@ class ChatScreenState extends State<ChatScreen> {
                           decoration: InputDecoration(
                             hintText: 'Message to AI Tutor...',
                             hintStyle: TextStyle(
-                              color: Colors.grey.shade400,
+                              color: AppColors.grey,
                               fontSize: 16,
                             ),
                             border: InputBorder.none,
@@ -329,17 +332,11 @@ class ChatScreenState extends State<ChatScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        icon: Icon(
-                          Iconsax.emoji_happy,
-                          color: Colors.blueGrey.shade700,
-                        ),
+                        icon: Icon(Iconsax.emoji_happy, color: AppColors.grey),
                         onPressed: () {},
                       ),
                       IconButton(
-                        icon: Icon(
-                          Iconsax.microphone_2,
-                          color: Colors.blueGrey.shade700,
-                        ),
+                        icon: Icon(Iconsax.microphone_2, color: AppColors.grey),
                         onPressed: () {},
                       ),
                       const SizedBox(width: 4),
@@ -350,12 +347,12 @@ class ChatScreenState extends State<ChatScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                         label: const Icon(
                           Iconsax.send_1,
-                          color: Colors.white,
+                          color: AppColors.white,
                           size: 20,
                         ),
                         style: ElevatedButton.styleFrom(
