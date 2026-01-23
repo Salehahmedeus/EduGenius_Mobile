@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../auth/data/services/auth_service.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/theme_manager.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../../../routes.dart';
 
@@ -13,7 +15,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isAppearanceOn = true;
   bool _isLoggingOut = false;
   final AuthService _authService = AuthService();
 
@@ -44,33 +45,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = AppColors.isDark(context);
+
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             children: [
               // Header with Edit button
-              _buildHeader(),
+              _buildHeader(isDark),
               const SizedBox(height: 30),
 
               // Group 1: Messages, Archive, Devices
-              _buildGroupContainer([
+              _buildGroupContainer(isDark, [
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.bookmark,
                   iconBg: const Color(0xFF246BFD),
                   title: 'Save Messages',
                   onTap: () {},
                 ),
-                _buildDivider(),
+                _buildDivider(isDark),
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.archive_add,
                   iconBg: const Color(0xFFF75555),
                   title: 'Archive Chat',
                   onTap: () {},
                 ),
-                _buildDivider(),
+                _buildDivider(isDark),
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.mobile,
                   iconBg: const Color(0xFF47D16E),
                   title: 'Devices',
@@ -80,38 +87,47 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 20),
 
               // Group 2: Notification, Privacy, Language, Appearance
-              _buildGroupContainer([
+              _buildGroupContainer(isDark, [
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.notification,
                   iconBg: const Color(0xFFFF981F),
                   title: 'Notification',
                   onTap: () {},
                 ),
-                _buildDivider(),
+                _buildDivider(isDark),
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.lock,
                   iconBg: const Color(0xFFACACAE),
                   title: 'Privacy and Security',
                   onTap: () {},
                 ),
-                _buildDivider(),
+                _buildDivider(isDark),
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.global,
                   iconBg: const Color(0xFF9145FF),
                   title: 'Language',
                   trailing: _buildLanguageBadge(),
                   onTap: () {},
                 ),
-                _buildDivider(),
+                _buildDivider(isDark),
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.colorfilter,
                   iconBg: const Color(0xFF47D16E),
                   title: 'Appearance',
-                  trailing: Switch(
-                    value: _isAppearanceOn,
-                    onChanged: (val) => setState(() => _isAppearanceOn = val),
-                    activeThumbColor: const Color(0xFF47D16E),
-                    activeTrackColor: const Color(0xFF47D16E).withOpacity(0.3),
+                  trailing: ValueListenableBuilder<ThemeMode>(
+                    valueListenable: themeManager,
+                    builder: (context, mode, _) {
+                      return Switch(
+                        value: mode == ThemeMode.dark,
+                        onChanged: (val) => themeManager.toggleTheme(),
+                        activeThumbColor: AppColors.white,
+                        activeTrackColor: AppColors.success,
+                      );
+                    },
                   ),
                   onTap: () {},
                 ),
@@ -119,8 +135,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 20),
 
               // Group 3: Premium
-              _buildGroupContainer([
+              _buildGroupContainer(isDark, [
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.crown,
                   iconBg: const Color(0xFF9145FF),
                   title: 'Chat GPT 4.0 Premium',
@@ -130,8 +147,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 20),
 
               // Group 4: Log Out
-              _buildGroupContainer([
+              _buildGroupContainer(isDark, [
                 _buildSettingItem(
+                  isDark,
                   icon: Iconsax.logout,
                   iconBg: const Color(0xFFF75555),
                   title: 'Log Out',
@@ -153,7 +171,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isDark) {
     return Column(
       children: [
         Row(
@@ -164,7 +182,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: const Text(
                 'Edit',
                 style: TextStyle(
-                  color: Color(0xFF246BFD),
+                  color: AppColors.secondary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -172,53 +190,63 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ],
         ),
-        const CircleAvatar(
+        CircleAvatar(
           radius: 60,
-          backgroundColor: Color(0xFFE5E7EB),
-          backgroundImage: NetworkImage(
+          backgroundColor: isDark
+              ? AppColors.darkItem
+              : const Color(0xFFE5E7EB),
+          backgroundImage: const NetworkImage(
             'https://api.dicebear.com/7.x/avataaars/png?seed=Zachery&backgroundColor=b6e3f4',
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           'Zachery Williamson',
           style: TextStyle(
-            color: Color(0xFF1F2937),
+            color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1F2937),
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 4),
-        const Text(
+        Text(
           'zachery.williamson94@gmail.com',
-          style: TextStyle(color: Color(0xFF6B7280), fontSize: 14),
+          style: TextStyle(
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : const Color(0xFF6B7280),
+            fontSize: 14,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildGroupContainer(List<Widget> children) {
+  Widget _buildGroupContainer(bool isDark, List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : const Color(0xFFE5E7EB),
+        ),
       ),
       child: Column(children: children),
     );
   }
 
-  Widget _buildDivider() {
-    return const Divider(
+  Widget _buildDivider(bool isDark) {
+    return Divider(
       height: 1,
       thickness: 1,
-      color: Color(0xFFE5E7EB),
+      color: isDark ? AppColors.darkBorder : const Color(0xFFE5E7EB),
       indent: 60,
       endIndent: 16,
     );
   }
 
-  Widget _buildSettingItem({
+  Widget _buildSettingItem(
+    bool isDark, {
     required IconData icon,
     required Color iconBg,
     required String title,
@@ -238,15 +266,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Color(0xFF1F2937),
+        style: TextStyle(
+          color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1F2937),
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),
       trailing:
           trailing ??
-          const Icon(Iconsax.arrow_right_3, color: Color(0xFFD1D5DB), size: 18),
+          Icon(
+            Iconsax.arrow_right_3,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : const Color(0xFFD1D5DB),
+            size: 18,
+          ),
     );
   }
 
@@ -254,7 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF246BFD).withOpacity(0.1),
+        color: AppColors.secondary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -263,13 +297,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text(
             'English',
             style: TextStyle(
-              color: Color(0xFF246BFD),
+              color: AppColors.secondary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
           SizedBox(width: 4),
-          Icon(Iconsax.arrow_right_3, color: Color(0xFF246BFD), size: 14),
+          Icon(Iconsax.arrow_right_3, color: AppColors.secondary, size: 14),
         ],
       ),
     );
