@@ -198,11 +198,9 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildDateDivider(label),
-                              ...materials
-                                  .map(
-                                    (m) => _buildMaterialCard(m, borderColor),
-                                  )
-                                  .toList(),
+                              ...materials.map(
+                                (m) => _buildMaterialCard(m, borderColor),
+                              ),
                               const SizedBox(height: 10),
                             ],
                           );

@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../data/models/quiz_model.dart';
 import '../../data/models/question_model.dart';
-import '../../data/models/quiz_result_model.dart';
 import '../../data/services/quiz_service.dart';
 import 'quiz_result_screen.dart';
 
@@ -23,7 +22,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
   final QuizService _quizService = QuizService();
   final PageController _pageController = PageController();
 
-  Map<int, String> _answers = {};
+  final Map<int, String> _answers = {};
   int _currentQuestionIndex = 0;
   bool _isSubmitting = false;
 
@@ -440,7 +439,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               colorScheme: colorScheme,
               onTap: () => _selectAnswer(question.id, option),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

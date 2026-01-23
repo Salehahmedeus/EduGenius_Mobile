@@ -1,3 +1,7 @@
+import 'package:edugenius_mobile/features/quiz/data/models/question_model.dart';
+import 'package:edugenius_mobile/features/quiz/data/models/quiz_result_model.dart';
+import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_review_screen.dart';
+import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_taking_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
@@ -189,9 +193,7 @@ class _QuizScreenState extends State<QuizScreen> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            // TODO: Navigate to quiz detail or resume quiz
-          },
+          onTap: () => _handleQuizTap(quiz),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -365,5 +367,99 @@ class _QuizScreenState extends State<QuizScreen> {
     if (score >= 80) return Colors.green;
     if (score >= 60) return Colors.orange;
     return Colors.red;
+  }
+
+  Future<void> _handleQuizTap(QuizModel quiz) async {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      // ============================================
+      // PATH A: PENDING QUIZ -> GO TO TAKING SCREEN
+      // ============================================
+      if (!quiz.isCompleted) {
+        // We fetch details to ensure we have all questions loaded
+        final fullQuiz = await _quizService.getQuizDetail(quiz.id);
+
+        if (mounted) {
+          Navigator.pop(context); // Close loading
+
+          // Go to Taking Screen
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuizTakingScreen(quiz: fullQuiz),
+            ),
+          );
+
+          // Refresh list when user comes back (in case they finished it)
+          _loadQuizHistory();
+        }
+        return;
+      }
+
+      // ============================================
+      // PATH B: COMPLETED QUIZ -> GO TO REVIEW SCREEN
+      // ============================================
+
+      // 1. Fetch Review Data (Score + Answers)
+      final data = await _quizService.getQuizReviewData(quiz.id);
+
+      if (mounted) Navigator.pop(context); // Close loading
+
+      // 2. Parse Data for Review
+      final List<dynamic> questionsRaw = data['questions'] ?? [];
+
+      // Map to Question Result Details
+      final List<QuestionResultDetail> details = questionsRaw.map((q) {
+        return QuestionResultDetail(
+          questionId: 0,
+          questionText: q['question']?.toString() ?? '',
+          userAnswer: q['user_answer']?.toString() ?? '(See Explanation)',
+          correctAnswer: q['correct_answer']?.toString() ?? '',
+          isCorrect:
+              true, // Backend logic determines score, we assume true for study mode
+          explanation: q['explanation']?.toString(),
+        );
+      }).toList();
+
+      // Create Result Model
+      final result = QuizResultModel(
+        quizId: quiz.id,
+        score: double.tryParse(data['score'].toString()) ?? 0.0,
+        totalQuestions: int.tryParse(data['total'].toString()) ?? 0,
+        correctAnswers: int.tryParse(data['correct'].toString()) ?? 0,
+        feedback: "Review Mode",
+        details: details,
+      );
+
+      // Create Quiz Model (for context)
+      final fullQuiz = QuizModel(
+        id: quiz.id,
+        topic: data['topic'] ?? quiz.topic,
+        difficulty: data['difficulty'] ?? 1,
+        questions: [], // We don't need raw questions here, details has them
+        status: QuizStatus.completed,
+      );
+
+      if (!mounted) return;
+
+      // 3. Navigate
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              QuizReviewScreen(result: result, quiz: fullQuiz),
+        ),
+      );
+    } catch (e) {
+      if (mounted && Navigator.canPop(context)) Navigator.pop(context);
+      Fluttertoast.showToast(msg: "Error: $e", backgroundColor: Colors.red);
+      print("Quiz Tap Error: $e");
+    }
   }
 }

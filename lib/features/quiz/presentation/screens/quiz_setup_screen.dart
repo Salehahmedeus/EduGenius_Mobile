@@ -71,15 +71,22 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       if (!mounted) return;
 
       // Navigate to quiz taking screen
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => QuizTakingScreen(quiz: quiz)),
       );
     } catch (e) {
       setState(() => _isGeneratingQuiz = false);
+
+      // 👇 PRINT TO CONSOLE (Check your "Run" tab in VS Code)
+      print("FULL ERROR DETAILS: $e");
+
+      // 👇 SHOW RAW ERROR IN TOAST
+      // This will tell us if it's a "Timeout", "FormatException", or something else
       Fluttertoast.showToast(
-        msg: 'Failed to generate quiz. Please try again.',
+        msg: "Error: $e",
         backgroundColor: Colors.red,
+        toastLength: Toast.LENGTH_LONG, // Keep it on screen longer
       );
     }
   }

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../data/models/quiz_model.dart';
 import '../../data/models/quiz_result_model.dart';
+import '../../data/services/quiz_service.dart';
 
 /// Screen for reviewing quiz answers after completion
 class QuizReviewScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class QuizReviewScreen extends StatefulWidget {
 class _QuizReviewScreenState extends State<QuizReviewScreen> {
   int _currentQuestionIndex = 0;
   final PageController _pageController = PageController();
+  final QuizService _quizService = QuizService();
+
+  QuizModel? _quizDetail;
+  bool _isLoadingDetail = false;
 
   List<QuestionResultDetail> get details => widget.result.details;
 
@@ -26,6 +31,35 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQuizDetailIfNeeded();
+  }
+
+  Future<void> _loadQuizDetailIfNeeded() async {
+    if (widget.quiz.questions.isNotEmpty) {
+      _quizDetail = widget.quiz;
+      return;
+    }
+
+    final quizId = widget.quiz.id != 0 ? widget.quiz.id : widget.result.quizId;
+    if (quizId == 0) return;
+
+    try {
+      setState(() => _isLoadingDetail = true);
+      final detail = await _quizService.getQuizDetail(quizId);
+      if (!mounted) return;
+      setState(() {
+        _quizDetail = detail;
+        _isLoadingDetail = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _isLoadingDetail = false);
+    }
   }
 
   @override
@@ -71,16 +105,18 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
           // Questions
           Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: details.length,
-              onPageChanged: (index) {
-                setState(() => _currentQuestionIndex = index);
-              },
-              itemBuilder: (context, index) {
-                return _buildQuestionReview(details[index], colorScheme);
-              },
-            ),
+            child: _isLoadingDetail
+                ? const Center(child: CircularProgressIndicator())
+                : PageView.builder(
+                    controller: _pageController,
+                    itemCount: details.length,
+                    onPageChanged: (index) {
+                      setState(() => _currentQuestionIndex = index);
+                    },
+                    itemBuilder: (context, index) {
+                      return _buildQuestionReview(details[index], colorScheme);
+                    },
+                  ),
           ),
 
           // Navigation
@@ -159,6 +195,13 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     QuestionResultDetail detail,
     ColorScheme colorScheme,
   ) {
+    final originalQuestion = (_quizDetail ?? widget.quiz)
+        .questions
+        .where((q) => q.id == detail.questionId)
+        .firstOrNull;
+    final questionText = (originalQuestion?.questionText ?? detail.questionText)
+        .trim();
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -197,7 +240,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
           // Question text
           Text(
-            detail.questionText,
+            questionText.isNotEmpty ? questionText : 'Question',
             style: GoogleFonts.outfit(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -225,7 +268,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     ColorScheme colorScheme,
   ) {
     // Try to find the original question for full options list
-    final originalQuestion = widget.quiz.questions
+    final originalQuestion = (_quizDetail ?? widget.quiz)
+        .questions
         .where((q) => q.id == detail.questionId)
         .firstOrNull;
 
@@ -233,7 +277,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
       return originalQuestion.options.asMap().entries.map((entry) {
         final index = entry.key;
         final option = entry.value;
-        final isUserAnswer = option == detail.userAnswer;
+        final hasUserAnswer = detail.userAnswer.trim().isNotEmpty;
+        final isUserAnswer = hasUserAnswer && option == detail.userAnswer;
         final isCorrectAnswer = option == detail.correctAnswer;
 
         return _buildOptionTile(

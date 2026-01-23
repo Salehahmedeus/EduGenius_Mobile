@@ -4,112 +4,178 @@ import '../../../../core/constants/api_endpoints.dart';
 import '../models/quiz_model.dart';
 import '../models/quiz_result_model.dart';
 
-/// Service class for quiz-related API operations
 class QuizService {
   final ApiClient _apiClient = ApiClient();
 
-  /// Generate a new quiz based on selected materials and difficulty
-  /// [materialIds] - List of material IDs to generate quiz from
-  /// [difficulty] - 1=Easy, 2=Medium, 3=Hard
+  /// Generate a new quiz
   Future<QuizModel> generateQuiz({
     required List<int> materialIds,
     required int difficulty,
   }) async {
     try {
       final response = await _apiClient.dio.post(
-        ApiEndpoints.quizGenerate,
+        ApiEndpoints
+            .quizGenerate, // Make sure this is '/quiz/generate' in your constants
         data: {'material_ids': materialIds, 'difficulty': difficulty},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = response.data['data'] ?? response.data;
-        return QuizModel.fromJson(data);
+        dynamic data = response.data;
+
+        // 1. Unwrap the 'data' envelope from Laravel
+        if (data is Map && data.containsKey('data')) {
+          data = data['data'];
+        }
+
+        // 2. Safe casting to Map<String, dynamic>
+        // This fixes the specific "type mismatch" error often seen with Dio
+        if (data is Map) {
+          return QuizModel.fromJson(Map<String, dynamic>.from(data));
+        }
+
+        throw DioException(
+          requestOptions: response.requestOptions,
+          message: 'Invalid JSON format received from server',
+        );
       }
+
       throw DioException(
         requestOptions: response.requestOptions,
-        message: 'Failed to generate quiz',
+        message: 'Failed to generate quiz: Status ${response.statusCode}',
       );
     } catch (e) {
+      // Print error to console for debugging
+      print("Quiz Generation Error: $e");
       rethrow;
     }
   }
 
-  /// Submit quiz answers and get results
-  /// [quizId] - The ID of the quiz being submitted
-  /// [answers] - Map of question ID to selected answer string
+  /// Submit quiz answers
   Future<QuizResultModel> submitQuiz({
     required int quizId,
     required Map<int, String> answers,
   }) async {
     try {
-      // Convert int keys to string keys for JSON
+      // Convert int keys to string keys for JSON compatibility
       final answersJson = answers.map(
         (key, value) => MapEntry(key.toString(), value),
       );
 
       final response = await _apiClient.dio.post(
-        ApiEndpoints.quizSubmit,
+        ApiEndpoints.quizSubmit, // Make sure this is '/quiz/submit'
         data: {'quiz_id': quizId, 'answers': answersJson},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = response.data['data'] ?? response.data;
-        // Add quiz_id to the response data if not present
-        if (data is Map<String, dynamic> && !data.containsKey('quiz_id')) {
-          data['quiz_id'] = quizId;
+        dynamic data = response.data;
+
+        if (data is Map && data.containsKey('data')) {
+          data = data['data'];
         }
-        return QuizResultModel.fromJson(data);
+
+        // Add quiz_id manually if missing, needed for UI
+        if (data is Map) {
+          final safeMap = Map<String, dynamic>.from(data);
+          if (!safeMap.containsKey('quiz_id')) {
+            safeMap['quiz_id'] = quizId;
+          }
+          return QuizResultModel.fromJson(safeMap);
+        }
       }
       throw DioException(
         requestOptions: response.requestOptions,
         message: 'Failed to submit quiz',
       );
     } catch (e) {
+      print("Quiz Submission Error: $e");
       rethrow;
     }
   }
 
-  /// Get quiz history (list of past quizzes)
+  /// Get quiz history
   Future<List<QuizModel>> getHistory() async {
     try {
       final response = await _apiClient.dio.get(ApiEndpoints.quizHistory);
 
       if (response.statusCode == 200) {
-        final dynamic rawData = response.data;
-        List<dynamic> data;
+        dynamic rawData = response.data;
 
+        // 1. Handle if Laravel wraps it in { "data": [...] }
         if (rawData is Map && rawData.containsKey('data')) {
-          data = rawData['data'];
-        } else if (rawData is List) {
-          data = rawData;
-        } else {
-          return [];
+          rawData = rawData['data'];
         }
 
-        return data.map((item) => QuizModel.fromJson(item)).toList();
+        // 2. Handle if it's a direct List [...]
+        if (rawData is List) {
+          return rawData
+              .map(
+                (item) => QuizModel.fromJson(Map<String, dynamic>.from(item)),
+              )
+              .toList();
+        }
+
+        return [];
       }
       return [];
     } catch (e) {
+      print("Get History Error: $e");
       rethrow;
     }
   }
 
-  /// Get quiz detail by ID
-  Future<QuizModel> getQuizDetail(int quizId) async {
+  /// Get full quiz review details (Questions + Result)
+  Future<Map<String, dynamic>> getQuizReviewData(int quizId) async {
     try {
+      // 👇 ADD THIS PRINT
+      print(
+        "DEBUG: Requesting URL: ${ApiEndpoints.baseUrl}${ApiEndpoints.quizDetail}/$quizId",
+      );
+
       final response = await _apiClient.dio.get(
         '${ApiEndpoints.quizDetail}/$quizId',
       );
 
       if (response.statusCode == 200) {
-        final data = response.data['data'] ?? response.data;
-        return QuizModel.fromJson(data);
+        // 👇 ADD THIS PRINT
+        print("DEBUG: API Response: ${response.data}");
+        return response.data;
       }
+      throw DioException(requestOptions: response.requestOptions);
+    } on DioException catch (e) {
+      // ... keep existing error handling ...
+      print(
+        "DEBUG: Error ${e.response?.statusCode} - ${e.response?.statusMessage}",
+      );
+      rethrow;
+    }
+  }
+
+  /// Get full details of a specific quiz (Used for resuming pending quizzes)
+  Future<QuizModel> getQuizDetail(int quizId) async {
+    try {
+      // Endpoint: GET /api/quiz/{id}
+      final response = await _apiClient.dio.get(
+        '${ApiEndpoints.quizDetail}/$quizId',
+      );
+
+      if (response.statusCode == 200) {
+        dynamic data = response.data;
+
+        // Handle Laravel wrapper { "data": ... } if present
+        if (data is Map && data.containsKey('data')) {
+          data = data['data'];
+        }
+
+        // Convert to Model
+        return QuizModel.fromJson(Map<String, dynamic>.from(data));
+      }
+
       throw DioException(
         requestOptions: response.requestOptions,
-        message: 'Failed to get quiz details',
+        message: 'Failed to load quiz details',
       );
     } catch (e) {
+      print("Get Quiz Detail Error: $e");
       rethrow;
     }
   }

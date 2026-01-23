@@ -18,10 +18,12 @@ class QuestionResultDetail {
 
   factory QuestionResultDetail.fromJson(Map<String, dynamic> json) {
     return QuestionResultDetail(
-      questionId: json['question_id'] ?? json['id'] ?? 0,
+      questionId: json['question_id'] is String
+          ? int.tryParse(json['question_id']) ?? 0
+          : (json['question_id'] ?? json['id'] ?? 0),
       questionText: json['question_text'] ?? json['question'] ?? '',
-      userAnswer: json['user_answer'] ?? '',
-      correctAnswer: json['correct_answer'] ?? '',
+      userAnswer: json['user_answer'] ?? json['selected_answer'] ?? '',
+      correctAnswer: json['correct_answer']?.toString() ?? '',
       isCorrect: json['is_correct'] ?? false,
       explanation: json['explanation'],
     );
@@ -59,15 +61,26 @@ class QuizResultModel {
 
   factory QuizResultModel.fromJson(Map<String, dynamic> json) {
     List<QuestionResultDetail> detailsList = [];
-    if (json['details'] != null) {
-      detailsList = (json['details'] as List)
-          .map((d) => QuestionResultDetail.fromJson(d))
+    final detailsData = json['details'] ?? json['questions'] ?? json['results'];
+    if (detailsData is List) {
+      detailsList = detailsData
+          .whereType<Map<String, dynamic>>()
+          .map(QuestionResultDetail.fromJson)
+          .toList();
+    } else if (detailsData is Map) {
+      detailsList = detailsData.values
+          .whereType<Map<String, dynamic>>()
+          .map(QuestionResultDetail.fromJson)
           .toList();
     }
 
     return QuizResultModel(
-      quizId: json['quiz_id'] ?? 0,
-      score: (json['score'] ?? 0).toDouble(),
+      quizId: json['quiz_id'] is String
+          ? int.tryParse(json['quiz_id']) ?? 0
+          : (json['quiz_id'] ?? 0),
+      score: json['score'] is String
+          ? double.tryParse(json['score']) ?? 0
+          : (json['score'] ?? 0).toDouble(),
       totalQuestions: json['total_questions'] ?? detailsList.length,
       correctAnswers: json['correct_answers'] ?? 0,
       feedback: json['feedback'],

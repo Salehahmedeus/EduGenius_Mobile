@@ -1,3 +1,4 @@
+import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:iconsax/iconsax.dart';
@@ -118,9 +119,9 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildDateDivider(label),
-                              ...sessions
-                                  .map((s) => _buildChatCard(s, borderColor))
-                                  .toList(),
+                              ...sessions.map(
+                                (s) => _buildChatCard(s, borderColor),
+                              ),
                               const SizedBox(height: 10),
                             ],
                           );
@@ -296,7 +297,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
               style: TextStyle(color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2196F3),
+              backgroundColor: AppColors.primary,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

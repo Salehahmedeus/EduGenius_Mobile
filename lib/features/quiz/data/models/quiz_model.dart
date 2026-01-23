@@ -26,36 +26,85 @@ class QuizModel {
   });
 
   factory QuizModel.fromJson(Map<String, dynamic> json) {
+    // Guard against non-map inputs
+    if (json.isEmpty) {
+      return QuizModel(
+        id: 0,
+        topic: '',
+        difficulty: 1,
+        questions: const [],
+      );
+    }
+
     // Parse status string to enum
     QuizStatus quizStatus = QuizStatus.pending;
     if (json['status'] != null) {
-      quizStatus = json['status'] == 'completed'
+      final statusValue = json['status'].toString().toLowerCase();
+      quizStatus = statusValue == 'completed'
           ? QuizStatus.completed
           : QuizStatus.pending;
+    } else if (json['is_completed'] != null) {
+      final completed = json['is_completed'];
+      final isDone = completed == true || completed == 1 || completed == '1';
+      quizStatus = isDone ? QuizStatus.completed : QuizStatus.pending;
     }
 
-    // Parse questions list
-    List<QuestionModel> questionsList = [];
-    if (json['questions'] != null) {
-      questionsList = (json['questions'] as List)
-          .map((q) => QuestionModel.fromJson(q))
-          .toList();
-    }
+    // Parse questions list; backend may send list or map
+    final questionsList = _parseQuestions(json['questions'] ?? json['quiz_questions']);
 
     return QuizModel(
-      id: json['id'] ?? 0,
-      topic: json['topic'] ?? '',
-      difficulty: json['difficulty'] ?? 1,
+        id: json['id'] is String
+          ? int.tryParse(json['id']) ?? 0
+          : (json['id'] ?? 0),
+        topic: json['topic']?.toString() ?? '',
+        difficulty: json['difficulty'] is String
+          ? int.tryParse(json['difficulty']) ?? 1
+          : (json['difficulty'] ?? 1),
       status: quizStatus,
-      score: json['score']?.toDouble(),
+        score: json['score'] is String
+          ? double.tryParse(json['score'])
+          : (json['score']?.toDouble()),
       questions: questionsList,
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      completedAt: json['completed_at'] != null
-          ? DateTime.parse(json['completed_at'])
-          : null,
+      createdAt: _parseDate(json['created_at']),
+      completedAt: _parseDate(json['completed_at']),
     );
+  }
+
+    static List<QuestionModel> _parseQuestions(dynamic questionsData) {
+      if (questionsData is List) {
+        return questionsData
+            .map((q) {
+              if (q is Map) {
+                return QuestionModel.fromJson(Map<String, dynamic>.from(q));
+              }
+              return null;
+            })
+            .whereType<QuestionModel>()
+            .toList();
+      }
+
+      if (questionsData is Map) {
+        return questionsData.values
+            .map((q) {
+              if (q is Map) {
+                return QuestionModel.fromJson(Map<String, dynamic>.from(q));
+              }
+              return null;
+            })
+            .whereType<QuestionModel>()
+            .toList();
+      }
+
+      return [];
+    }
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      return DateTime.parse(value.toString());
+    } catch (_) {
+      return null;
+    }
   }
 
   Map<String, dynamic> toJson() {

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../auth/data/services/auth_service.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
+import '../../../../routes.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -10,6 +14,33 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isAppearanceOn = true;
+  bool _isLoggingOut = false;
+  final AuthService _authService = AuthService();
+
+  Future<void> _handleLogout() async {
+    if (_isLoggingOut) return;
+
+    setState(() => _isLoggingOut = true);
+
+    try {
+      await _authService.logout();
+
+      if (mounted) {
+        CustomSnackbar.showSuccess(context, 'Logged out successfully');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.welcome,
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomSnackbar.showError(context, e.toString());
+      }
+    } finally {
+      if (mounted) setState(() => _isLoggingOut = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +110,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   trailing: Switch(
                     value: _isAppearanceOn,
                     onChanged: (val) => setState(() => _isAppearanceOn = val),
-                    activeColor: const Color(0xFF47D16E),
+                    activeThumbColor: const Color(0xFF47D16E),
                     activeTrackColor: const Color(0xFF47D16E).withOpacity(0.3),
                   ),
                   onTap: () {},
@@ -104,7 +135,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   icon: Iconsax.logout,
                   iconBg: const Color(0xFFF75555),
                   title: 'Log Out',
-                  onTap: () {},
+                  trailing: _isLoggingOut
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : null,
+                  onTap: _handleLogout,
                 ),
               ]),
               const SizedBox(height: 30),

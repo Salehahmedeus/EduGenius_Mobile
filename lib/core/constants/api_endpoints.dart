@@ -1,5 +1,6 @@
 class ApiEndpoints {
   // For Android Emulator, use 10.0.2.2 instead of localhost or custom domains
+  // static const String baseUrl = 'http://192.168.31.65:8000/api'; for mobile testing
   static const String baseUrl = 'http://10.0.2.2:8000/api';
   // static const String baseUrl = 'https://edugenius.test/api';
 
@@ -21,6 +22,7 @@ class ApiEndpoints {
   // Quiz
   static const String quizGenerate = '/quiz/generate';
   static const String quizSubmit = '/quiz/submit';
-  static const String quizHistory = '/quiz/all';
-  static const String quizDetail = '/quiz'; // + /{id}
+  static const String quizHistory =
+      '/quiz/all'; // or /quiz/all based on your backend
+  static const String quizDetail = '/quiz'; // for /quiz/{id}
 }

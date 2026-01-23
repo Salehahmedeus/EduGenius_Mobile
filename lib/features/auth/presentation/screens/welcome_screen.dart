@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               const Spacer(),
               // Central Icon
-              Container(
+              SizedBox(
                 width: 200,
                 height: 200,
                 child: Image.asset(

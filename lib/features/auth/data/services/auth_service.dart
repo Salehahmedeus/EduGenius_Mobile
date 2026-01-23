@@ -87,4 +87,19 @@ class AuthService {
       throw e.response?.data['error'] ?? 'Invalid OTP';
     }
   }
+
+  // Logout
+  Future<void> logout() async {
+    try {
+      await _client.dio.post(ApiEndpoints.logout);
+    } on DioException catch (e) {
+      if (e.response?.statusCode != 401) {
+        throw e.response?.data['message'] ??
+            e.response?.data['error'] ??
+            'Logout failed';
+      }
+    } finally {
+      await TokenStorage.deleteToken();
+    }
+  }
 }
