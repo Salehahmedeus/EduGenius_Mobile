@@ -47,6 +47,7 @@ dependencies:
   percent_indicator: ^4.2.3
   fl_chart: ^1.1.1
   liquid_pull_to_refresh: ^3.0.1
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
