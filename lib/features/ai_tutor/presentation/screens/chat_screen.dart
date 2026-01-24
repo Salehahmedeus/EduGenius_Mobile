@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:iconsax/iconsax.dart';
@@ -312,26 +313,69 @@ class ChatScreenState extends State<ChatScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (_attachedFile != null)
-              Padding(
-                padding: EdgeInsets.only(bottom: 8.0.h),
+              Container(
+                margin: EdgeInsets.only(bottom: 12.h),
+                padding: EdgeInsets.all(12.r),
+                decoration: BoxDecoration(
+                  color: AppColors.getSurface(context),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+                  boxShadow: [
+                    if (!AppColors.isDark(context))
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                  ],
+                ),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Chip(
-                      avatar: Icon(
-                        Iconsax.document,
-                        size: 16.r,
+                    Container(
+                      padding: EdgeInsets.all(8.r),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Icon(
+                        Iconsax.document_text,
+                        size: 20.r,
                         color: AppColors.primary,
                       ),
-                      label: Text(
-                        _attachedFile!.path.split('/').last,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: AppColors.getTextPrimary(context),
-                        ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _attachedFile!.path.split('/').last,
+                            style: GoogleFonts.outfit(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.getTextPrimary(context),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Ready to analyze',
+                            style: GoogleFonts.outfit(
+                              fontSize: 10.sp,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
                       ),
-                      onDeleted: () => setState(() => _attachedFile = null),
-                      backgroundColor: AppColors.primaryLight,
-                      deleteIconColor: AppColors.primary,
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Iconsax.close_circle,
+                        color: AppColors.getTextSecondary(context),
+                        size: 20.r,
+                      ),
+                      onPressed: () => setState(() => _attachedFile = null),
                     ),
                   ],
                 ),
