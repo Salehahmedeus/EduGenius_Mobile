@@ -59,61 +59,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildHeader(isDark),
               SizedBox(height: 30.h),
 
-              // Group 1: Academic Profile
-              _buildGroupTitle(isDark, 'Academic Profile'),
-              _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.teacher,
-                  iconBg: const Color(0xFF246BFD),
-                  title: 'Study Level',
-                  trailing: _buildBadge('University'),
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.book_1,
-                  iconBg: const Color(0xFF47D16E),
-                  title: 'My Subjects',
-                  onTap: () {},
-                ),
-              ]),
-              const SizedBox(height: 24),
-
-              // Group 2: AI Tutor Preferences
-              _buildGroupTitle(isDark, 'AI Tutor Preferences'),
-              _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.status_up,
-                  iconBg: const Color(0xFF9145FF),
-                  title: 'Response Style',
-                  trailing: _buildBadge('Detailed'),
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.volume_high,
-                  iconBg: const Color(0xFFFF981F),
-                  title: 'Tutor Voice',
-                  onTap: () {},
-                ),
-              ]),
-              const SizedBox(height: 24),
-
               // Group 3: App Settings
               _buildGroupTitle(isDark, 'App Settings'),
               _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.notification,
-                  iconBg: const Color(0xFFACACAE),
-                  title: 'Notifications',
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.global,
