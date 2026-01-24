@@ -130,6 +130,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       foregroundColor: AppColors.white,
                       shape: const CircleBorder(),
                       padding: EdgeInsets.all(20.r),
+                      minimumSize: Size.zero,
                     ),
                     child: Icon(Iconsax.arrow_right_3, size: 24.r),
                   ),
