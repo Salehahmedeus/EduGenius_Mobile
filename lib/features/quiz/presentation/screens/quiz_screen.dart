@@ -2,6 +2,7 @@ import 'package:edugenius_mobile/features/quiz/data/models/quiz_result_model.dar
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_review_screen.dart';
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_taking_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
@@ -101,7 +102,7 @@ class _QuizScreenState extends State<QuizScreen> {
       showChildOpacityTransition: false,
       springAnimationDurationInMilliseconds: 500,
       child: ListView.builder(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.r),
         itemCount: _quizHistory.length,
         itemBuilder: (context, index) {
           return _buildQuizCard(_quizHistory[index], colorScheme);
@@ -113,38 +114,38 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget _buildEmptyState(ColorScheme colorScheme) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(32.r),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(24.r),
               decoration: BoxDecoration(
                 color: AppColors.primary.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Iconsax.note_2, size: 64, color: AppColors.primary),
+              child: Icon(Iconsax.note_2, size: 64.r, color: AppColors.primary),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
             Text(
               'No Quizzes Yet',
               style: GoogleFonts.outfit(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextPrimary(context),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               'Create your first AI-powered quiz\nto test your knowledge!',
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
-                fontSize: 14,
+                fontSize: 14.sp,
                 color: AppColors.getTextSecondary(context),
                 height: 1.5,
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32.h),
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -162,12 +163,9 @@ class _QuizScreenState extends State<QuizScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 16,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
               ),
             ),
@@ -182,10 +180,10 @@ class _QuizScreenState extends State<QuizScreen> {
     final difficultyColor = _getDifficultyColor(quiz.difficulty);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: AppColors.getBorder(context).withOpacity(0.5),
         ),
@@ -193,32 +191,32 @@ class _QuizScreenState extends State<QuizScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           onTap: () => _handleQuizTap(quiz),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(12.r),
                       decoration: BoxDecoration(
                         color: isCompleted
                             ? AppColors.success.withOpacity(0.1)
                             : AppColors.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Icon(
                         isCompleted ? Iconsax.tick_circle : Iconsax.note_2,
                         color: isCompleted
                             ? AppColors.success
                             : AppColors.primary,
-                        size: 24,
+                        size: 24.r,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,18 +224,18 @@ class _QuizScreenState extends State<QuizScreen> {
                           Text(
                             quiz.topic,
                             style: GoogleFonts.outfit(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.getTextPrimary(context),
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4.h),
                           Text(
                             '${quiz.questions.length} questions',
                             style: GoogleFonts.outfit(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               color: AppColors.getTextSecondary(context),
                             ),
                           ),
@@ -246,18 +244,18 @@ class _QuizScreenState extends State<QuizScreen> {
                     ),
                     if (isCompleted && quiz.score != null)
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
                           color: _getScoreColor(quiz.score!).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
                           '${quiz.score!.toStringAsFixed(0)}%',
                           style: GoogleFonts.outfit(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                             color: _getScoreColor(quiz.score!),
                           ),
@@ -265,17 +263,17 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12.h),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
                         color: difficultyColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -288,11 +286,11 @@ class _QuizScreenState extends State<QuizScreen> {
                               shape: BoxShape.circle,
                             ),
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6.w),
                           Text(
                             quiz.difficultyLabel,
                             style: GoogleFonts.outfit(
-                              fontSize: 11,
+                              fontSize: 11.sp,
                               fontWeight: FontWeight.w500,
                               color: difficultyColor,
                             ),
@@ -300,31 +298,31 @@ class _QuizScreenState extends State<QuizScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.getItemColor(context),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             isCompleted ? Iconsax.tick_circle : Iconsax.timer_1,
-                            size: 12,
+                            size: 12.r,
                             color: isCompleted
                                 ? AppColors.success
                                 : AppColors.getTextSecondary(context),
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4.w),
                           Text(
                             isCompleted ? 'Completed' : 'Pending',
                             style: GoogleFonts.outfit(
-                              fontSize: 11,
+                              fontSize: 11.sp,
                               fontWeight: FontWeight.w500,
                               color: isCompleted
                                   ? AppColors.success
@@ -339,7 +337,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       Text(
                         DateFormat('MMM d, yyyy').format(quiz.createdAt!),
                         style: GoogleFonts.outfit(
-                          fontSize: 11,
+                          fontSize: 11.sp,
                           color: AppColors.getTextSecondary(context),
                         ),
                       ),
