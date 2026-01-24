@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -25,26 +26,26 @@ class QuizResultScreen extends StatelessWidget {
       backgroundColor: AppColors.getBackground(context),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: EdgeInsets.all(24.r),
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // Result header
               _buildResultHeader(context, colorScheme),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // Score Circle
               _buildScoreCircle(context, colorScheme, scorePercent),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
 
               // Score details
               _buildScoreDetails(context, colorScheme),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
 
               // AI Feedback
               _buildFeedbackCard(context, colorScheme),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
 
               // Action buttons
               _buildActionButtons(context, colorScheme),
@@ -84,27 +85,27 @@ class QuizResultScreen extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20.r),
           decoration: BoxDecoration(
             color: iconColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: iconColor, size: 48),
+          child: Icon(icon, color: iconColor, size: 48.r),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         Text(
           title,
           style: GoogleFonts.outfit(
-            fontSize: 28,
+            fontSize: 28.sp,
             fontWeight: FontWeight.bold,
             color: AppColors.black,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4.h),
         Text(
           subtitle,
           style: GoogleFonts.outfit(
-            fontSize: 16,
+            fontSize: 16.sp,
             color: AppColors.getTextSecondary(context),
           ),
         ),
@@ -127,8 +128,8 @@ class QuizResultScreen extends StatelessWidget {
     }
 
     return CircularPercentIndicator(
-      radius: 100,
-      lineWidth: 12,
+      radius: 100.r,
+      lineWidth: 12.w,
       percent: scorePercent.clamp(0.0, 1.0),
       animation: true,
       animationDuration: 1200,
@@ -141,7 +142,7 @@ class QuizResultScreen extends StatelessWidget {
           Text(
             result.scorePercentage,
             style: GoogleFonts.outfit(
-              fontSize: 42,
+              fontSize: 42.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.getTextPrimary(context),
             ),
@@ -149,7 +150,7 @@ class QuizResultScreen extends StatelessWidget {
           Text(
             'Score',
             style: GoogleFonts.outfit(
-              fontSize: 16,
+              fontSize: 16.sp,
               color: AppColors.getTextSecondary(context),
             ),
           ),
@@ -160,10 +161,10 @@ class QuizResultScreen extends StatelessWidget {
 
   Widget _buildScoreDetails(BuildContext context, ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -217,12 +218,12 @@ class QuizResultScreen extends StatelessWidget {
   }) {
     return Column(
       children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: 8),
+        Icon(icon, color: color, size: 24.r),
+        SizedBox(height: 8.h),
         Text(
           value,
           style: GoogleFonts.outfit(
-            fontSize: 24,
+            fontSize: 24.sp,
             fontWeight: FontWeight.bold,
             color: AppColors.getTextPrimary(context),
           ),
@@ -230,7 +231,7 @@ class QuizResultScreen extends StatelessWidget {
         Text(
           label,
           style: GoogleFonts.outfit(
-            fontSize: 12,
+            fontSize: 12.sp,
             color: AppColors.getTextSecondary(context),
           ),
         ),
@@ -245,7 +246,7 @@ class QuizResultScreen extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -255,7 +256,7 @@ class QuizResultScreen extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Column(
@@ -264,33 +265,33 @@ class QuizResultScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(8.r),
                 decoration: BoxDecoration(
                   color: AppColors.primary.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Icon(
                   Iconsax.magic_star,
                   color: AppColors.primary,
-                  size: 20,
+                  size: 20.r,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
               Text(
                 'AI Feedback',
                 style: GoogleFonts.outfit(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.getTextPrimary(context),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Text(
             result.feedback!,
             style: GoogleFonts.outfit(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: AppColors.getTextPrimary(context).withOpacity(0.8),
               height: 1.5,
             ),
@@ -306,7 +307,7 @@ class QuizResultScreen extends StatelessWidget {
         // Review Answers Button
         SizedBox(
           width: double.infinity,
-          height: 56,
+          height: 56.h,
           child: ElevatedButton(
             onPressed: () {
               Navigator.push(
@@ -322,18 +323,18 @@ class QuizResultScreen extends StatelessWidget {
               foregroundColor: AppColors.white,
               elevation: 2,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Iconsax.eye, size: 20),
-                const SizedBox(width: 8),
+                Icon(Iconsax.eye, size: 20.r),
+                SizedBox(width: 8.w),
                 Text(
                   'Review Answers',
                   style: GoogleFonts.outfit(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -341,12 +342,12 @@ class QuizResultScreen extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
 
         // Back to Home Button
         SizedBox(
           width: double.infinity,
-          height: 56,
+          height: 56.h,
           child: OutlinedButton(
             onPressed: () {
               // Pop until we reach the home screen
@@ -355,18 +356,18 @@ class QuizResultScreen extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: AppColors.grey.withOpacity(0.3)),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Iconsax.home, size: 20),
-                const SizedBox(width: 8),
+                Icon(Iconsax.home, size: 20.r),
+                SizedBox(width: 8.w),
                 Text(
                   'Back to Home',
                   style: GoogleFonts.outfit(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
