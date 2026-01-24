@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/storage/app_preferences.dart';
@@ -52,27 +54,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemCount: _contents.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(40.0),
+                    padding: EdgeInsets.all(40.0.r),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(_contents[index].image, height: 300),
-                        const SizedBox(height: 48),
+                        Image.asset(_contents[index].image, height: 300.h),
+                        SizedBox(height: 48.h),
                         Text(
                           _contents[index].title,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 28,
+                          style: TextStyle(
+                            fontSize: 28.sp,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         Text(
                           _contents[index].description,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 16,
+                          style: TextStyle(
+                            fontSize: 16.sp,
                             color: AppColors.grey,
                             height: 1.5,
                           ),
@@ -84,7 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(24.0.r),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -93,14 +95,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: List.generate(
                       _contents.length,
                       (index) => Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        height: 8,
-                        width: _currentPage == index ? 24 : 8,
+                        margin: EdgeInsets.only(right: 8.w),
+                        height: 8.h,
+                        width: _currentPage == index ? 24.w : 8.w,
                         decoration: BoxDecoration(
                           color: _currentPage == index
                               ? AppColors.primary
                               : AppColors.grey.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
                       ),
                     ),
@@ -127,9 +129,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       backgroundColor: AppColors.primary,
                       foregroundColor: AppColors.white,
                       shape: const CircleBorder(),
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(20.r),
                     ),
-                    child: const Icon(Iconsax.arrow_right_3),
+                    child: Icon(Iconsax.arrow_right_3, size: 24.r),
                   ),
                 ],
               ),
