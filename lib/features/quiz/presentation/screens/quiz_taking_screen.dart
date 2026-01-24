@@ -11,6 +11,7 @@ import '../../data/models/quiz_model.dart';
 import '../../data/models/question_model.dart';
 import '../../data/services/quiz_service.dart';
 import 'quiz_result_screen.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 /// Screen for taking a quiz - displays questions one at a time
 class QuizTakingScreen extends StatefulWidget {
@@ -284,77 +285,76 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
       },
       child: Scaffold(
         backgroundColor: AppColors.getBackground(context),
-        appBar: _buildAppBar(),
+        appBar: CustomAppBar(
+          onBackPress: _showExitConfirmation,
+          leading: IconButton(
+            icon: Icon(
+              Iconsax.close_circle,
+              color: AppColors.getTextPrimary(context),
+              size: 24.r,
+            ),
+            onPressed: _showExitConfirmation,
+          ),
+          titleWidget: Column(
+            children: [
+              Text(
+                widget.quiz.topic,
+                style: GoogleFonts.outfit(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.getTextPrimary(context),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Text(
+                'question_progress'.tr(
+                  args: [
+                    (_currentQuestionIndex + 1).toString(),
+                    questions.length.toString(),
+                  ],
+                ),
+                style: GoogleFonts.outfit(
+                  fontSize: 12.sp,
+                  color: AppColors.getTextSecondary(context),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Container(
+              margin: EdgeInsets.only(right: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: widget.quiz.difficultyLabel == 'Easy'
+                    ? AppColors.success.withOpacity(0.1)
+                    : widget.quiz.difficultyLabel == 'Medium'
+                    ? AppColors.warning.withOpacity(0.1)
+                    : AppColors.error.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  child: Text(
+                    widget.quiz.difficultyLabel,
+                    style: GoogleFonts.outfit(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: widget.quiz.difficultyLabel == 'Easy'
+                          ? AppColors.success
+                          : widget.quiz.difficultyLabel == 'Medium'
+                          ? AppColors.warning
+                          : AppColors.error,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         body: _isSubmitting ? _buildSubmittingState() : _buildQuizContent(),
       ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: IconButton(
-        icon: Icon(
-          Iconsax.close_circle,
-          color: AppColors.getTextPrimary(context),
-          size: 24.r,
-        ),
-        onPressed: _showExitConfirmation,
-      ),
-      title: Column(
-        children: [
-          Text(
-            widget.quiz.topic,
-            style: GoogleFonts.outfit(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.getTextPrimary(context),
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            'question_progress'.tr(
-              args: [
-                (_currentQuestionIndex + 1).toString(),
-                questions.length.toString(),
-              ],
-            ),
-            style: GoogleFonts.outfit(
-              fontSize: 12.sp,
-              color: AppColors.getTextSecondary(context),
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: EdgeInsets.only(right: 16.w),
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-          decoration: BoxDecoration(
-            color: widget.quiz.difficultyLabel == 'Easy'
-                ? AppColors.success.withOpacity(0.1)
-                : widget.quiz.difficultyLabel == 'Medium'
-                ? AppColors.warning.withOpacity(0.1)
-                : AppColors.error.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          child: Text(
-            widget.quiz.difficultyLabel,
-            style: GoogleFonts.outfit(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: widget.quiz.difficultyLabel == 'Easy'
-                  ? AppColors.success
-                  : widget.quiz.difficultyLabel == 'Medium'
-                  ? AppColors.warning
-                  : AppColors.error,
-            ),
-          ),
-        ),
-      ],
     );
   }
 

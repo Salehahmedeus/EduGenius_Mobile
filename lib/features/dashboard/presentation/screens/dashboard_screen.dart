@@ -1,3 +1,4 @@
+import '../../../../core/widgets/custom_app_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -62,15 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        title: Text(
-          'dashboard'.tr(),
-          style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: 'dashboard'.tr(), showBackButton: false),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _homeData == null

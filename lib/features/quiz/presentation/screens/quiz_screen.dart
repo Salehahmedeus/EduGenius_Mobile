@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:edugenius_mobile/features/quiz/data/models/quiz_result_model.dart';
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_review_screen.dart';
 import 'package:edugenius_mobile/features/quiz/presentation/screens/quiz_taking_screen.dart';
@@ -13,6 +14,7 @@ import '../../data/models/quiz_model.dart';
 import '../../data/services/quiz_service.dart';
 import 'quiz_setup_screen.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 /// Main quiz screen showing quiz history and option to create new quiz
 class QuizScreen extends StatefulWidget {
@@ -37,16 +39,20 @@ class _QuizScreenState extends State<QuizScreen> {
     try {
       setState(() => _isLoading = true);
       final history = await _quizService.getHistory();
-      setState(() {
-        _quizHistory = history;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _quizHistory = history;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() => _isLoading = false);
-      Fluttertoast.showToast(
-        msg: 'Failed to load quiz history',
-        backgroundColor: AppColors.error,
-      );
+      if (mounted) {
+        setState(() => _isLoading = false);
+        Fluttertoast.showToast(
+          msg: 'load_quiz_history_error'.tr(),
+          backgroundColor: AppColors.error,
+        );
+      }
     }
   }
 
@@ -57,18 +63,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'Quizzes',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w600,
-            color: AppColors.getTextPrimary(context),
-          ),
-        ),
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: 'quizzes'.tr(), showBackButton: false),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _buildContent(colorScheme),
@@ -83,7 +78,7 @@ class _QuizScreenState extends State<QuizScreen> {
         foregroundColor: AppColors.white,
         icon: const Icon(Iconsax.add),
         label: Text(
-          'New Quiz',
+          'new_quiz'.tr(),
           style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
         ),
       ),
@@ -128,7 +123,7 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             SizedBox(height: 24.h),
             Text(
-              'No Quizzes Yet',
+              'no_quizzes_yet'.tr(),
               style: GoogleFonts.outfit(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
@@ -137,7 +132,7 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Create your first AI-powered quiz\nto test your knowledge!',
+              'create_first_quiz_msg'.tr(),
               textAlign: TextAlign.center,
               style: GoogleFonts.outfit(
                 fontSize: 14.sp,
@@ -157,7 +152,7 @@ class _QuizScreenState extends State<QuizScreen> {
               },
               icon: const Icon(Iconsax.add),
               label: Text(
-                'Create Quiz',
+                'create_quiz'.tr(),
                 style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
               ),
               style: ElevatedButton.styleFrom(
@@ -233,7 +228,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            '${quiz.questions.length} questions',
+                            '${quiz.questions.length} ${'questions'.tr()}',
                             style: GoogleFonts.outfit(
                               fontSize: 12.sp,
                               color: AppColors.getTextSecondary(context),
@@ -288,7 +283,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           ),
                           SizedBox(width: 6.w),
                           Text(
-                            quiz.difficultyLabel,
+                            quiz.difficultyLabel.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w500,
@@ -320,7 +315,7 @@ class _QuizScreenState extends State<QuizScreen> {
                           ),
                           SizedBox(width: 4.w),
                           Text(
-                            isCompleted ? 'Completed' : 'Pending',
+                            isCompleted ? 'completed'.tr() : 'pending'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w500,
@@ -335,7 +330,10 @@ class _QuizScreenState extends State<QuizScreen> {
                     const Spacer(),
                     if (quiz.createdAt != null)
                       Text(
-                        DateFormat('MMM d, yyyy').format(quiz.createdAt!),
+                        DateFormat(
+                          'MMM d, yyyy',
+                          context.locale.languageCode,
+                        ).format(quiz.createdAt!),
                         style: GoogleFonts.outfit(
                           fontSize: 11.sp,
                           color: AppColors.getTextSecondary(context),
@@ -379,17 +377,12 @@ class _QuizScreenState extends State<QuizScreen> {
     );
 
     try {
-      // ============================================
-      // PATH A: PENDING QUIZ -> GO TO TAKING SCREEN
-      // ============================================
       if (!quiz.isCompleted) {
-        // We fetch details to ensure we have all questions loaded
         final fullQuiz = await _quizService.getQuizDetail(quiz.id);
 
         if (mounted) {
           Navigator.pop(context); // Close loading
 
-          // Go to Taking Screen
           await Navigator.push(
             context,
             MaterialPageRoute(
@@ -397,29 +390,20 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           );
 
-          // Refresh list when user comes back (in case they finished it)
           _loadQuizHistory();
         }
         return;
       }
 
-      // ============================================
-      // PATH B: COMPLETED QUIZ -> GO TO REVIEW SCREEN
-      // ============================================
-
-      // 1. Fetch full quiz details (includes questions + options)
       final fullQuiz = await _quizService.getQuizDetail(quiz.id);
 
       if (mounted) Navigator.pop(context); // Close loading
 
-      // 2. Build review details from questions (options shown from fullQuiz)
-      // 2. Build review details
       QuizResultModel result;
 
       if (fullQuiz.result != null) {
         result = fullQuiz.result!;
       } else {
-        // Fallback: Build review details from questions if no result attached
         final totalQuestions = fullQuiz.questions.length;
         final score = quiz.score ?? 0;
         final correctAnswers = totalQuestions == 0
@@ -437,7 +421,6 @@ class _QuizScreenState extends State<QuizScreen> {
           );
         }).toList();
 
-        // Create Result Model
         result = QuizResultModel(
           quizId: quiz.id,
           score: score,
@@ -450,7 +433,6 @@ class _QuizScreenState extends State<QuizScreen> {
 
       if (!mounted) return;
 
-      // 3. Navigate
       Navigator.push(
         context,
         MaterialPageRoute(

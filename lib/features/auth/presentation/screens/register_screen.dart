@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -35,13 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
-          onPressed: () => Navigator.maybePop(context),
-        ),
-      ),
+      appBar: const CustomAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24.0.w),

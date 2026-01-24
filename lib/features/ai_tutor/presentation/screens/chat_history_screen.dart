@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,7 @@ import '../../../../core/utils/error_handler.dart';
 import '../../data/models/chat_session_model.dart';
 import '../../data/services/ai_service.dart';
 import 'chat_screen.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 class ChatHistoryScreen extends StatefulWidget {
   const ChatHistoryScreen({super.key});
@@ -55,7 +57,6 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
 
-    // Sort sessions by date (newest first)
     sessions.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
     for (var session in sessions) {
@@ -66,11 +67,14 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       );
       String label;
       if (date == today) {
-        label = 'Today';
+        label = 'today'.tr();
       } else if (date == yesterday) {
-        label = 'Yesterday';
+        label = 'yesterday'.tr();
       } else {
-        label = DateFormat('MMMM dd, yyyy').format(date);
+        label = DateFormat(
+          'MMMM dd, yyyy',
+          context.locale.languageCode,
+        ).format(date);
       }
 
       if (!grouped.containsKey(label)) {
@@ -84,8 +88,8 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   Future<void> _deleteSession(int id) async {
     try {
       await _aiService.deleteChat(id);
-      _fetchSessions(); // Refresh grouping
-      if (mounted) CustomSnackbar.showSuccess(context, "Chat deleted");
+      _fetchSessions();
+      if (mounted) CustomSnackbar.showSuccess(context, "chat_deleted".tr());
     } catch (e) {
       if (mounted) CustomSnackbar.showError(context, ErrorHandler.parse(e));
     }
@@ -95,17 +99,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Chat History',
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: AppColors.getBackground(context),
-        foregroundColor: AppColors.getTextPrimary(context),
-        elevation: 0,
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: 'chat_history'.tr(), showBackButton: false),
       body: SafeArea(
         child: Column(
           children: [
@@ -155,7 +149,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           if (result == true) _fetchSessions();
         },
         label: Text(
-          'New Chat',
+          'new_chat'.tr(),
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -227,7 +221,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
         subtitle: Padding(
           padding: EdgeInsets.only(top: 4.0.h),
           child: Text(
-            'Conversation with AI Tutor • ${DateFormat('HH:mm').format(session.updatedAt)}',
+            '${'chat_with_ai'.tr()} • ${DateFormat('HH:mm').format(session.updatedAt)}',
             style: TextStyle(
               fontSize: 13.sp,
               color: AppColors.getTextSecondary(context),
@@ -244,9 +238,12 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
             }
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'delete',
-              child: Text('Delete', style: TextStyle(color: AppColors.error)),
+              child: Text(
+                'delete'.tr(),
+                style: TextStyle(color: AppColors.error),
+              ),
             ),
           ],
         ),
@@ -262,7 +259,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           Icon(Iconsax.clock, size: 80.r, color: AppColors.getSurface(context)),
           SizedBox(height: 16.h),
           Text(
-            'No chat history yet',
+            'no_chat_history'.tr(),
             style: TextStyle(
               fontSize: 18.sp,
               color: AppColors.grey,
@@ -271,7 +268,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Start a new conversation with your AI Tutor!',
+            'start_chat_msg'.tr(),
             style: TextStyle(
               color: AppColors.getTextSecondary(context),
               fontSize: 14.sp,
@@ -298,7 +295,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                     Icon(Iconsax.add, color: Colors.white, size: 20.r),
                     SizedBox(width: 8.w),
                     Text(
-                      'New Chat',
+                      'new_chat'.tr(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14.sp,

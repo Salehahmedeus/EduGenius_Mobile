@@ -11,6 +11,7 @@ import 'package:edugenius_mobile/core/utils/error_handler.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/material_model.dart';
 import '../../data/services/content_service.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 class MaterialsScreen extends StatefulWidget {
   const MaterialsScreen({super.key});
@@ -175,49 +176,69 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildSearchBar(),
-            Expanded(
-              child: _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
-                    )
-                  : _groupedMaterials.isEmpty
-                  ? _buildEmptyState()
-                  : LiquidPullToRefresh(
-                      onRefresh: _fetchMaterials,
-                      color: AppColors.primary,
-                      backgroundColor: AppColors.getSurface(context),
-                      showChildOpacityTransition: false,
-                      springAnimationDurationInMilliseconds: 500,
-                      child: ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        itemCount: _groupedMaterials.length,
-                        itemBuilder: (context, index) {
-                          String label = _groupedMaterials.keys.elementAt(
-                            index,
-                          );
-                          List<MaterialModel> materials =
-                              _groupedMaterials[label]!;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildDateDivider(label),
-                              ...materials.map((m) => _buildMaterialCard(m)),
-                              SizedBox(height: 10.h),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
+      appBar: CustomAppBar(
+        title: 'materials_header'.tr(),
+        showBackButton: false,
+        actions: [
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.getBorder(context)),
+              borderRadius: BorderRadius.circular(20.r),
             ),
-          ],
-        ),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Text(
+                  '$_totalCount ${'files'.tr()}',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.getTextSecondary(context),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          _buildSearchBar(),
+          Expanded(
+            child: _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(color: AppColors.primary),
+                  )
+                : _groupedMaterials.isEmpty
+                ? _buildEmptyState()
+                : LiquidPullToRefresh(
+                    onRefresh: _fetchMaterials,
+                    color: AppColors.primary,
+                    backgroundColor: AppColors.getSurface(context),
+                    showChildOpacityTransition: false,
+                    springAnimationDurationInMilliseconds: 500,
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      itemCount: _groupedMaterials.length,
+                      itemBuilder: (context, index) {
+                        String label = _groupedMaterials.keys.elementAt(index);
+                        List<MaterialModel> materials =
+                            _groupedMaterials[label]!;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildDateDivider(label),
+                            ...materials.map((m) => _buildMaterialCard(m)),
+                            SizedBox(height: 10.h),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _pickAndUploadFile,
@@ -227,40 +248,6 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         ),
         icon: const Icon(Iconsax.document_upload, color: Colors.white),
         backgroundColor: AppColors.primary,
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 10.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'materials_header'.tr(),
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.getTextPrimary(context),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.getBorder(context)),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              '$_totalCount ${'files'.tr()}',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.getTextSecondary(context),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

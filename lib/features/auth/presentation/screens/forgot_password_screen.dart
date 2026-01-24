@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
@@ -8,6 +8,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -31,7 +32,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await _authService.sendOtp(_emailController.text.trim());
 
       if (mounted) {
-        CustomSnackbar.showInfo(context, "OTP sent to your email");
+        CustomSnackbar.showInfo(context, "otp_sent_email".tr());
         Navigator.pushNamed(
           context,
           Routes.otpVerify,
@@ -39,7 +40,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         );
       }
     } catch (e) {
-      CustomSnackbar.showError(context, e.toString());
+      if (mounted) CustomSnackbar.showError(context, e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -48,13 +49,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      backgroundColor: AppColors.getBackground(context),
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 24.0.w),
         child: Form(
@@ -63,7 +59,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 20.h),
-              // Logo or Image can go here if needed
               SizedBox(
                 width: 200.r,
                 height: 200.r,
@@ -73,7 +68,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               SizedBox(height: 24.h),
               Text(
-                "Forgot Password?",
+                "forgot_password_title".tr(),
                 style: TextStyle(
                   fontSize: 26.sp,
                   fontWeight: FontWeight.bold,
@@ -82,27 +77,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               SizedBox(height: 12.h),
               Text(
-                "Enter your email address to receive a verification code.",
+                "forgot_password_msg".tr(),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14.sp, color: AppColors.grey),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.getTextSecondary(context),
+                ),
               ),
               SizedBox(height: 48.h),
 
               // Email Field
               CustomTextField(
                 controller: _emailController,
-                hintText: "Email",
+                hintText: "email".tr(),
                 prefixIcon: Iconsax.sms,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
+                    return 'enter_email_error'.tr();
                   }
                   final emailRegex = RegExp(
                     r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
                   );
                   if (!emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email address';
+                    return 'valid_email_error'.tr();
                   }
                   return null;
                 },
@@ -111,7 +109,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
               // Send Button
               CustomButton(
-                text: "Send OTP",
+                text: "send_otp".tr(),
                 isLoading: _isLoading,
                 onPressed: _handleSendOtp,
               ),

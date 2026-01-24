@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -157,18 +158,9 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Iconsax.arrow_left, size: 24.r),
-          onPressed: () => Navigator.maybePop(context, true),
-        ),
-        title: Text(
-          _activeConversationId != null ? 'chat'.tr() : 'new_chat'.tr(),
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
-        ),
-        backgroundColor: AppColors.getBackground(context),
-        foregroundColor: AppColors.getTextPrimary(context),
-        actions: [],
+      appBar: CustomAppBar(
+        title: _activeConversationId != null ? 'chat'.tr() : 'new_chat'.tr(),
+        onBackPress: () => Navigator.maybePop(context, true),
       ),
       body: PopScope(
         canPop: false,

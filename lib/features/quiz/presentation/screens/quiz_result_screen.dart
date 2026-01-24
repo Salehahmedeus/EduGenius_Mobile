@@ -9,6 +9,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../data/models/quiz_model.dart';
 import '../../data/models/quiz_result_model.dart';
 import 'quiz_review_screen.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 /// Screen displaying quiz results with score and feedback
 class QuizResultScreen extends StatelessWidget {
@@ -25,6 +26,17 @@ class QuizResultScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
+      appBar: CustomAppBar(
+        title: 'quiz_results'.tr(),
+        showBackButton: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Iconsax.home),
+            onPressed: () =>
+                Navigator.of(context).popUntil((route) => route.isFirst),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(24.r),

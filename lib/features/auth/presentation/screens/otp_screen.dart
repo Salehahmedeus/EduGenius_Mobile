@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:iconsax/iconsax.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 import '../../data/services/auth_service.dart';
@@ -10,10 +9,10 @@ import '../../../../routes.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
-// import '../../../../core/widgets/custom_text_field.dart'; // No longer needed here
+import '../../../../core/widgets/custom_app_bar.dart';
 
 class OtpScreen extends StatefulWidget {
-  final String? email; // Passed from ForgotPasswordScreen
+  final String? email;
 
   const OtpScreen({super.key, this.email});
 
@@ -69,17 +68,14 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void _handleVerifyOtp() async {
-    // Form validation might not work directly with Pinput if wrapped in Form in duplicate way,
-    // but Pinput has its own validator. For now, we check manually or use form.
-
     final email = _email;
     if (email.isEmpty) {
-      CustomSnackbar.showError(context, "Email not found. Please try again.");
+      CustomSnackbar.showError(context, "email_not_found".tr());
       return;
     }
 
     if (_otpController.text.length != 6) {
-      CustomSnackbar.showWarning(context, "Please enter a valid 6-digit OTP");
+      CustomSnackbar.showWarning(context, "enter_valid_otp".tr());
       return;
     }
 
@@ -93,16 +89,16 @@ class _OtpScreenState extends State<OtpScreen> {
 
       if (success) {
         if (mounted) {
-          CustomSnackbar.showSuccess(context, "OTP Verified!");
+          CustomSnackbar.showSuccess(context, "otp_verified".tr());
           Navigator.pushNamedAndRemoveUntil(
             context,
-            Routes.dashboard, // Or appropriate next screen
+            Routes.dashboard,
             (route) => false,
           );
         }
       }
     } catch (e) {
-      CustomSnackbar.showError(context, e.toString());
+      if (mounted) CustomSnackbar.showError(context, e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -117,11 +113,11 @@ class _OtpScreenState extends State<OtpScreen> {
     try {
       await _authService.sendOtp(email);
       if (mounted) {
-        CustomSnackbar.showInfo(context, "OTP resent successfully");
+        CustomSnackbar.showInfo(context, "otp_resent".tr());
         startTimer();
       }
     } catch (e) {
-      CustomSnackbar.showError(context, e.toString());
+      if (mounted) CustomSnackbar.showError(context, e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -138,7 +134,7 @@ class _OtpScreenState extends State<OtpScreen> {
         fontWeight: FontWeight.bold,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primaryLight, // Light red/pink background
+        color: AppColors.primaryLight,
         borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: Colors.transparent),
       ),
@@ -154,18 +150,10 @@ class _OtpScreenState extends State<OtpScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: const CustomAppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 24.0.w),
         child: Column(
-          // Removed Form widget wrapper as Pinput handles its own state mostly, simplified for now
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: 20.h),
@@ -176,7 +164,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             SizedBox(height: 24.h),
             Text(
-              "Verification Code",
+              "verification_code".tr(),
               style: TextStyle(
                 fontSize: 26.sp,
                 fontWeight: FontWeight.bold,
@@ -185,7 +173,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             SizedBox(height: 12.h),
             Text(
-              "We have sent the code verification to\n${_email.isNotEmpty ? _email : 'your email'}",
+              "${'verification_msg'.tr()}\n${_email.isNotEmpty ? _email : 'email'.tr()}",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.sp,
@@ -202,7 +190,7 @@ class _OtpScreenState extends State<OtpScreen> {
               focusedPinTheme: focusedPinTheme,
               submittedPinTheme: submittedPinTheme,
               validator: (s) {
-                return s?.length == 6 ? null : 'Pin is incorrect';
+                return s?.length == 6 ? null : 'pin_incorrect'.tr();
               },
               pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
               showCursor: true,
@@ -217,7 +205,7 @@ class _OtpScreenState extends State<OtpScreen> {
               children: [
                 if (!_isResendEnabled)
                   Text(
-                    "Resend code in 00:${_start.toString().padLeft(2, '0')}",
+                    "${'resend_in'.tr()} 00:${_start.toString().padLeft(2, '0')}",
                     style: TextStyle(
                       color: AppColors.getTextSecondary(context),
                       fontSize: 14.sp,
@@ -227,7 +215,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   TextButton(
                     onPressed: _handleResendOtp,
                     child: Text(
-                      "Resend Code",
+                      "resend_code".tr(),
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.primary,
@@ -242,7 +230,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
             // Verify Button
             CustomButton(
-              text: "Verify",
+              text: "verify".tr(),
               isLoading: _isLoading,
               onPressed: _handleVerifyOtp,
             ),

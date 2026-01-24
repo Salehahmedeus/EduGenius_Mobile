@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,6 +9,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../data/models/quiz_model.dart';
 import '../../data/models/quiz_result_model.dart';
 import '../../data/services/quiz_service.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 /// Screen for reviewing quiz answers after completion
 class QuizReviewScreen extends StatefulWidget {
@@ -72,20 +74,11 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Iconsax.arrow_left,
-            color: AppColors.getTextPrimary(context),
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Column(
+      appBar: CustomAppBar(
+        titleWidget: Column(
           children: [
             Text(
-              'Review Answers',
+              'review_answers'.tr(),
               style: GoogleFonts.outfit(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
@@ -93,7 +86,12 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               ),
             ),
             Text(
-              'Question ${_currentQuestionIndex + 1} of ${details.length}',
+              'question_progress'.tr(
+                args: [
+                  (_currentQuestionIndex + 1).toString(),
+                  details.length.toString(),
+                ],
+              ),
               style: GoogleFonts.outfit(
                 fontSize: 12.sp,
                 color: AppColors.getTextSecondary(context),
@@ -101,7 +99,6 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             ),
           ],
         ),
-        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -235,7 +232,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                 ),
                 SizedBox(width: 6.w),
                 Text(
-                  detail.isCorrect ? 'Correct' : 'Incorrect',
+                  detail.isCorrect ? 'correct'.tr() : 'incorrect'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
@@ -251,7 +248,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
           // Question text
           Text(
-            questionText.isNotEmpty ? questionText : 'Question',
+            questionText.isNotEmpty ? questionText : 'question'.tr(),
             style: GoogleFonts.outfit(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
@@ -305,7 +302,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     return [
       _buildOptionTile(
         option: detail.userAnswer,
-        label: 'Your Answer',
+        label: 'your_answer'.tr(),
         isUserAnswer: true,
         isCorrectAnswer: detail.isCorrect,
         colorScheme: colorScheme,
@@ -313,7 +310,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
       if (!detail.isCorrect)
         _buildOptionTile(
           option: detail.correctAnswer,
-          label: 'Correct',
+          label: 'correct'.tr(),
           isUserAnswer: false,
           isCorrectAnswer: true,
           colorScheme: colorScheme,
@@ -416,7 +413,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               Icon(Iconsax.lamp_on, color: AppColors.info, size: 20.r),
               SizedBox(width: 8.w),
               Text(
-                'Explanation',
+                'explanation'.tr(),
                 style: GoogleFonts.outfit(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
@@ -477,7 +474,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                       Icon(Iconsax.arrow_left_2, size: 20.r),
                       SizedBox(width: 8.w),
                       Text(
-                        'Previous',
+                        'previous'.tr(),
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w600,
                           fontSize: 14.sp,
@@ -512,7 +509,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Next',
+                        'next'.tr(),
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w600,
                           fontSize: 14.sp,
@@ -542,7 +539,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                       Icon(Iconsax.tick_circle, size: 20.r),
                       SizedBox(width: 8.w),
                       Text(
-                        'Done',
+                        'done'.tr(),
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w600,
                           fontSize: 14.sp,

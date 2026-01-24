@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -128,27 +129,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Iconsax.arrow_left,
-            color: AppColors.getTextPrimary(context),
-            size: 24.r,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'create_quiz'.tr(),
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w600,
-            fontSize: 20.sp,
-            color: AppColors.getTextPrimary(context),
-          ),
-        ),
-        centerTitle: true,
-      ),
+      appBar: CustomAppBar(title: 'create_quiz'.tr()),
       body: _isLoadingMaterials
           ? const Center(child: CircularProgressIndicator())
           : _buildContent(colorScheme),

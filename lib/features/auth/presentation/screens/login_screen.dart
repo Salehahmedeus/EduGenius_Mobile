@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -62,15 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
-          onPressed: () => Navigator.pushNamedAndRemoveUntil(
-            context,
-            Routes.welcome,
-            (route) => false,
-          ),
+      appBar: CustomAppBar(
+        onBackPress: () => Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.welcome,
+          (route) => false,
         ),
       ),
       body: SingleChildScrollView(

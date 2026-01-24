@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../auth/data/services/auth_service.dart';
@@ -10,6 +10,7 @@ import '../../../../core/theme/theme_manager.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../../../routes.dart';
 import '../../../auth/data/models/user_model.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -122,82 +123,80 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-          child: Column(
-            children: [
-              // Header with Edit button
-              _buildHeader(isDark),
-              SizedBox(height: 30.h),
+      appBar: CustomAppBar(title: 'settings'.tr(), showBackButton: false),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        child: Column(
+          children: [
+            // Header with Profile
+            _buildHeader(isDark),
+            SizedBox(height: 30.h),
 
-              // Group 3: App Settings
-              _buildGroupTitle(isDark, 'settings'.tr()),
-              _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.global,
-                  iconBg: const Color(0xFF246BFD),
-                  title: 'language'.tr(),
-                  trailing: _buildBadge(
-                    context.locale.languageCode == 'en'
-                        ? 'english'.tr()
-                        : 'arabic'.tr(),
-                  ),
-                  onTap: () => _showLanguageDialog(context),
+            // Group 3: App Settings
+            _buildGroupTitle(isDark, 'appearance'.tr()),
+            _buildGroupContainer(isDark, [
+              _buildSettingItem(
+                isDark,
+                icon: Iconsax.global,
+                iconBg: const Color(0xFF246BFD),
+                title: 'language'.tr(),
+                trailing: _buildBadge(
+                  context.locale.languageCode == 'en'
+                      ? 'english'.tr()
+                      : 'arabic'.tr(),
                 ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.colorfilter,
-                  iconBg: const Color(0xFF47D16E),
-                  title: 'appearance'.tr(),
-                  trailing: ValueListenableBuilder<ThemeMode>(
-                    valueListenable: themeManager,
-                    builder: (context, mode, _) {
-                      return Switch(
-                        value: mode == ThemeMode.dark,
-                        onChanged: (val) => themeManager.toggleTheme(),
-                        activeThumbColor: AppColors.white,
-                        activeTrackColor: AppColors.success,
-                      );
-                    },
-                  ),
-                  onTap: () {},
+                onTap: () => _showLanguageDialog(context),
+              ),
+              _buildDivider(isDark),
+              _buildSettingItem(
+                isDark,
+                icon: Iconsax.colorfilter,
+                iconBg: const Color(0xFF47D16E),
+                title: 'dark_mode'.tr(),
+                trailing: ValueListenableBuilder<ThemeMode>(
+                  valueListenable: themeManager,
+                  builder: (context, mode, _) {
+                    return Switch(
+                      value: mode == ThemeMode.dark,
+                      onChanged: (val) => themeManager.toggleTheme(),
+                      activeThumbColor: AppColors.white,
+                      activeTrackColor: AppColors.success,
+                    );
+                  },
                 ),
-              ]),
-              const SizedBox(height: 24),
+                onTap: () {},
+              ),
+            ]),
+            const SizedBox(height: 24),
 
-              // Group 4: Account & Support
-              _buildGroupTitle(isDark, 'help_center'.tr()),
-              // Using Help Center key for section slightly mismatch but okay
-              _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.info_circle,
-                  iconBg: const Color(0xFFACACAE),
-                  title: 'help_center'.tr(),
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.logout,
-                  iconBg: const Color(0xFFF75555),
-                  title: 'logout'.tr(),
-                  trailing: _isLoggingOut
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : null,
-                  onTap: _handleLogout,
-                ),
-              ]),
-              SizedBox(height: 30.h),
-            ],
-          ),
+            // Group 4: Account & Support
+            _buildGroupTitle(isDark, 'help_center'.tr()),
+            _buildGroupContainer(isDark, [
+              _buildSettingItem(
+                isDark,
+                icon: Iconsax.info_circle,
+                iconBg: const Color(0xFFACACAE),
+                title: 'help_center'.tr(),
+                onTap: () {},
+              ),
+              _buildDivider(isDark),
+              _buildSettingItem(
+                isDark,
+                icon: Iconsax.logout,
+                iconBg: const Color(0xFFF75555),
+                title: 'logout'.tr(),
+                trailing: _isLoggingOut
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : null,
+                onTap: _handleLogout,
+              ),
+            ]),
+            SizedBox(height: 30.h),
+          ],
         ),
       ),
     );
