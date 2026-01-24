@@ -61,6 +61,11 @@ class QuizService {
         (key, value) => MapEntry(key.toString(), value),
       );
 
+      // Debug: Print request data
+      print("DEBUG submitQuiz: quiz_id = $quizId");
+      print("DEBUG submitQuiz: answers = $answersJson");
+      print("DEBUG submitQuiz: endpoint = ${ApiEndpoints.quizSubmit}");
+
       final response = await _apiClient.dio.post(
         ApiEndpoints.quizSubmit, // Make sure this is '/quiz/submit'
         data: {'quiz_id': quizId, 'answers': answersJson},
@@ -86,6 +91,12 @@ class QuizService {
         requestOptions: response.requestOptions,
         message: 'Failed to submit quiz',
       );
+    } on DioException catch (e) {
+      print("Quiz Submission DioException: ${e.type}");
+      print("Quiz Submission Error Message: ${e.message}");
+      print("Quiz Submission Response Status: ${e.response?.statusCode}");
+      print("Quiz Submission Response Data: ${e.response?.data}");
+      rethrow;
     } catch (e) {
       print("Quiz Submission Error: $e");
       rethrow;

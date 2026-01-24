@@ -70,7 +70,6 @@ class AppTheme {
         surface: AppColors.darkSurface,
         onSurface: AppColors.darkTextPrimary,
         error: AppColors.error,
-        background: AppColors.darkBackground,
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.darkBackground,

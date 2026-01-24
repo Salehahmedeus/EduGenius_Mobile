@@ -34,7 +34,9 @@ class StatsSummary {
   factory StatsSummary.fromJson(Map<String, dynamic> json) {
     return StatsSummary(
       totalQuizzes: json['total_quizzes'] ?? 0,
-      avgScore: (json['avg_score'] ?? 0).toDouble(),
+      avgScore: json['avg_score'] is String
+          ? double.tryParse(json['avg_score']) ?? 0.0
+          : (json['avg_score'] ?? 0).toDouble(),
       totalStudySessions: json['total_study_sessions'] ?? 0,
     );
   }
@@ -77,7 +79,9 @@ class PerformanceTrend {
   factory PerformanceTrend.fromJson(Map<String, dynamic> json) {
     return PerformanceTrend(
       date: json['date'] ?? '',
-      avgScore: (json['avg_score'] ?? 0).toDouble(),
+      avgScore: json['avg_score'] is String
+          ? double.tryParse(json['avg_score']) ?? 0.0
+          : (json['avg_score'] ?? 0).toDouble(),
     );
   }
 }
@@ -91,7 +95,9 @@ class TopicStrength {
   factory TopicStrength.fromJson(Map<String, dynamic> json) {
     return TopicStrength(
       topic: json['topic'] ?? '',
-      avgScore: (json['avg_score'] ?? 0).toDouble(),
+      avgScore: json['avg_score'] is String
+          ? double.tryParse(json['avg_score']) ?? 0.0
+          : (json['avg_score'] ?? 0).toDouble(),
     );
   }
 }

@@ -180,7 +180,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Text(
                     "Don't have an account? ",
-                    style: TextStyle(fontSize: 14.sp),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: AppColors.getTextPrimary(context),
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {

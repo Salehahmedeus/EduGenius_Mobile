@@ -153,9 +153,9 @@ class _OtpScreenState extends State<OtpScreen> {
     );
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Iconsax.arrow_left_2, color: AppColors.primary),
@@ -187,7 +187,10 @@ class _OtpScreenState extends State<OtpScreen> {
             Text(
               "We have sent the code verification to\n${_email.isNotEmpty ? _email : 'your email'}",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.getTextSecondary(context),
+              ),
             ),
             SizedBox(height: 48.h),
 
@@ -215,7 +218,10 @@ class _OtpScreenState extends State<OtpScreen> {
                 if (!_isResendEnabled)
                   Text(
                     "Resend code in 00:${_start.toString().padLeft(2, '0')}",
-                    style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                    style: TextStyle(
+                      color: AppColors.getTextSecondary(context),
+                      fontSize: 14.sp,
+                    ),
                   ),
                 if (_isResendEnabled)
                   TextButton(

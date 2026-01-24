@@ -347,6 +347,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildInsightsList() {
     return Column(
       children: _statsData!.insights.map((insight) {
+        // Format text: Remove decimals from % and handle **bold**
+        String cleanText = insight.replaceAllMapped(
+          RegExp(r'(\d+)\.0+%|(\d+\.\d+?)0+%'),
+          (match) {
+            // If it matches exactly integers like 20.0000%, group(1) might catch 20
+            // Ideally just parse the number
+            String numStr = match.group(1) ?? match.group(2) ?? '';
+            if (numStr.isEmpty) return match.group(0)!;
+            // Simple double parse
+            double val =
+                double.tryParse(match.group(0)!.replaceAll('%', '')) ?? 0;
+            return '${val.toStringAsFixed(0)}%';
+          },
+        );
+
+        // Better Regex for 20.0000% specifically as mentioned by user
+        cleanText = cleanText.replaceAllMapped(RegExp(r'(\d+\.\d+)%'), (match) {
+          double val = double.tryParse(match.group(1)!) ?? 0;
+          return '${val.toStringAsFixed(0)}%';
+        });
+
+        List<InlineSpan> spans = [];
+        final boldRegex = RegExp(r'\*\*(.*?)\*\*');
+        int lastIndex = 0;
+
+        for (final match in boldRegex.allMatches(cleanText)) {
+          if (match.start > lastIndex) {
+            spans.add(
+              TextSpan(
+                text: cleanText.substring(lastIndex, match.start),
+                style: GoogleFonts.outfit(
+                  fontSize: 14.sp,
+                  color: AppColors.getTextPrimary(context),
+                  height: 1.5,
+                ),
+              ),
+            );
+          }
+          spans.add(
+            TextSpan(
+              text: match.group(1),
+              style: GoogleFonts.outfit(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+                color:
+                    AppColors.primary, // Highlight bold text with primary color
+                height: 1.5,
+              ),
+            ),
+          );
+          lastIndex = match.end;
+        }
+
+        if (lastIndex < cleanText.length) {
+          spans.add(
+            TextSpan(
+              text: cleanText.substring(lastIndex),
+              style: GoogleFonts.outfit(
+                fontSize: 14.sp,
+                color: AppColors.getTextPrimary(context),
+                height: 1.5,
+              ),
+            ),
+          );
+        }
+
         return Container(
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(16.r),
@@ -358,17 +424,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Iconsax.lamp_on, color: AppColors.primary, size: 20.r),
+              Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Iconsax.magic_star,
+                  color: AppColors.primary,
+                  size: 18.r,
+                ),
+              ),
               SizedBox(width: 12.w),
               Expanded(
-                child: Text(
-                  insight,
-                  style: GoogleFonts.outfit(
-                    fontSize: 14.sp,
-                    color: AppColors.getTextPrimary(context),
-                    height: 1.5,
-                  ),
-                ),
+                child: RichText(text: TextSpan(children: spans)),
               ),
             ],
           ),
@@ -404,33 +481,48 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Container(
       height: 250.h,
-      padding: EdgeInsets.only(right: 20.w, top: 20.h, bottom: 10.h),
+      padding: EdgeInsets.fromLTRB(16.w, 24.h, 24.w, 10.h),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.getBorder(context)),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(
+          color: AppColors.getBorder(context).withOpacity(0.5),
+        ),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
+          if (!AppColors.isDark(context))
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
         ],
       ),
       child: LineChart(
         LineChartData(
-          gridData: FlGridData(show: false),
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            horizontalInterval: 20,
+            getDrawingHorizontalLine: (value) {
+              return FlLine(
+                color: AppColors.getBorder(context).withOpacity(0.3),
+                strokeWidth: 1,
+              );
+            },
+          ),
           titlesData: FlTitlesData(
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 40,
+                reservedSize: 30,
+                interval: 20,
                 getTitlesWidget: (value, meta) {
                   return Text(
                     value.toInt().toString(),
                     style: TextStyle(
                       color: AppColors.getTextSecondary(context),
                       fontSize: 10.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   );
                 },
@@ -438,31 +530,75 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
-                showTitles: false,
-              ), // Hide date labels for simplicity
+                showTitles: true,
+                interval: 1,
+                getTitlesWidget: (value, meta) {
+                  // Show only start and end date labels if too many points?
+                  // For now, let's just show indices or keep simple
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
           borderData: FlBorderData(show: false),
           minX: 0,
-          maxX: (points.length - 1).toDouble(),
+          maxX: (points.length - 1).toDouble() + 0.1, // Add slight padding
           minY: 0,
           maxY: 100,
           lineBarsData: [
             LineChartBarData(
               spots: points,
               isCurved: true,
+              curveSmoothness: 0.35,
               color: AppColors.primary,
-              barWidth: 4,
+              barWidth: 3,
               isStrokeCapRound: true,
-              dotData: FlDotData(show: true),
+              dotData: FlDotData(
+                show: true,
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 4,
+                    color: AppColors.white,
+                    strokeWidth: 2,
+                    strokeColor: AppColors.primary,
+                  );
+                },
+              ),
               belowBarData: BarAreaData(
                 show: true,
-                color: AppColors.primary.withOpacity(0.1),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.primary.withOpacity(0.2),
+                    AppColors.primary.withOpacity(0.0),
+                  ],
+                ),
               ),
             ),
           ],
+          lineTouchData: LineTouchData(
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (touchedSpot) => AppColors.getSurface(context),
+              tooltipBorder: BorderSide(
+                color: AppColors.primary.withOpacity(0.2),
+              ),
+              getTooltipItems: (touchedSpots) {
+                return touchedSpots.map((LineBarSpot touchedSpot) {
+                  return LineTooltipItem(
+                    '${touchedSpot.y.toInt()}%',
+                    TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.sp,
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -490,18 +626,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final topics = _statsData!.charts.topicStrengths;
 
     return Container(
-      height: 300.h,
-      padding: EdgeInsets.all(20.r),
+      height: 320.h,
+      padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 16.h),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.getBorder(context)),
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(
+          color: AppColors.getBorder(context).withOpacity(0.5),
+        ),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
+          if (!AppColors.isDark(context))
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
         ],
       ),
       child: BarChart(
@@ -511,23 +650,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              getTooltipColor: (_) => AppColors.isDark(context)
-                  ? AppColors.darkItem
-                  : AppColors.black,
+              getTooltipColor: (_) => AppColors.getSurface(context),
+              tooltipBorder: BorderSide(
+                color: AppColors.primary.withOpacity(0.2),
+              ),
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                String topicName = topics[groupIndex].topic;
                 return BarTooltipItem(
-                  '${topics[groupIndex].topic}\n',
+                  '$topicName\n',
                   TextStyle(
-                    color: AppColors.white,
+                    color: AppColors.getTextPrimary(context),
                     fontWeight: FontWeight.bold,
+                    fontSize: 12.sp,
                   ),
                   children: <TextSpan>[
                     TextSpan(
                       text: '${rod.toY.round()}%',
                       style: TextStyle(
-                        color: AppColors.primary, // tooltip text color
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -540,19 +682,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
+                reservedSize: 40,
                 getTitlesWidget: (double value, TitleMeta meta) {
                   final index = value.toInt();
                   if (index >= 0 && index < topics.length) {
-                    // Truncate topic name
+                    // Truncate topic name smart
                     String name = topics[index].topic;
-                    if (name.length > 5) name = '${name.substring(0, 5)}...';
+                    if (name.length > 8) name = '${name.substring(0, 8)}...';
                     return Padding(
-                      padding: EdgeInsets.only(top: 4.0.h),
-                      child: Text(
-                        name,
-                        style: TextStyle(
-                          color: AppColors.getTextSecondary(context),
-                          fontSize: 10.sp,
+                      padding: EdgeInsets.only(top: 10.0.h),
+                      child: Transform.rotate(
+                        angle: -0.2,
+                        child: Text(
+                          name,
+                          style: TextStyle(
+                            color: AppColors.getTextSecondary(context),
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     );
@@ -565,27 +712,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
-          gridData: FlGridData(show: false),
+          gridData: FlGridData(
+            show: true,
+            drawVerticalLine: false,
+            horizontalInterval: 20,
+            getDrawingHorizontalLine: (value) => FlLine(
+              color: AppColors.getBorder(context).withOpacity(0.3),
+              strokeWidth: 1,
+            ),
+          ),
           borderData: FlBorderData(show: false),
           barGroups: topics.asMap().entries.map((e) {
+            Color barColor = e.value.avgScore >= 80
+                ? AppColors.success
+                : (e.value.avgScore >= 60
+                      ? AppColors.warning
+                      : AppColors.error);
             return BarChartGroupData(
               x: e.key,
               barRods: [
                 BarChartRodData(
                   toY: e.value.avgScore,
-                  color: e.value.avgScore >= 80
-                      ? AppColors.success
-                      : (e.value.avgScore >= 60
-                            ? AppColors.warning
-                            : AppColors.error),
-                  width: 20.w,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(6.r),
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [barColor.withOpacity(0.7), barColor],
                   ),
+                  width: 16.w,
+                  borderRadius: BorderRadius.all(Radius.circular(6.r)),
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: 100,
-                    color: AppColors.getBorder(context).withOpacity(0.3),
+                    color: AppColors.getBackground(
+                      context,
+                    ).withOpacity(0.5), // cleaner background
                   ),
                 ),
               ],
@@ -604,10 +764,145 @@ class _DashboardScreenState extends State<DashboardScreen> {
         onPressed: () async {
           // Generate Report Logic
           try {
-            await _dashboardService.generateReport();
+            final report = await _dashboardService.generateReport();
             if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Report generated successfully')),
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: AppColors.getSurface(context),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: Row(
+                    children: [
+                      Icon(Iconsax.document_text, color: AppColors.primary),
+                      SizedBox(width: 12.w),
+                      Text(
+                        'Progress Report',
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.getTextPrimary(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Overview',
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          'Total Quizzes: ${report.totalQuizzes}',
+                          style: GoogleFonts.outfit(
+                            color: AppColors.getTextPrimary(context),
+                          ),
+                        ),
+                        Text(
+                          'Average Score: ${report.averageScore.toStringAsFixed(1)}%',
+                          style: GoogleFonts.outfit(
+                            color: AppColors.getTextPrimary(context),
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+
+                        if (report.strengths.isNotEmpty) ...[
+                          Text(
+                            'Strengths',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.success,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          ...report.strengths.map(
+                            (s) => Row(
+                              children: [
+                                Icon(
+                                  Icons.check_circle_outline,
+                                  size: 16,
+                                  color: AppColors.success,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    s,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 12.sp,
+                                      color: AppColors.getTextSecondary(
+                                        context,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                        ],
+
+                        if (report.weaknesses.isNotEmpty) ...[
+                          Text(
+                            'Areas for Improvement',
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.warning,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          ...report.weaknesses.map(
+                            (w) => Row(
+                              children: [
+                                Icon(
+                                  Icons.warning_amber_rounded,
+                                  size: 16,
+                                  color: AppColors.warning,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    w,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 12.sp,
+                                      color: AppColors.getTextSecondary(
+                                        context,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                        ],
+
+                        Text(
+                          'Generated: ${report.generatedAt.toString().split('.')[0]}',
+                          style: GoogleFonts.outfit(
+                            fontSize: 10.sp,
+                            color: AppColors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Close',
+                        style: GoogleFonts.outfit(color: AppColors.primary),
+                      ),
+                    ),
+                  ],
+                ),
               );
             }
           } catch (e) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -192,9 +192,21 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
       );
     } catch (e) {
       setState(() => _isSubmitting = false);
+      print("Quiz Submit UI Error: $e");
+
+      String errorMessage = 'Failed to submit quiz.';
+      if (e is DioException) {
+        if (e.response?.data != null && e.response?.data['message'] != null) {
+          errorMessage = e.response?.data['message'];
+        } else if (e.message != null) {
+          errorMessage = e.message!;
+        }
+      }
+
       Fluttertoast.showToast(
-        msg: 'Failed to submit quiz. Please try again.',
+        msg: errorMessage,
         backgroundColor: AppColors.error,
+        toastLength: Toast.LENGTH_LONG,
       );
     }
   }
