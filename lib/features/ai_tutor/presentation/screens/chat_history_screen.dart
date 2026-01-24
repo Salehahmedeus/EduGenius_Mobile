@@ -97,7 +97,10 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Chat History'),
+        title: Text(
+          'Chat History',
+          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
+        ),
         backgroundColor: AppColors.getBackground(context),
         foregroundColor: AppColors.getTextPrimary(context),
         elevation: 0,
@@ -151,11 +154,15 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           );
           if (result == true) _fetchSessions();
         },
-        label: const Text(
+        label: Text(
           'New Chat',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 14.sp,
+          ),
         ),
-        icon: const Icon(Iconsax.add, color: Colors.white),
+        icon: Icon(Iconsax.add, color: Colors.white, size: 24.r),
         backgroundColor: AppColors.primary,
       ),
     );
