@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
@@ -182,7 +184,7 @@ class ChatScreenState extends State<ChatScreen> {
                   ? _buildEmptyState()
                   : ListView.builder(
                       controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
+                      padding: EdgeInsets.all(16.r),
                       itemCount: _messages.length + (_isThinking ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index == _messages.length) {
@@ -205,31 +207,31 @@ class ChatScreenState extends State<ChatScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
               color: AppColors.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Iconsax.message_question,
-              size: 40,
+              size: 40.r,
               color: AppColors.primary,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Text(
             'How can I help you today?',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.getTextPrimary(context),
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             'Ask anything about your study materials',
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: AppColors.getTextSecondary(context),
             ),
           ),
@@ -243,31 +245,29 @@ class ChatScreenState extends State<ChatScreen> {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.8,
-        ),
+        margin: EdgeInsets.only(bottom: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        constraints: BoxConstraints(maxWidth: 0.8.sw),
         decoration: BoxDecoration(
           color: isUser ? AppColors.primary : AppColors.getSurface(context),
           borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: Radius.circular(isUser ? 16 : 0),
-            bottomRight: Radius.circular(isUser ? 0 : 16),
+            topLeft: Radius.circular(16.r),
+            topRight: Radius.circular(16.r),
+            bottomLeft: Radius.circular(isUser ? 16.r : 0),
+            bottomRight: Radius.circular(isUser ? 0 : 16.r),
           ),
         ),
         child: isUser
             ? Text(
                 message.text,
-                style: const TextStyle(color: AppColors.white, fontSize: 16),
+                style: TextStyle(color: AppColors.white, fontSize: 16.sp),
               )
             : MarkdownBody(
                 data: message.text,
                 styleSheet: MarkdownStyleSheet(
                   p: TextStyle(
                     color: AppColors.getTextPrimary(context),
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
               ),
@@ -279,17 +279,18 @@ class ChatScreenState extends State<ChatScreen> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: EdgeInsets.only(bottom: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
           color: AppColors.getSurface(context),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Text(
           'Thinking...',
           style: TextStyle(
             color: AppColors.getTextSecondary(context),
             fontStyle: FontStyle.italic,
+            fontSize: 14.sp,
           ),
         ),
       ),
@@ -298,7 +299,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget _buildInputArea(Color themeColor) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: AppColors.getBackground(context),
         border: Border(top: BorderSide(color: AppColors.getBorder(context))),
@@ -309,19 +310,19 @@ class ChatScreenState extends State<ChatScreen> {
           children: [
             if (_attachedFile != null)
               Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: EdgeInsets.only(bottom: 8.0.h),
                 child: Row(
                   children: [
                     Chip(
                       avatar: Icon(
                         Iconsax.document,
-                        size: 16,
+                        size: 16.r,
                         color: AppColors.primary,
                       ),
                       label: Text(
                         _attachedFile!.path.split('/').last,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           color: AppColors.getTextPrimary(context),
                         ),
                       ),
@@ -335,28 +336,29 @@ class ChatScreenState extends State<ChatScreen> {
             Container(
               decoration: BoxDecoration(
                 color: AppColors.getSurface(context),
-                borderRadius: BorderRadius.circular(32),
+                borderRadius: BorderRadius.circular(32.r),
                 border: Border.all(color: AppColors.getBorder(context)),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.getTextPrimary(context).withOpacity(0.02),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    blurRadius: 10.r,
+                    offset: Offset(0, 4.h),
                   ),
                 ],
               ),
-              padding: const EdgeInsets.symmetric(vertical: 4),
+              padding: EdgeInsets.symmetric(vertical: 4.h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                       IconButton(
                         icon: Icon(
                           Iconsax.paperclip,
                           color: AppColors.getTextSecondary(context),
+                          size: 24.r,
                         ),
                         onPressed: _pickFile,
                       ),
@@ -371,20 +373,20 @@ class ChatScreenState extends State<ChatScreen> {
                             hintText: 'Message to AI Tutor...',
                             hintStyle: TextStyle(
                               color: AppColors.getTextSecondary(context),
-                              fontSize: 16,
+                              fontSize: 16.sp,
                             ),
                             border: InputBorder.none,
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             filled: false,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 12,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 4.w,
+                              vertical: 12.h,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12.w),
                     ],
                   ),
                   Row(
@@ -394,6 +396,7 @@ class ChatScreenState extends State<ChatScreen> {
                         icon: Icon(
                           Iconsax.emoji_happy,
                           color: AppColors.getTextSecondary(context),
+                          size: 24.r,
                         ),
                         onPressed: () {},
                       ),
@@ -401,47 +404,48 @@ class ChatScreenState extends State<ChatScreen> {
                         icon: Icon(
                           Iconsax.microphone_2,
                           color: AppColors.getTextSecondary(context),
+                          size: 24.r,
                         ),
                         onPressed: () {},
                       ),
-                      const SizedBox(width: 4),
+                      SizedBox(width: 4.w),
                       Material(
                         color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(24.r),
                         child: InkWell(
                           onTap: _sendMessage,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(24.r),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 12,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 12.h,
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   'Send',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.white,
                                   ),
                                 ),
-                                SizedBox(width: 8),
+                                SizedBox(width: 8.w),
                                 Icon(
                                   Iconsax.send_1,
                                   color: AppColors.white,
-                                  size: 20,
+                                  size: 20.r,
                                 ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8.w),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4.h),
                 ],
               ),
             ),
