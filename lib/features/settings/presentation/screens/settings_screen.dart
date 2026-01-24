@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../auth/data/services/auth_service.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/theme_manager.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
@@ -70,6 +71,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.getSurface(context),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'language'.tr(),
+          style: TextStyle(color: AppColors.getTextPrimary(context)),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(
+                'english'.tr(),
+                style: TextStyle(color: AppColors.getTextPrimary(context)),
+              ),
+              trailing: context.locale.languageCode == 'en'
+                  ? const Icon(Iconsax.tick_circle, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                context.setLocale(const Locale('en'));
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(
+                'arabic'.tr(),
+                style: TextStyle(color: AppColors.getTextPrimary(context)),
+              ),
+              trailing: context.locale.languageCode == 'ar'
+                  ? const Icon(Iconsax.tick_circle, color: AppColors.primary)
+                  : null,
+              onTap: () {
+                context.setLocale(const Locale('ar'));
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = AppColors.isDark(context);
@@ -86,22 +132,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SizedBox(height: 30.h),
 
               // Group 3: App Settings
-              _buildGroupTitle(isDark, 'App Settings'),
+              _buildGroupTitle(isDark, 'settings'.tr()),
               _buildGroupContainer(isDark, [
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.global,
                   iconBg: const Color(0xFF246BFD),
-                  title: 'Language',
-                  trailing: _buildBadge('English'),
-                  onTap: () {},
+                  title: 'language'.tr(),
+                  trailing: _buildBadge(
+                    context.locale.languageCode == 'en'
+                        ? 'english'.tr()
+                        : 'arabic'.tr(),
+                  ),
+                  onTap: () => _showLanguageDialog(context),
                 ),
                 _buildDivider(isDark),
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.colorfilter,
                   iconBg: const Color(0xFF47D16E),
-                  title: 'Appearance',
+                  title: 'appearance'.tr(),
                   trailing: ValueListenableBuilder<ThemeMode>(
                     valueListenable: themeManager,
                     builder: (context, mode, _) {
@@ -119,13 +169,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(height: 24),
 
               // Group 4: Account & Support
-              _buildGroupTitle(isDark, 'Support'),
+              _buildGroupTitle(isDark, 'help_center'.tr()),
+              // Using Help Center key for section slightly mismatch but okay
               _buildGroupContainer(isDark, [
                 _buildSettingItem(
                   isDark,
                   icon: Iconsax.info_circle,
                   iconBg: const Color(0xFFACACAE),
-                  title: 'Help Center',
+                  title: 'help_center'.tr(),
                   onTap: () {},
                 ),
                 _buildDivider(isDark),
@@ -133,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   isDark,
                   icon: Iconsax.logout,
                   iconBg: const Color(0xFFF75555),
-                  title: 'Log Out',
+                  title: 'logout'.tr(),
                   trailing: _isLoggingOut
                       ? const SizedBox(
                           height: 20,
