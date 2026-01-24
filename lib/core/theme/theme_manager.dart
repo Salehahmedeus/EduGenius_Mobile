@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ThemeManager extends ValueNotifier<ThemeMode> {
-  ThemeManager() : super(ThemeMode.light);
+  ThemeManager() : super(ThemeMode.system);
 
   bool get isDarkMode => value == ThemeMode.dark;
 

@@ -131,7 +131,11 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Iconsax.arrow_left, color: AppColors.black, size: 24.r),
+          icon: Icon(
+            Iconsax.arrow_left,
+            color: AppColors.getTextPrimary(context),
+            size: 24.r,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(

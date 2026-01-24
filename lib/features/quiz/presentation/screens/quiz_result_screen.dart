@@ -98,7 +98,7 @@ class QuizResultScreen extends StatelessWidget {
           style: GoogleFonts.outfit(
             fontSize: 28.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.black,
+            color: AppColors.getTextPrimary(context),
           ),
         ),
         SizedBox(height: 4.h),

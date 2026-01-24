@@ -76,7 +76,10 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Iconsax.arrow_left, color: AppColors.black),
+          icon: Icon(
+            Iconsax.arrow_left,
+            color: AppColors.getTextPrimary(context),
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -386,7 +389,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               style: GoogleFonts.outfit(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
-                color: AppColors.black,
+                color: AppColors.getTextPrimary(context),
               ),
             ),
           ),
