@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iconsax/iconsax.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
@@ -54,37 +56,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: EdgeInsets.symmetric(horizontal: 24.0.w),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               // Logo or Image can go here if needed
               SizedBox(
-                width: 200,
-                height: 200,
+                width: 200.r,
+                height: 200.r,
                 child: Image.asset(
                   'assets/images/forgot_password_illustration.png',
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text(
+              SizedBox(height: 24.h),
+              Text(
                 "Forgot Password?",
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 26.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 12),
-              const Text(
+              SizedBox(height: 12.h),
+              Text(
                 "Enter your email address to receive a verification code.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: AppColors.grey),
+                style: TextStyle(fontSize: 14.sp, color: AppColors.grey),
               ),
-              const SizedBox(height: 48),
+              SizedBox(height: 48.h),
 
               // Email Field
               CustomTextField(
@@ -105,7 +107,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32.h),
 
               // Send Button
               CustomButton(
