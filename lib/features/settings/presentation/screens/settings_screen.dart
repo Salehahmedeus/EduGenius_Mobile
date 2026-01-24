@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../auth/data/services/auth_service.dart';
@@ -51,12 +52,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           child: Column(
             children: [
               // Header with Edit button
               _buildHeader(isDark),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
 
               // Group 1: Academic Profile
               _buildGroupTitle(isDark, 'Academic Profile'),
@@ -169,7 +170,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   onTap: _handleLogout,
                 ),
               ]),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
             ],
           ),
         ),
@@ -185,11 +186,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             TextButton(
               onPressed: () {},
-              child: const Text(
+              child: Text(
                 'Edit',
                 style: TextStyle(
                   color: AppColors.secondary,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -197,7 +198,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
         CircleAvatar(
-          radius: 60,
+          radius: 60.r,
           backgroundColor: isDark
               ? AppColors.darkItem
               : const Color(0xFFE5E7EB),
@@ -205,23 +206,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             'https://api.dicebear.com/7.x/avataaars/png?seed=Zachery&backgroundColor=b6e3f4',
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16.h),
         Text(
           'Zachery Williamson',
           style: TextStyle(
             color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1F2937),
-            fontSize: 24,
+            fontSize: 24.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4.h),
         Text(
           'zachery.williamson94@gmail.com',
           style: TextStyle(
             color: isDark
                 ? AppColors.darkTextSecondary
                 : const Color(0xFF6B7280),
-            fontSize: 14,
+            fontSize: 14.sp,
           ),
         ),
       ],
@@ -231,12 +232,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildGroupTitle(bool isDark, String title) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
       child: Text(
         title.toUpperCase(),
         style: TextStyle(
           color: isDark ? AppColors.darkTextSecondary : const Color(0xFF6B7280),
-          fontSize: 12,
+          fontSize: 12.sp,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.2,
         ),
@@ -248,7 +249,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : const Color(0xFFE5E7EB),
         ),
@@ -259,11 +260,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _buildDivider(bool isDark) {
     return Divider(
-      height: 1,
-      thickness: 1,
+      height: 1.h,
+      thickness: 1.h,
       color: isDark ? AppColors.darkBorder : const Color(0xFFE5E7EB),
-      indent: 60,
-      endIndent: 16,
+      indent: 60.w,
+      endIndent: 16.w,
     );
   }
 
@@ -277,20 +278,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }) {
     return ListTile(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       leading: Container(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.all(8.r),
         decoration: BoxDecoration(
           color: iconBg,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        child: Icon(icon, color: Colors.white, size: 20),
+        child: Icon(icon, color: Colors.white, size: 20.r),
       ),
       title: Text(
         title,
         style: TextStyle(
           color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1F2937),
-          fontSize: 16,
+          fontSize: 16.sp,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -301,31 +302,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
             color: isDark
                 ? AppColors.darkTextSecondary
                 : const Color(0xFFD1D5DB),
-            size: 18,
+            size: 18.r,
           ),
     );
   }
 
   Widget _buildBadge(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: AppColors.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.primary,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(width: 4),
-          const Icon(Iconsax.arrow_right_3, color: AppColors.primary, size: 14),
+          SizedBox(width: 4.w),
+          Icon(Iconsax.arrow_right_3, color: AppColors.primary, size: 14.r),
         ],
       ),
     );
