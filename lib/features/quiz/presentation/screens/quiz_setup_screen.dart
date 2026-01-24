@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -129,13 +131,14 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Iconsax.arrow_left, color: AppColors.black),
+          icon: Icon(Iconsax.arrow_left, color: AppColors.black, size: 24.r),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Create Quiz',
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w600,
+            fontSize: 20.sp,
             color: AppColors.getTextPrimary(context),
           ),
         ),
@@ -153,30 +156,30 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     if (_materials.isEmpty) {
       return Center(
         child: Padding(
-          padding: const EdgeInsets.all(32),
+          padding: EdgeInsets.all(32.r),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Iconsax.document_upload,
-                size: 80,
+                size: 80.r,
                 color: AppColors.getTextSecondary(context),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               Text(
                 'No Materials Found',
                 style: GoogleFonts.outfit(
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.getTextPrimary(context),
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8.h),
               Text(
                 'Upload some study materials first to generate a quiz.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.outfit(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   color: AppColors.getTextSecondary(context),
                 ),
               ),
@@ -190,19 +193,19 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       onRefresh: _loadMaterials,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.r),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Difficulty Selection
             _buildDifficultySection(colorScheme),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // Materials Selection
             _buildMaterialsSection(colorScheme),
 
             // Bottom padding for FAB
-            const SizedBox(height: 100),
+            SizedBox(height: 100.h),
           ],
         ),
       ),
@@ -211,10 +214,10 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
 
   Widget _buildDifficultySection(ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: AppColors.getBorder(context).withOpacity(0.5),
         ),
@@ -224,49 +227,54 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
         children: [
           Row(
             children: [
-              Icon(Iconsax.chart_2, color: AppColors.primary, size: 20),
-              const SizedBox(width: 8),
+              Icon(Iconsax.chart_2, color: AppColors.primary, size: 20.r),
+              SizedBox(width: 8.w),
               Text(
                 'Difficulty Level',
                 style: GoogleFonts.outfit(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.getTextPrimary(context),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             decoration: BoxDecoration(
               color: AppColors.getBackground(context),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               border: Border.all(color: AppColors.grey.withOpacity(0.2)),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 value: _selectedDifficulty,
                 isExpanded: true,
-                icon: Icon(Iconsax.arrow_down_1, color: AppColors.primary),
+                icon: Icon(
+                  Iconsax.arrow_down_1,
+                  color: AppColors.primary,
+                  size: 24.r,
+                ),
                 items: [1, 2, 3].map((difficulty) {
                   return DropdownMenuItem<int>(
                     value: difficulty,
                     child: Row(
                       children: [
                         Container(
-                          width: 10,
-                          height: 10,
+                          width: 10.r,
+                          height: 10.r,
                           decoration: BoxDecoration(
                             color: _getDifficultyColor(difficulty),
                             shape: BoxShape.circle,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: 12.w),
                         Text(
                           _getDifficultyLabel(difficulty),
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w500,
+                            fontSize: 14.sp,
                             color: AppColors.getTextPrimary(context),
                           ),
                         ),
@@ -293,27 +301,27 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       children: [
         Row(
           children: [
-            Icon(Iconsax.document_text, color: colorScheme.primary, size: 20),
-            const SizedBox(width: 8),
+            Icon(Iconsax.document_text, color: colorScheme.primary, size: 20.r),
+            SizedBox(width: 8.w),
             Text(
               'Select Materials',
               style: GoogleFonts.outfit(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextPrimary(context),
               ),
             ),
             const Spacer(),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
               decoration: BoxDecoration(
                 color: colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
                 '${_selectedMaterialIds.length} selected',
                 style: GoogleFonts.outfit(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.primary,
                 ),
@@ -321,7 +329,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12.h),
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -344,12 +352,12 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   ) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: 8.h),
       decoration: BoxDecoration(
         color: isSelected
             ? AppColors.primary.withOpacity(0.1)
             : AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: isSelected
               ? AppColors.primary
@@ -360,7 +368,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
           onTap: () {
             setState(() {
               if (isSelected) {
@@ -371,24 +379,24 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
             });
           },
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16.r),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.primary.withOpacity(0.2)
                         : AppColors.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
                     _getFileIcon(material.fileType),
                     color: colorScheme.primary,
-                    size: 20,
+                    size: 20.r,
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,16 +405,17 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                         material.fileName,
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w500,
+                          fontSize: 14.sp,
                           color: AppColors.getTextPrimary(context),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2.h),
                       Text(
                         material.fileType.toUpperCase(),
                         style: GoogleFonts.outfit(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           color: AppColors.getTextSecondary(context),
                         ),
                       ),
@@ -458,10 +467,10 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     final isEnabled = _selectedMaterialIds.isNotEmpty && !_isGeneratingQuiz;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: SizedBox(
         width: double.infinity,
-        height: 56,
+        height: 56.h,
         child: ElevatedButton(
           onPressed: isEnabled ? _generateQuiz : null,
           style: ElevatedButton.styleFrom(
@@ -471,7 +480,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
             elevation: isEnabled ? 4 : 0,
             shadowColor: AppColors.primary.withOpacity(0.4),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16.r),
             ),
           ),
           child: _isGeneratingQuiz
@@ -479,10 +488,10 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 20,
-                      height: 20,
+                      width: 20.r,
+                      height: 20.r,
                       child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                        strokeWidth: 2.w,
                         valueColor: AlwaysStoppedAnimation<Color>(
                           AppColors.white,
                         ),
@@ -492,7 +501,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                     Text(
                       'Generating Quiz...',
                       style: GoogleFonts.outfit(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -501,12 +510,12 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Iconsax.play_circle, size: 22),
-                    const SizedBox(width: 8),
+                    Icon(Iconsax.play_circle, size: 22.r),
+                    SizedBox(width: 8.w),
                     Text(
                       'Start Quiz',
                       style: GoogleFonts.outfit(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
