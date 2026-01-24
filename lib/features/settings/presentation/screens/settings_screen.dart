@@ -199,9 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         CircleAvatar(
           radius: 60.r,
-          backgroundColor: isDark
-              ? AppColors.darkItem
-              : const Color(0xFFE5E7EB),
+          backgroundColor: AppColors.getItemColor(context),
           backgroundImage: const NetworkImage(
             'https://api.dicebear.com/7.x/avataaars/png?seed=Zachery&backgroundColor=b6e3f4',
           ),
@@ -210,7 +208,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Text(
           'Zachery Williamson',
           style: TextStyle(
-            color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1F2937),
+            color: AppColors.getTextPrimary(context),
             fontSize: 24.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -219,9 +217,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         Text(
           'zachery.williamson94@gmail.com',
           style: TextStyle(
-            color: isDark
-                ? AppColors.darkTextSecondary
-                : const Color(0xFF6B7280),
+            color: AppColors.getTextSecondary(context),
             fontSize: 14.sp,
           ),
         ),
@@ -236,7 +232,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Text(
         title.toUpperCase(),
         style: TextStyle(
-          color: isDark ? AppColors.darkTextSecondary : const Color(0xFF6B7280),
+          color: AppColors.getTextSecondary(context),
           fontSize: 12.sp,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.2,
@@ -248,11 +244,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildGroupContainer(bool isDark, List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : Colors.white,
+        color: AppColors.getSurface(context),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: isDark ? AppColors.darkBorder : const Color(0xFFE5E7EB),
-        ),
+        border: Border.all(color: AppColors.getBorder(context)),
       ),
       child: Column(children: children),
     );
@@ -262,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Divider(
       height: 1.h,
       thickness: 1.h,
-      color: isDark ? AppColors.darkBorder : const Color(0xFFE5E7EB),
+      color: AppColors.getBorder(context),
       indent: 60.w,
       endIndent: 16.w,
     );
@@ -290,7 +284,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title: Text(
         title,
         style: TextStyle(
-          color: isDark ? AppColors.darkTextPrimary : const Color(0xFF1F2937),
+          color: AppColors.getTextPrimary(context),
           fontSize: 16.sp,
           fontWeight: FontWeight.w500,
         ),
@@ -299,9 +293,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           trailing ??
           Icon(
             Iconsax.arrow_right_3,
-            color: isDark
-                ? AppColors.darkTextSecondary
-                : const Color(0xFFD1D5DB),
+            color: AppColors.getTextSecondary(context),
             size: 18.r,
           ),
     );

@@ -177,7 +177,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text("Agree with ", style: TextStyle(fontSize: 14.sp)),
+                    Text(
+                      "Agree with ",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.getTextPrimary(context),
+                      ),
+                    ),
                     GestureDetector(
                       onTap: () {
                         // TODO: Show terms
@@ -195,6 +201,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Checkbox(
                       value: _agreeToTerms,
                       activeColor: AppColors.primary,
+                      side: BorderSide(
+                        color: AppColors.getTextSecondary(context),
+                        width: 1.5,
+                      ),
                       onChanged: (value) {
                         setState(() {
                           _agreeToTerms = value ?? false;
@@ -219,7 +229,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   children: [
                     Text(
                       "Already have an account? ",
-                      style: TextStyle(fontSize: 14.sp),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.getTextPrimary(context),
+                      ),
                     ),
                     GestureDetector(
                       onTap: () {
