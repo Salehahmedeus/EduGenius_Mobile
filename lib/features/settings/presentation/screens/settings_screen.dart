@@ -215,22 +215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'Edit',
-                style: TextStyle(
-                  color: AppColors.secondary,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
+        SizedBox(height: 16.h),
         CircleAvatar(
           radius: 60.r,
           backgroundColor: AppColors.primary,

@@ -4,6 +4,7 @@ import 'core/theme/app_theme.dart';
 import 'core/theme/theme_manager.dart';
 import 'routes.dart';
 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -35,12 +36,35 @@ class EduGeniusApp extends StatelessWidget {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: themeManager,
           builder: (context, themeMode, _) {
+            // Determine font based on locale
+            final isArabic = context.locale.languageCode == 'ar';
+
+            ThemeData lightTheme = AppTheme.light;
+            ThemeData darkTheme = AppTheme.dark;
+
+            if (isArabic) {
+              lightTheme = lightTheme.copyWith(
+                textTheme: GoogleFonts.tajawalTextTheme(lightTheme.textTheme),
+              );
+              darkTheme = darkTheme.copyWith(
+                textTheme: GoogleFonts.tajawalTextTheme(darkTheme.textTheme),
+              );
+            } else {
+              // Optional: Set default font to Outfit if desired globally, matching screens
+              lightTheme = lightTheme.copyWith(
+                textTheme: GoogleFonts.outfitTextTheme(lightTheme.textTheme),
+              );
+              darkTheme = darkTheme.copyWith(
+                textTheme: GoogleFonts.outfitTextTheme(darkTheme.textTheme),
+              );
+            }
+
             return MaterialApp(
               navigatorKey: navigatorKey,
               title: 'EduGenius',
               debugShowCheckedModeBanner: false,
-              theme: AppTheme.light,
-              darkTheme: AppTheme.dark,
+              theme: lightTheme,
+              darkTheme: darkTheme,
               themeMode: themeMode,
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
