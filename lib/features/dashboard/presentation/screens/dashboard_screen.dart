@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
@@ -80,32 +81,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
               showChildOpacityTransition: false,
               springAnimationDurationInMilliseconds: 500,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(24.r),
                 physics:
                     const AlwaysScrollableScrollPhysics(), // Required for pull to refresh
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildGreeting(),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32.h),
 
                     // Progress Overview
                     Text(
                       'Overview',
                       style: GoogleFonts.outfit(
-                        fontSize: 18,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.getTextPrimary(context),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16.h),
                     _buildProgressCards(),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32.h),
 
                     // Recommendation
                     if (_homeData!.recommendation.hasRecommendation) ...[
                       _buildRecommendationCard(),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
                     ],
 
                     // Stats Section Content
@@ -115,47 +116,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Text(
                           'AI Insights',
                           style: GoogleFonts.outfit(
-                            fontSize: 18,
+                            fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.getTextPrimary(context),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: 16.h),
                         _buildInsightsList(),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32.h),
                       ],
 
                       // Performance Trend Chart
                       Text(
                         'Performance Trend',
                         style: GoogleFonts.outfit(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.getTextPrimary(context),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       _buildPerformanceChart(),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
 
                       // Topic Strengths
                       Text(
                         'Topic Strengths',
                         style: GoogleFonts.outfit(
-                          fontSize: 18,
+                          fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.getTextPrimary(context),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16.h),
                       _buildTopicStrengthChart(),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 32.h),
                     ],
 
                     // Report Button
                     _buildReportButton(context),
                     // Add extra padding at bottom
-                    const SizedBox(height: 40),
+                    SizedBox(height: 40.h),
                   ],
                 ),
               ),
@@ -168,32 +169,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Row(
       children: [
         CircleAvatar(
-          radius: 30,
+          radius: 30.r,
           backgroundColor: AppColors.primary,
           child: Text(
             user.avatarInitials,
             style: GoogleFonts.outfit(
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.white,
             ),
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16.w),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Welcome back,',
               style: GoogleFonts.outfit(
-                fontSize: 14,
+                fontSize: 14.sp,
                 color: AppColors.getTextSecondary(context),
               ),
             ),
             Text(
               user.name,
               style: GoogleFonts.outfit(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
                 color: AppColors.getTextPrimary(context),
               ),
@@ -216,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             AppColors.info,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: _buildStatCard(
             'Avg Score',
@@ -225,7 +226,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             AppColors.success,
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12.w),
         Expanded(
           child: _buildStatCard(
             'Uploaded',
@@ -245,10 +246,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Color color,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: AppColors.getBorder(context).withOpacity(0.5),
         ),
@@ -257,27 +258,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(8.r),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8.r),
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(icon, color: color, size: 20.r),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12.h),
           Text(
             value,
             style: GoogleFonts.outfit(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.getTextPrimary(context),
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4.h),
           Text(
             label,
             style: GoogleFonts.outfit(
-              fontSize: 12,
+              fontSize: 12.sp,
               color: AppColors.getTextSecondary(context),
             ),
           ),
@@ -289,7 +290,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildRecommendationCard() {
     final rec = _homeData!.recommendation;
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -299,7 +300,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: AppColors.primary.withOpacity(0.2)),
       ),
       child: Row(
@@ -313,24 +314,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Icon(
                       Iconsax.magic_star,
                       color: AppColors.primary,
-                      size: 20,
+                      size: 20.r,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8.w),
                     Text(
                       'AI Recommendation',
                       style: GoogleFonts.outfit(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primary,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8.h),
                 Text(
                   rec.text,
                   style: GoogleFonts.outfit(
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     color: AppColors.getTextPrimary(context),
                     height: 1.4,
                   ),
@@ -347,23 +348,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Column(
       children: _statsData!.insights.map((insight) {
         return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(16),
+          margin: EdgeInsets.only(bottom: 12.h),
+          padding: EdgeInsets.all(16.r),
           decoration: BoxDecoration(
             color: AppColors.primary.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
             border: Border.all(color: AppColors.primary.withOpacity(0.1)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Iconsax.lamp_on, color: AppColors.primary, size: 20),
-              const SizedBox(width: 12),
+              Icon(Iconsax.lamp_on, color: AppColors.primary, size: 20.r),
+              SizedBox(width: 12.w),
               Expanded(
                 child: Text(
                   insight,
                   style: GoogleFonts.outfit(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: AppColors.getTextPrimary(context),
                     height: 1.5,
                   ),
@@ -402,11 +403,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .toList();
 
     return Container(
-      height: 250,
-      padding: const EdgeInsets.only(right: 20, top: 20, bottom: 10),
+      height: 250.h,
+      padding: EdgeInsets.only(right: 20.w, top: 20.h, bottom: 10.h),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: AppColors.getBorder(context)),
         boxShadow: [
           BoxShadow(
@@ -429,7 +430,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     value.toInt().toString(),
                     style: TextStyle(
                       color: AppColors.getTextSecondary(context),
-                      fontSize: 10,
+                      fontSize: 10.sp,
                     ),
                   );
                 },
@@ -489,11 +490,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final topics = _statsData!.charts.topicStrengths;
 
     return Container(
-      height: 300,
-      padding: const EdgeInsets.all(20),
+      height: 300.h,
+      padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: AppColors.getBorder(context)),
         boxShadow: [
           BoxShadow(
@@ -525,7 +526,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       text: '${rod.toY.round()}%',
                       style: TextStyle(
                         color: AppColors.primary, // tooltip text color
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -546,12 +547,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     String name = topics[index].topic;
                     if (name.length > 5) name = '${name.substring(0, 5)}...';
                     return Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
+                      padding: EdgeInsets.only(top: 4.0.h),
                       child: Text(
                         name,
                         style: TextStyle(
                           color: AppColors.getTextSecondary(context),
-                          fontSize: 10,
+                          fontSize: 10.sp,
                         ),
                       ),
                     );
@@ -577,9 +578,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       : (e.value.avgScore >= 60
                             ? AppColors.warning
                             : AppColors.error),
-                  width: 20,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(6),
+                  width: 20.w,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(6.r),
                   ),
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
@@ -598,7 +599,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildReportButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: 56.h,
       child: OutlinedButton(
         onPressed: () async {
           // Generate Report Logic
@@ -620,18 +621,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
         style: OutlinedButton.styleFrom(
           side: BorderSide(color: AppColors.getBorder(context)),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16.r),
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Iconsax.document_download, size: 20),
-            const SizedBox(width: 8),
+            Icon(Iconsax.document_download, size: 20.r),
+            SizedBox(width: 8.w),
             Text(
               'Generate Progress Report',
               style: GoogleFonts.outfit(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextPrimary(context),
               ),
