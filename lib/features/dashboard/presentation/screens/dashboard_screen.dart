@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,9 +51,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         // Fallback: Try loading just home if stats fail or vice versa,
         // but for now simple error handling
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error loading dashboard: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${'error_loading_dashboard'.tr()}: $e')),
+        );
       }
     }
   }
@@ -63,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
         title: Text(
-          'Dashboard',
+          'dashboard'.tr(),
           style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.transparent,
@@ -73,7 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _homeData == null
-          ? const Center(child: Text("Failed to load data"))
+          ? Center(child: Text("failed_to_load_data".tr()))
           : LiquidPullToRefresh(
               onRefresh: _loadData,
               color: AppColors.primary,
@@ -92,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // Progress Overview
                     Text(
-                      'Overview',
+                      'overview'.tr(),
                       style: GoogleFonts.outfit(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w600,
@@ -114,7 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       // Insights
                       if (_statsData!.insights.isNotEmpty) ...[
                         Text(
-                          'AI Insights',
+                          'ai_insights'.tr(),
                           style: GoogleFonts.outfit(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
@@ -128,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                       // Performance Trend Chart
                       Text(
-                        'Performance Trend',
+                        'performance_trend'.tr(),
                         style: GoogleFonts.outfit(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -141,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                       // Topic Strengths
                       Text(
-                        'Topic Strengths',
+                        'topic_strengths'.tr(),
                         style: GoogleFonts.outfit(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -185,7 +186,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Welcome back,',
+              'welcome_back'.tr(),
               style: GoogleFonts.outfit(
                 fontSize: 14.sp,
                 color: AppColors.getTextSecondary(context),
@@ -211,7 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         Expanded(
           child: _buildStatCard(
-            'Quizzes',
+            'quizzes'.tr(),
             '${progress.quizCount}',
             Iconsax.task_square,
             AppColors.info,
@@ -220,7 +221,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         SizedBox(width: 12.w),
         Expanded(
           child: _buildStatCard(
-            'Avg Score',
+            'avg_score_label'.tr(),
             '${progress.averageScore.toStringAsFixed(0)}%',
             Iconsax.chart_21,
             AppColors.success,
@@ -229,7 +230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         SizedBox(width: 12.w),
         Expanded(
           child: _buildStatCard(
-            'Uploaded',
+            'uploaded'.tr(),
             '${progress.uploadedCount}',
             Iconsax.document_upload,
             AppColors.warning,
@@ -318,7 +319,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(width: 8.w),
                     Text(
-                      'AI Recommendation',
+                      'ai_recommendation'.tr(),
                       style: GoogleFonts.outfit(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
@@ -464,7 +465,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         child: Center(
           child: Text(
-            'No performance data',
+            'no_performance_data'.tr(),
             style: GoogleFonts.outfit(
               color: AppColors.getTextSecondary(context),
             ),
@@ -614,7 +615,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         child: Center(
           child: Text(
-            'No topic data',
+            'no_topic_data'.tr(),
             style: GoogleFonts.outfit(
               color: AppColors.getTextSecondary(context),
             ),
@@ -778,7 +779,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Icon(Iconsax.document_text, color: AppColors.primary),
                       SizedBox(width: 12.w),
                       Text(
-                        'Progress Report',
+                        'progress_report'.tr(),
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.bold,
                           color: AppColors.getTextPrimary(context),
@@ -792,7 +793,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Overview',
+                          'overview'.tr(),
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w600,
                             color: AppColors.primary,

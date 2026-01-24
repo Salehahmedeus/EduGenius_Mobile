@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    'Study Clever',
+                    'study_clever'.tr(),
                     style: TextStyle(
                       fontSize: 32.sp,
                       color: AppColors.primary, // Red color from image
@@ -29,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Less Time',
+                    'less_time'.tr(),
                     style: TextStyle(
                       fontSize: 36.sp,
                       color: AppColors.primary, // Red color from image
@@ -52,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
               // Start Button
               CustomButton(
-                text: 'Start',
+                text: 'start'.tr(),
                 onPressed: () {
                   Navigator.pushNamed(context, Routes.login);
                 },

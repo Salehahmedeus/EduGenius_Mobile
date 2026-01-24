@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await _authService.sendOtp(_emailController.text.trim());
 
         if (mounted) {
-          CustomSnackbar.showSuccess(context, "Credentials valid. OTP sent!");
+          CustomSnackbar.showSuccess(context, "otp_sent".tr());
           Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.otpVerify,
@@ -100,18 +101,18 @@ class _LoginScreenState extends State<LoginScreen> {
               // Email Field
               CustomTextField(
                 controller: _emailController,
-                hintText: "Email",
+                hintText: "email".tr(),
                 prefixIcon: Iconsax.sms,
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your email';
+                    return 'enter_email_error'.tr();
                   }
                   final emailRegex = RegExp(
                     r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
                   );
                   if (!emailRegex.hasMatch(value)) {
-                    return 'Please enter a valid email address';
+                    return 'valid_email_error'.tr();
                   }
                   return null;
                 },
@@ -121,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // Password Field
               CustomTextField(
                 controller: _passwordController,
-                hintText: "Password",
+                hintText: "password".tr(),
                 isObscure: !_isPasswordVisible,
                 prefixIcon: Iconsax.lock,
                 suffixIcon: _isPasswordVisible
@@ -134,10 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
+                    return 'enter_password_error'.tr();
                   }
                   if (value.length < 6) {
-                    return 'Password must be at least 6 characters';
+                    return 'password_length_error'.tr();
                   }
                   return null;
                 },
@@ -152,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.pushNamed(context, Routes.forgotPassword);
                   },
                   child: Text(
-                    "Forgot Password?",
+                    "forgot_password".tr(),
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.primary,
@@ -167,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Login Button
               CustomButton(
-                text: "Login",
+                text: "login".tr(),
                 isLoading: _isLoading,
                 onPressed: _handleLogin,
               ),
@@ -179,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Don't have an account? ",
+                    "dont_have_account".tr() + " ",
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColors.getTextPrimary(context),
@@ -190,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushNamed(context, Routes.register);
                     },
                     child: Text(
-                      "Sign Up",
+                      "sign_up".tr(),
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.primary,

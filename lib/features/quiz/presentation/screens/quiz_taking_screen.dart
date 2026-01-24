@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
@@ -87,7 +88,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             Icon(Iconsax.info_circle, color: AppColors.primary, size: 24.r),
             SizedBox(width: 12.w),
             Text(
-              'Submit Quiz',
+              'submit_quiz'.tr(),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextPrimary(context),
@@ -100,7 +101,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Are you sure you want to submit your quiz?',
+              'submit_confirm_msg'.tr(),
               style: GoogleFonts.outfit(
                 color: AppColors.getTextPrimary(context),
                 fontSize: 14.sp,
@@ -122,7 +123,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    '${_answers.length}/${questions.length} questions answered',
+                    '${_answers.length}/${questions.length} ${'questions_answered'.tr()}',
                     style: GoogleFonts.outfit(
                       fontWeight: FontWeight.w500,
                       fontSize: 14.sp,
@@ -138,7 +139,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Review',
+              'review'.tr(),
               style: GoogleFonts.outfit(
                 color: AppColors.getTextSecondary(context),
               ),
@@ -157,7 +158,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               ),
             ),
             child: Text(
-              'Submit',
+              'submit_quiz'.tr(),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w600,
                 fontSize: 14.sp,
@@ -222,7 +223,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             Icon(Iconsax.warning_2, color: AppColors.warning, size: 24.r),
             SizedBox(width: 12.w),
             Text(
-              'Exit Quiz?',
+              'exit_quiz'.tr(),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextPrimary(context),
@@ -231,7 +232,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           ],
         ),
         content: Text(
-          'Your progress will be lost. Are you sure you want to exit?',
+          'exit_msg'.tr(),
           style: GoogleFonts.outfit(
             color: AppColors.getTextPrimary(context),
             fontSize: 14.sp,
@@ -241,7 +242,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Cancel',
+              'cancel'.tr(),
               style: GoogleFonts.outfit(
                 color: AppColors.getTextSecondary(context),
               ),
@@ -260,7 +261,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               ),
             ),
             child: Text(
-              'Exit',
+              'exit'.tr(),
               style: GoogleFonts.outfit(
                 fontWeight: FontWeight.w600,
                 fontSize: 14.sp,
@@ -314,7 +315,12 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            'Question ${_currentQuestionIndex + 1} of ${questions.length}',
+            'question_progress'.tr(
+              args: [
+                (_currentQuestionIndex + 1).toString(),
+                questions.length.toString(),
+              ],
+            ),
             style: GoogleFonts.outfit(
               fontSize: 12.sp,
               color: AppColors.getTextSecondary(context),
@@ -367,7 +373,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Submitting Quiz...',
+            'submitting_quiz'.tr(),
             style: GoogleFonts.outfit(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
@@ -376,7 +382,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Please wait while we analyze your answers',
+            'wait_analyze'.tr(),
             style: GoogleFonts.outfit(
               color: AppColors.getTextSecondary(context),
               fontSize: 14.sp,
@@ -398,7 +404,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               Icon(Iconsax.danger, size: 48.r, color: AppColors.warning),
               SizedBox(height: 16.h),
               Text(
-                'No Questions Found',
+                'no_questions_found'.tr(),
                 style: GoogleFonts.outfit(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w600,
@@ -407,7 +413,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                'We couldn\'t load any questions for this quiz. Please try again or contact support.',
+                'no_questions_msg'.tr(),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.outfit(
                   color: AppColors.grey,
@@ -417,7 +423,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               SizedBox(height: 24.h),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Go Back'),
+                child: Text('go_back'.tr()),
               ),
             ],
           ),
@@ -489,7 +495,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
-              'Question ${_currentQuestionIndex + 1}',
+              'question_number'.tr(
+                args: [(_currentQuestionIndex + 1).toString()],
+              ),
               style: GoogleFonts.outfit(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
@@ -649,7 +657,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                       Icon(Iconsax.arrow_left_2, size: 20.r),
                       SizedBox(width: 8.w),
                       Text(
-                        'Previous',
+                        'previous'.tr(),
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w600,
                           fontSize: 14.sp,
@@ -683,7 +691,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      isLastQuestion ? 'Submit' : 'Next',
+                      isLastQuestion ? 'submit_quiz'.tr() : 'next'.tr(),
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.w600,
                         fontSize: 16.sp,

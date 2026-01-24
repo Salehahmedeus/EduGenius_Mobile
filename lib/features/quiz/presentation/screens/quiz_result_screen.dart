@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
@@ -68,18 +69,18 @@ class QuizResultScreen extends StatelessWidget {
     if (isGreatScore) {
       icon = Iconsax.medal_star5;
       iconColor = AppColors.warning; // amber-like
-      title = 'Excellent!';
-      subtitle = 'You\'ve mastered this topic!';
+      title = 'excellent'.tr();
+      subtitle = 'mastered_msg'.tr();
     } else if (isGoodScore) {
       icon = Iconsax.like_15;
       iconColor = AppColors.success;
-      title = 'Good Job!';
-      subtitle = 'Keep up the good work!';
+      title = 'good_job'.tr();
+      subtitle = 'good_work_msg'.tr();
     } else {
       icon = Iconsax.book_1;
       iconColor = AppColors.info;
-      title = 'Keep Learning!';
-      subtitle = 'Review the material and try again.';
+      title = 'keep_learning'.tr();
+      subtitle = 'try_again_msg'.tr();
     }
 
     return Column(
@@ -148,7 +149,7 @@ class QuizResultScreen extends StatelessWidget {
             ),
           ),
           Text(
-            'Score',
+            'score'.tr(),
             style: GoogleFonts.outfit(
               fontSize: 16.sp,
               color: AppColors.getTextSecondary(context),
@@ -171,7 +172,7 @@ class QuizResultScreen extends StatelessWidget {
         children: [
           _buildStatItem(
             icon: Iconsax.tick_circle,
-            label: 'Correct',
+            label: 'correct'.tr(),
             value: '${result.correctAnswers}',
             color: AppColors.success,
             colorScheme: colorScheme,
@@ -184,7 +185,7 @@ class QuizResultScreen extends StatelessWidget {
           ),
           _buildStatItem(
             icon: Iconsax.close_circle,
-            label: 'Wrong',
+            label: 'incorrect'.tr(),
             value: '${result.totalQuestions - result.correctAnswers}',
             color: AppColors.error,
             colorScheme: colorScheme,
@@ -197,7 +198,7 @@ class QuizResultScreen extends StatelessWidget {
           ),
           _buildStatItem(
             icon: Iconsax.document_text,
-            label: 'Total',
+            label: 'total'.tr(),
             value: '${result.totalQuestions}',
             color: AppColors.primary,
             colorScheme: colorScheme,
@@ -278,7 +279,7 @@ class QuizResultScreen extends StatelessWidget {
               ),
               SizedBox(width: 12.w),
               Text(
-                'AI Feedback',
+                'ai_feedback'.tr(),
                 style: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -332,7 +333,7 @@ class QuizResultScreen extends StatelessWidget {
                 Icon(Iconsax.eye, size: 20.r),
                 SizedBox(width: 8.w),
                 Text(
-                  'Review Answers',
+                  'review_answers'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -365,7 +366,7 @@ class QuizResultScreen extends StatelessWidget {
                 Icon(Iconsax.home, size: 20.r),
                 SizedBox(width: 8.w),
                 Text(
-                  'Back to Home',
+                  'back_to_home'.tr(),
                   style: GoogleFonts.outfit(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

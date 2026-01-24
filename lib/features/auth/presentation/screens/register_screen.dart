@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -70,28 +71,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Name Field
                 CustomTextField(
                   controller: _nameController,
-                  hintText: "Full Name",
+                  hintText: "full_name".tr(),
                   prefixIcon: Iconsax.user,
                   validator: (value) =>
-                      value?.isEmpty ?? true ? 'Please enter your name' : null,
+                      value?.isEmpty ?? true ? 'enter_name_error'.tr() : null,
                 ),
                 SizedBox(height: 16.h),
 
                 // Phone Field
                 CustomTextField(
                   controller: _phoneController,
-                  hintText: "Phone Number",
+                  hintText: "phone".tr(),
                   prefixIcon: Iconsax.mobile,
                   keyboardType: TextInputType.phone,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
+                      return 'enter_phone_error'.tr();
                     }
                     if (!value.startsWith('+218')) {
-                      return 'Phone number must start with +218';
+                      return 'phone_prefix_error'.tr();
                     }
                     if (value.length != 14) {
-                      return 'Phone number must be exactly 14 digits';
+                      return 'phone_length_error'.tr();
                     }
                     return null;
                   },
@@ -101,18 +102,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Email Field
                 CustomTextField(
                   controller: _emailController,
-                  hintText: "Email Address",
+                  hintText: "email".tr(),
                   prefixIcon: Iconsax.sms,
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'enter_email_error'.tr();
                     }
                     final emailRegex = RegExp(
                       r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
                     );
                     if (!emailRegex.hasMatch(value)) {
-                      return 'Please enter a valid email address';
+                      return 'valid_email_error'.tr();
                     }
                     return null;
                   },
@@ -122,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Password Field
                 CustomTextField(
                   controller: _passwordController,
-                  hintText: "Password",
+                  hintText: "password".tr(),
                   isObscure: !_isPasswordVisible,
                   prefixIcon: Iconsax.lock,
                   suffixIcon: _isPasswordVisible
@@ -135,10 +136,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter password';
+                      return 'enter_password_error'.tr();
                     }
                     if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'password_length_error'.tr();
                     }
                     return null;
                   },
@@ -149,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // Confirm Password Field
                 CustomTextField(
                   controller: _confirmPasswordController,
-                  hintText: "Confirm Password",
+                  hintText: "confirm_password".tr(),
                   isObscure: !_isConfirmPasswordVisible,
                   prefixIcon: Iconsax.lock,
                   suffixIcon: _isConfirmPasswordVisible
@@ -162,11 +163,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
+                      return 'confirm_password_error'.tr();
                     }
                     final password = _passwordController.text;
                     if (value != password) {
-                      return 'Passwords do not match';
+                      return 'password_mismatch_error'.tr();
                     }
                     return null;
                   },
@@ -178,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      "Agree with ",
+                      "agree_terms".tr() + " ",
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.getTextPrimary(context),
@@ -189,7 +190,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         // TODO: Show terms
                       },
                       child: Text(
-                        "Terms & Conditions",
+                        "terms_conditions".tr(),
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: AppColors.primary,
@@ -217,7 +218,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 // Register Button
                 CustomButton(
-                  text: "Register",
+                  text: "register".tr(),
                   isLoading: _isLoading,
                   onPressed: _handleRegister,
                 ),
@@ -228,7 +229,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account? ",
+                      "already_have_account".tr() + " ",
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.getTextPrimary(context),
@@ -241,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ); // Go back to Login (assuming pushed from Login or has route)
                       },
                       child: Text(
-                        "Login",
+                        "login".tr(),
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: AppColors.primary,
@@ -264,10 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     if (!_agreeToTerms) {
-      CustomSnackbar.showWarning(
-        context,
-        "Please agree to the Terms & Conditions",
-      );
+      CustomSnackbar.showWarning(context, "agree_terms_error".tr());
       return;
     }
 
@@ -290,7 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (mounted) {
                     CustomSnackbar.showSuccess(
                       context,
-                      "Registration successful! OTP sent.",
+                      "registration_success_otp".tr(),
                     );
                     Navigator.pushNamedAndRemoveUntil(
                       context,

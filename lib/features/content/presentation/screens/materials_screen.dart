@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:io';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -101,11 +102,14 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       );
       String label;
       if (date == today) {
-        label = 'Today';
+        label = 'today'.tr();
       } else if (date == yesterday) {
-        label = 'Yesterday';
+        label = 'yesterday'.tr();
       } else {
-        label = DateFormat('MMMM dd, yyyy').format(date);
+        label = DateFormat(
+          'MMMM dd, yyyy',
+          context.locale.languageCode,
+        ).format(date);
       }
 
       if (!grouped.containsKey(label)) {
@@ -146,7 +150,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     try {
       await _contentService.uploadMaterial(file);
       if (mounted) Navigator.pop(context);
-      if (mounted) CustomSnackbar.showSuccess(context, "Upload successful!");
+      if (mounted) CustomSnackbar.showSuccess(context, "upload_success".tr());
       _fetchMaterials();
     } catch (e) {
       if (mounted) {
@@ -159,10 +163,11 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
   Future<void> _deleteMaterial(int id) async {
     try {
       await _contentService.deleteMaterial(id);
-      if (mounted) CustomSnackbar.showInfo(context, "Deleted successfully");
+      if (mounted) CustomSnackbar.showInfo(context, "delete_success".tr());
       _fetchMaterials();
     } catch (e) {
-      if (mounted) CustomSnackbar.showError(context, "Delete failed: $e");
+      if (mounted)
+        CustomSnackbar.showError(context, "${'delete_failed'.tr()}: $e");
     }
   }
 
@@ -216,7 +221,10 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _pickAndUploadFile,
-        label: const Text('Upload', style: TextStyle(color: Colors.white)),
+        label: Text(
+          'upload_material'.tr(),
+          style: const TextStyle(color: Colors.white),
+        ),
         icon: const Icon(Iconsax.document_upload, color: Colors.white),
         backgroundColor: AppColors.primary,
       ),
@@ -230,7 +238,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'Study Materials',
+            'materials_header'.tr(),
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
@@ -244,7 +252,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
-              '$_totalCount Files',
+              '$_totalCount ${'files'.tr()}',
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
@@ -264,7 +272,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         controller: _searchController,
         onSubmitted: _performSearch,
         decoration: InputDecoration(
-          hintText: 'Search your materials...',
+          hintText: 'search_materials'.tr(),
           hintStyle: TextStyle(fontSize: 16.sp),
           prefixIcon: Icon(Iconsax.search_normal, size: 20.r),
         ),
@@ -356,9 +364,12 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
             }
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
+            PopupMenuItem(
               value: 'delete',
-              child: Text('Delete', style: TextStyle(color: AppColors.error)),
+              child: Text(
+                'delete'.tr(),
+                style: const TextStyle(color: AppColors.error),
+              ),
             ),
           ],
         ),
@@ -379,8 +390,8 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           SizedBox(height: 16.h),
           Text(
             _searchQuery.isNotEmpty
-                ? 'No results for "$_searchQuery"'
-                : 'No materials found',
+                ? 'no_results'.tr(args: [_searchQuery])
+                : 'no_materials_found'.tr(),
             style: TextStyle(
               fontSize: 18.sp,
               color: AppColors.getTextSecondary(context),
@@ -389,7 +400,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Upload a document to get started!',
+            'upload_first_material'.tr(),
             style: TextStyle(
               color: AppColors.getTextSecondary(context),
               fontSize: 14.sp,
@@ -401,7 +412,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                 _searchController.clear();
                 _performSearch("");
               },
-              child: const Text('Clear Search'),
+              child: Text('clear_search'.tr()),
             ),
         ],
       ),

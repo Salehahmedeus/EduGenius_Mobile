@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -46,7 +47,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     } catch (e) {
       setState(() => _isLoadingMaterials = false);
       Fluttertoast.showToast(
-        msg: 'Failed to load materials',
+        msg: 'failed_to_load_data'.tr(),
         backgroundColor: AppColors.error,
       );
     }
@@ -55,7 +56,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   Future<void> _generateQuiz() async {
     if (_selectedMaterialIds.isEmpty) {
       Fluttertoast.showToast(
-        msg: 'Please select at least one material',
+        msg: 'select_least_one'.tr(),
         backgroundColor: AppColors.warning,
       );
       return;
@@ -97,13 +98,13 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   String _getDifficultyLabel(int difficulty) {
     switch (difficulty) {
       case 1:
-        return 'Easy';
+        return 'easy'.tr();
       case 2:
-        return 'Medium';
+        return 'medium'.tr();
       case 3:
-        return 'Hard';
+        return 'hard'.tr();
       default:
-        return 'Easy';
+        return 'easy'.tr();
     }
   }
 
@@ -139,7 +140,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Create Quiz',
+          'create_quiz'.tr(),
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.w600,
             fontSize: 20.sp,
@@ -171,7 +172,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
               ),
               SizedBox(height: 16.h),
               Text(
-                'No Materials Found',
+                'no_materials_found'.tr(),
                 style: GoogleFonts.outfit(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w600,
@@ -180,7 +181,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                'Upload some study materials first to generate a quiz.',
+                'upload_first_material'.tr(),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.outfit(
                   fontSize: 14.sp,
@@ -234,7 +235,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
               Icon(Iconsax.chart_2, color: AppColors.primary, size: 20.r),
               SizedBox(width: 8.w),
               Text(
-                'Difficulty Level',
+                'difficulty_level'.tr(),
                 style: GoogleFonts.outfit(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
@@ -308,7 +309,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
             Icon(Iconsax.document_text, color: colorScheme.primary, size: 20.r),
             SizedBox(width: 8.w),
             Text(
-              'Select Materials',
+              'select_material'.tr(),
               style: GoogleFonts.outfit(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
@@ -323,7 +324,9 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
-                '${_selectedMaterialIds.length} selected',
+                'selected_count'.tr(
+                  args: [_selectedMaterialIds.length.toString()],
+                ),
                 style: GoogleFonts.outfit(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
@@ -503,7 +506,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Generating Quiz...',
+                      'generating_quiz'.tr(),
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
@@ -517,7 +520,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
                     Icon(Iconsax.play_circle, size: 22.r),
                     SizedBox(width: 8.w),
                     Text(
-                      'Start Quiz',
+                      'start_quiz'.tr(),
                       style: GoogleFonts.outfit(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,

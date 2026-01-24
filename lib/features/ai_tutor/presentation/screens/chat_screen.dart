@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -162,7 +163,7 @@ class ChatScreenState extends State<ChatScreen> {
           onPressed: () => Navigator.maybePop(context, true),
         ),
         title: Text(
-          _activeConversationId != null ? 'Chat' : 'New Chat',
+          _activeConversationId != null ? 'chat'.tr() : 'new_chat'.tr(),
           style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
         ),
         backgroundColor: AppColors.getBackground(context),
@@ -224,7 +225,7 @@ class ChatScreenState extends State<ChatScreen> {
           ),
           SizedBox(height: 16.h),
           Text(
-            'How can I help you today?',
+            'ask_ai'.tr(),
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
@@ -233,7 +234,7 @@ class ChatScreenState extends State<ChatScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            'Ask anything about your study materials',
+            'ask_ai_sub'.tr(),
             style: TextStyle(
               fontSize: 14.sp,
               color: AppColors.getTextSecondary(context),
@@ -290,7 +291,7 @@ class ChatScreenState extends State<ChatScreen> {
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Text(
-          'Thinking...',
+          'thinking'.tr(),
           style: TextStyle(
             color: AppColors.getTextSecondary(context),
             fontStyle: FontStyle.italic,
@@ -360,7 +361,7 @@ class ChatScreenState extends State<ChatScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            'Ready to analyze',
+                            'ready_to_analyze'.tr(),
                             style: GoogleFonts.outfit(
                               fontSize: 10.sp,
                               color: AppColors.primary,
@@ -417,7 +418,7 @@ class ChatScreenState extends State<ChatScreen> {
                             color: AppColors.getTextPrimary(context),
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Message to AI Tutor...',
+                            hintText: 'message_hint'.tr(),
                             hintStyle: TextStyle(
                               color: AppColors.getTextSecondary(context),
                               fontSize: 16.sp,
@@ -471,7 +472,7 @@ class ChatScreenState extends State<ChatScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Send',
+                                  'send'.tr(),
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.bold,
