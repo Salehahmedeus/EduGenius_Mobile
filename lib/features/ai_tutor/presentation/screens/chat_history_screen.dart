@@ -1,5 +1,7 @@
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:intl/intl.dart';
 import 'package:iconsax/iconsax.dart';
@@ -120,7 +122,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                       showChildOpacityTransition: false,
                       springAnimationDurationInMilliseconds: 500,
                       child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         itemCount: _groupedSessions.length,
                         itemBuilder: (context, index) {
                           String label = _groupedSessions.keys.elementAt(index);
@@ -131,7 +133,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                             children: [
                               _buildDateDivider(label),
                               ...sessions.map((s) => _buildChatCard(s)),
-                              const SizedBox(height: 10),
+                              SizedBox(height: 10.h),
                             ],
                           );
                         },
@@ -161,20 +163,20 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
 
   Widget _buildDateDivider(String label) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.symmetric(vertical: 20.h),
       child: Row(
         children: [
           Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.getBorder(context)),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextSecondary(context),
               ),
@@ -188,14 +190,14 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
 
   Widget _buildChatCard(ChatSessionModel session) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
         border: Border.all(color: AppColors.getBorder(context)),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         onTap: () async {
           final result = await Navigator.push(
             context,
@@ -208,7 +210,7 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
         title: Text(
           session.contextName,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
             color: AppColors.getTextPrimary(context),
           ),
@@ -216,11 +218,11 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 4.0),
+          padding: EdgeInsets.only(top: 4.0.h),
           child: Text(
             'Conversation with AI Tutor • ${DateFormat('HH:mm').format(session.updatedAt)}',
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 13.sp,
               color: AppColors.getTextSecondary(context),
             ),
             maxLines: 2,
@@ -250,25 +252,28 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Iconsax.clock, size: 80, color: AppColors.getSurface(context)),
-          const SizedBox(height: 16),
-          const Text(
+          Icon(Iconsax.clock, size: 80.r, color: AppColors.getSurface(context)),
+          SizedBox(height: 16.h),
+          Text(
             'No chat history yet',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               color: AppColors.grey,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             'Start a new conversation with your AI Tutor!',
-            style: TextStyle(color: AppColors.getTextSecondary(context)),
+            style: TextStyle(
+              color: AppColors.getTextSecondary(context),
+              fontSize: 14.sp,
+            ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
           Material(
             color: AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             child: InkWell(
               onTap: () async {
                 final result = await Navigator.push(
@@ -277,21 +282,19 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
                 );
                 if (result == true) _fetchSessions();
               },
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12.r),
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                child: const Row(
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Iconsax.add, color: Colors.white, size: 20),
-                    SizedBox(width: 8),
+                    Icon(Iconsax.add, color: Colors.white, size: 20.r),
+                    SizedBox(width: 8.w),
                     Text(
                       'New Chat',
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
