@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -19,31 +20,31 @@ class UploadScreen extends StatelessWidget {
         foregroundColor: AppColors.getTextPrimary(context),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0.r),
         child: Column(
           children: [
             CustomTextField(
               controller: titleController,
               hintText: 'Content Title',
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Container(
-              height: 150,
+              height: 150.h,
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.getBorder(context)),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8.r),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Iconsax.cloud_add, size: 48, color: AppColors.grey),
-                  SizedBox(height: 8),
-                  Text('Tap to select file'),
+                children: [
+                  Icon(Iconsax.cloud_add, size: 48.r, color: AppColors.grey),
+                  SizedBox(height: 8.h),
+                  Text('Tap to select file', style: TextStyle(fontSize: 16.sp)),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
             CustomButton(
               text: 'Upload Material',
               onPressed: () {
