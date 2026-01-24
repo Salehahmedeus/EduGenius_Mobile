@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -82,7 +84,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             Text(
               'Review Answers',
               style: GoogleFonts.outfit(
-                fontSize: 18,
+                fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextPrimary(context),
               ),
@@ -90,7 +92,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
             Text(
               'Question ${_currentQuestionIndex + 1} of ${details.length}',
               style: GoogleFonts.outfit(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: AppColors.getTextSecondary(context),
               ),
             ),
@@ -102,7 +104,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
         children: [
           // Progress dots
           _buildProgressDots(colorScheme),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
 
           // Questions
           Expanded(
@@ -129,7 +131,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
   Widget _buildProgressDots(ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -149,16 +151,16 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: isCurrent ? 28 : 20,
-                height: isCurrent ? 28 : 20,
+                margin: EdgeInsets.symmetric(horizontal: 4.w),
+                width: isCurrent ? 28.r : 20.r,
+                height: isCurrent ? 28.r : 20.r,
                 decoration: BoxDecoration(
                   color:
                       (detail.isCorrect ? AppColors.success : AppColors.error)
                           .withOpacity(isCurrent ? 1 : 0.3),
                   shape: BoxShape.circle,
                   border: isCurrent
-                      ? Border.all(color: AppColors.background, width: 2)
+                      ? Border.all(color: AppColors.background, width: 2.w)
                       : null,
                   boxShadow: isCurrent
                       ? [
@@ -168,8 +170,8 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                                         ? AppColors.success
                                         : AppColors.error)
                                     .withOpacity(0.4),
-                            blurRadius: 8,
-                            spreadRadius: 1,
+                            blurRadius: 8.r,
+                            spreadRadius: 1.r,
                           ),
                         ]
                       : null,
@@ -178,7 +180,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   child: Text(
                     '${index + 1}',
                     style: GoogleFonts.outfit(
-                      fontSize: isCurrent ? 12 : 10,
+                      fontSize: isCurrent ? 12.sp : 10.sp,
                       fontWeight: FontWeight.w600,
                       color: isCurrent
                           ? AppColors.white
@@ -207,32 +209,32 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
         .trim();
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Status badge
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
               color: detail.isCorrect
                   ? AppColors.success.withOpacity(0.1)
                   : AppColors.error.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
                   detail.isCorrect ? Iconsax.tick_circle : Iconsax.close_circle,
-                  size: 16,
+                  size: 16.r,
                   color: detail.isCorrect ? AppColors.success : AppColors.error,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6.w),
                 Text(
                   detail.isCorrect ? 'Correct' : 'Incorrect',
                   style: GoogleFonts.outfit(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
                     color: detail.isCorrect
                         ? AppColors.success
@@ -242,26 +244,26 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
 
           // Question text
           Text(
             questionText.isNotEmpty ? questionText : 'Question',
             style: GoogleFonts.outfit(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.getTextPrimary(context),
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24.h),
 
           // Find the original question to get all options
           ..._buildAnswerOptions(detail, colorScheme),
 
           // Explanation
           if (detail.explanation != null && detail.explanation!.isNotEmpty) ...[
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
             _buildExplanationCard(detail.explanation!, colorScheme),
           ],
         ],
@@ -344,18 +346,18 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: 1.5),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: borderColor, width: 1.5.w),
       ),
       child: Row(
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 36.r,
+            height: 36.r,
             decoration: BoxDecoration(
               color: isCorrectAnswer
                   ? AppColors.success
@@ -369,7 +371,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                 label,
                 style: GoogleFonts.outfit(
                   fontWeight: FontWeight.w600,
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   color: isCorrectAnswer || isUserAnswer
                       ? AppColors.white
                       : AppColors.getTextPrimary(context),
@@ -377,19 +379,19 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16.w),
           Expanded(
             child: Text(
               option,
               style: GoogleFonts.outfit(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 color: AppColors.black,
               ),
             ),
           ),
           if (trailingIcon != null)
-            Icon(trailingIcon, color: iconColor, size: 24),
+            Icon(trailingIcon, color: iconColor, size: 24.r),
         ],
       ),
     );
@@ -397,10 +399,10 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
   Widget _buildExplanationCard(String explanation, ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: AppColors.info.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColors.info.withOpacity(0.2)),
       ),
       child: Column(
@@ -408,23 +410,23 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
         children: [
           Row(
             children: [
-              Icon(Iconsax.lamp_on, color: AppColors.info, size: 20),
-              const SizedBox(width: 8),
+              Icon(Iconsax.lamp_on, color: AppColors.info, size: 20.r),
+              SizedBox(width: 8.w),
               Text(
                 'Explanation',
                 style: GoogleFonts.outfit(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.info,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             explanation,
             style: GoogleFonts.outfit(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: AppColors.getTextPrimary(context).withOpacity(0.8),
               height: 1.5,
             ),
@@ -436,14 +438,14 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
 
   Widget _buildNavigation(ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(24.r),
       decoration: BoxDecoration(
         color: AppColors.getBackground(context),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+            blurRadius: 10.r,
+            offset: Offset(0, -5.h),
           ),
         ],
       ),
@@ -460,21 +462,22 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                     );
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
                     side: BorderSide(color: AppColors.getBorder(context)),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Iconsax.arrow_left_2, size: 20),
-                      const SizedBox(width: 8),
+                      Icon(Iconsax.arrow_left_2, size: 20.r),
+                      SizedBox(width: 8.w),
                       Text(
                         'Previous',
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
                           color: AppColors.getTextPrimary(context),
                         ),
                       ),
@@ -484,7 +487,7 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
               ),
             if (_currentQuestionIndex > 0 &&
                 _currentQuestionIndex < details.length - 1)
-              const SizedBox(width: 12),
+              SizedBox(width: 12.w),
             if (_currentQuestionIndex < details.length - 1)
               Expanded(
                 child: ElevatedButton(
@@ -507,10 +510,13 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                     children: [
                       Text(
                         'Next',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                        ),
                       ),
-                      const SizedBox(width: 8),
-                      Icon(Iconsax.arrow_right_3, size: 20),
+                      SizedBox(width: 8.w),
+                      Icon(Iconsax.arrow_right_3, size: 20.r),
                     ],
                   ),
                 ),
@@ -530,11 +536,14 @@ class _QuizReviewScreenState extends State<QuizReviewScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Iconsax.tick_circle, size: 20),
-                      const SizedBox(width: 8),
+                      Icon(Iconsax.tick_circle, size: 20.r),
+                      SizedBox(width: 8.w),
                       Text(
                         'Done',
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.w600),
+                        style: GoogleFonts.outfit(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ],
                   ),
