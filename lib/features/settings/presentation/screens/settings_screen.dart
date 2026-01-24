@@ -3,10 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../auth/data/services/auth_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/theme_manager.dart';
 import '../../../../core/widgets/custom_snackbar.dart';
 import '../../../../routes.dart';
+import '../../../auth/data/models/user_model.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,6 +20,30 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _isLoggingOut = false;
   final AuthService _authService = AuthService();
+  UserModel? _user;
+  bool _isLoadingProfile = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final user = await _authService.getProfile();
+      if (mounted) {
+        setState(() {
+          _user = user;
+          _isLoadingProfile = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isLoadingProfile = false);
+      }
+    }
+  }
 
   Future<void> _handleLogout() async {
     if (_isLoggingOut) return;
@@ -127,6 +153,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildHeader(bool isDark) {
+    if (_isLoadingProfile) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    final user = _user;
+    final initials = user?.initials ?? 'U';
+    final name = user?.name ?? 'User';
+    final email = user?.email ?? '';
+
     return Column(
       children: [
         Row(
@@ -147,14 +182,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         CircleAvatar(
           radius: 60.r,
-          backgroundColor: AppColors.getItemColor(context),
-          backgroundImage: const NetworkImage(
-            'https://api.dicebear.com/7.x/avataaars/png?seed=Zachery&backgroundColor=b6e3f4',
+          backgroundColor: AppColors.primary,
+          child: Text(
+            initials,
+            style: GoogleFonts.outfit(
+              fontSize: 40.sp,
+              fontWeight: FontWeight.bold,
+              color: AppColors.white,
+            ),
           ),
         ),
         SizedBox(height: 16.h),
         Text(
-          'Zachery Williamson',
+          name,
           style: TextStyle(
             color: AppColors.getTextPrimary(context),
             fontSize: 24.sp,
@@ -163,7 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         SizedBox(height: 4.h),
         Text(
-          'zachery.williamson94@gmail.com',
+          email,
           style: TextStyle(
             color: AppColors.getTextSecondary(context),
             fontSize: 14.sp,

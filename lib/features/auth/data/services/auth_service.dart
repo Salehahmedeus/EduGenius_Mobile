@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/constants/api_endpoints.dart';
 import '../../../../core/storage/token_storage.dart';
+import '../models/user_model.dart';
 
 class AuthService {
   final ApiClient _client = ApiClient();
@@ -100,6 +101,19 @@ class AuthService {
       }
     } finally {
       await TokenStorage.deleteToken();
+    }
+  }
+
+  // Get Profile
+  Future<UserModel> getProfile() async {
+    try {
+      final response = await _client.dio.get(ApiEndpoints.profile);
+      if (response.statusCode == 200) {
+        return UserModel.fromJson(response.data);
+      }
+      throw 'Failed to load profile';
+    } on DioException catch (e) {
+      throw e.response?.data['message'] ?? 'Failed to load profile';
     }
   }
 }
