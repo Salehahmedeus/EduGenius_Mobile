@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../routes.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -11,17 +13,17 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w, vertical: 24.0.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(height: 40), // Top spacing
+              SizedBox(height: 40.h), // Top spacing
               Column(
                 children: [
                   Text(
                     'Study Clever',
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 32.sp,
                       color: AppColors.primary, // Red color from image
                       fontWeight: FontWeight.w500,
                     ),
@@ -29,7 +31,7 @@ class WelcomeScreen extends StatelessWidget {
                   Text(
                     'Less Time',
                     style: TextStyle(
-                      fontSize: 36,
+                      fontSize: 36.sp,
                       color: AppColors.primary, // Red color from image
                       fontWeight: FontWeight.bold,
                     ),
@@ -39,12 +41,12 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
               // Central Icon
               SizedBox(
-                width: 200,
-                height: 200,
+                width: 200.r,
+                height: 200.r,
                 child: Image.asset(
                   'assets/images/logo.png',
-                  width: 200,
-                  height: 200,
+                  width: 200.r,
+                  height: 200.r,
                 ),
               ),
               const Spacer(),
@@ -55,7 +57,7 @@ class WelcomeScreen extends StatelessWidget {
                   Navigator.pushNamed(context, Routes.login);
                 },
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
