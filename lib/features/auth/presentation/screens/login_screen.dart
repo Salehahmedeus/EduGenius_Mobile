@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iconsax/iconsax.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
@@ -71,29 +73,29 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: EdgeInsets.symmetric(horizontal: 24.0.w),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               // Logo
               SizedBox(
-                width: 120,
-                height: 120,
+                width: 120.r,
+                height: 120.r,
                 child: Image.asset('assets/images/logo.png'),
               ),
-              const SizedBox(height: 16),
-              const Text(
+              SizedBox(height: 16.h),
+              Text(
                 "Edu Genius",
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 28.sp,
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
               ),
-              const SizedBox(height: 48),
+              SizedBox(height: 48.h),
 
               // Email Field
               CustomTextField(
@@ -114,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
 
               // Password Field
               CustomTextField(
@@ -149,9 +151,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     Navigator.pushNamed(context, Routes.forgotPassword);
                   },
-                  child: const Text(
+                  child: Text(
                     "Forgot Password?",
                     style: TextStyle(
+                      fontSize: 14.sp,
                       color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
@@ -160,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
 
               // Removed Terms Checkbox
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
 
               // Login Button
               CustomButton(
@@ -169,20 +172,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _handleLogin,
               ),
 
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
 
               // Footer
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Don't have an account? "),
+                  Text(
+                    "Don't have an account? ",
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
                   GestureDetector(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.register);
                     },
-                    child: const Text(
+                    child: Text(
                       "Sign Up",
                       style: TextStyle(
+                        fontSize: 14.sp,
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
