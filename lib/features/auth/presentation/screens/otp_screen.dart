@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
@@ -128,16 +130,16 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 50,
-      height: 60,
-      textStyle: const TextStyle(
-        fontSize: 22,
+      width: 50.w,
+      height: 60.h,
+      textStyle: TextStyle(
+        fontSize: 22.sp,
         color: AppColors.primary,
         fontWeight: FontWeight.bold,
       ),
       decoration: BoxDecoration(
         color: AppColors.primaryLight, // Light red/pink background
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
         border: Border.all(color: Colors.transparent),
       ),
     );
@@ -161,33 +163,33 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: EdgeInsets.symmetric(horizontal: 24.0.w),
         child: Column(
           // Removed Form widget wrapper as Pinput handles its own state mostly, simplified for now
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
             SizedBox(
-              width: 200,
-              height: 200,
+              width: 200.r,
+              height: 200.r,
               child: Lottie.asset('assets/animations/otp_animation.json'),
             ),
-            const SizedBox(height: 24),
-            const Text(
+            SizedBox(height: 24.h),
+            Text(
               "Verification Code",
               style: TextStyle(
-                fontSize: 26,
+                fontSize: 26.sp,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h),
             Text(
               "We have sent the code verification to\n${_email.isNotEmpty ? _email : 'your email'}",
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
+              style: TextStyle(fontSize: 14.sp, color: Colors.grey),
             ),
-            const SizedBox(height: 48),
+            SizedBox(height: 48.h),
 
             // Pinput Field
             Pinput(
@@ -204,7 +206,7 @@ class _OtpScreenState extends State<OtpScreen> {
               onCompleted: (pin) => print(pin),
             ),
 
-            const SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // Timer and Resend
             Row(
@@ -213,14 +215,15 @@ class _OtpScreenState extends State<OtpScreen> {
                 if (!_isResendEnabled)
                   Text(
                     "Resend code in 00:${_start.toString().padLeft(2, '0')}",
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey, fontSize: 14.sp),
                   ),
                 if (_isResendEnabled)
                   TextButton(
                     onPressed: _handleResendOtp,
-                    child: const Text(
+                    child: Text(
                       "Resend Code",
                       style: TextStyle(
+                        fontSize: 14.sp,
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
