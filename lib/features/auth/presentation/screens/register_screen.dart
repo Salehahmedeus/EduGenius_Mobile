@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iconsax/iconsax.dart';
 import '../../data/services/auth_service.dart';
 import '../../../../routes.dart';
@@ -41,29 +43,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 // Logo
                 SizedBox(
-                  width: 100,
-                  height: 100,
+                  width: 100.r,
+                  height: 100.r,
                   child: Image.asset('assets/images/logo.png'),
                 ),
-                const SizedBox(height: 16),
-                const Text(
+                SizedBox(height: 16.h),
+                Text(
                   "Edu Genius",
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 28.sp,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 32.h),
 
                 // Name Field
                 CustomTextField(
@@ -73,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter your name' : null,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
                 // Phone Field
                 CustomTextField(
@@ -94,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
                 // Email Field
                 CustomTextField(
@@ -115,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
                 // Password Field
                 CustomTextField(
@@ -142,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
 
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
 
                 // Confirm Password Field
                 CustomTextField(
@@ -175,15 +177,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text("Agree with ", style: TextStyle(fontSize: 14)),
+                    Text("Agree with ", style: TextStyle(fontSize: 14.sp)),
                     GestureDetector(
                       onTap: () {
                         // TODO: Show terms
                       },
-                      child: const Text(
+                      child: Text(
                         "Terms & Conditions",
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                           decorationColor: AppColors.primary,
@@ -201,7 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // Register Button
                 CustomButton(
@@ -209,22 +211,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   isLoading: _isLoading,
                   onPressed: _handleRegister,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24.h),
 
                 // Footer
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Already have an account? "),
+                    Text(
+                      "Already have an account? ",
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
                     GestureDetector(
                       onTap: () {
                         Navigator.pop(
                           context,
                         ); // Go back to Login (assuming pushed from Login or has route)
                       },
-                      child: const Text(
+                      child: Text(
                         "Login",
                         style: TextStyle(
+                          fontSize: 14.sp,
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
                         ),
@@ -232,7 +238,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20.h),
               ],
             ),
           ),
