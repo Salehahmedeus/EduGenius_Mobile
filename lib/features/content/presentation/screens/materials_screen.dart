@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:edugenius_mobile/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:file_picker/file_picker.dart';
@@ -190,7 +191,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                       showChildOpacityTransition: false,
                       springAnimationDurationInMilliseconds: 500,
                       child: ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
                         itemCount: _groupedMaterials.length,
                         itemBuilder: (context, index) {
                           String label = _groupedMaterials.keys.elementAt(
@@ -203,7 +204,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                             children: [
                               _buildDateDivider(label),
                               ...materials.map((m) => _buildMaterialCard(m)),
-                              const SizedBox(height: 10),
+                              SizedBox(height: 10.h),
                             ],
                           );
                         },
@@ -224,28 +225,28 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+      padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 10.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'Study Materials',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.getTextPrimary(context),
             ),
           ),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.getBorder(context)),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
               '$_totalCount Files',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextSecondary(context),
               ),
@@ -258,13 +259,14 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
   Widget _buildSearchBar() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: TextField(
         controller: _searchController,
         onSubmitted: _performSearch,
-        decoration: const InputDecoration(
+        decoration: InputDecoration(
           hintText: 'Search your materials...',
-          prefixIcon: Icon(Iconsax.search_normal, size: 20),
+          hintStyle: TextStyle(fontSize: 16.sp),
+          prefixIcon: Icon(Iconsax.search_normal, size: 20.r),
         ),
       ),
     );
@@ -272,20 +274,20 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
 
   Widget _buildDateDivider(String label) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: EdgeInsets.symmetric(vertical: 16.h),
       child: Row(
         children: [
           Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.getBorder(context)),
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
             child: Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.getTextSecondary(context),
               ),
@@ -302,33 +304,33 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     final iconColor = isPdf ? AppColors.error : AppColors.primary;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
         color: AppColors.getSurface(context),
         border: Border.all(color: AppColors.getBorder(context)),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
         onTap: () {
           // Open material or show details
         },
         leading: Container(
-          padding: const EdgeInsets.all(10),
+          padding: EdgeInsets.all(10.r),
           decoration: BoxDecoration(
             color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
           child: Icon(
             isPdf ? Iconsax.document_text : Iconsax.document,
             color: iconColor,
-            size: 24,
+            size: 24.r,
           ),
         ),
         title: Text(
           material.fileName,
           style: TextStyle(
-            fontSize: 15,
+            fontSize: 15.sp,
             fontWeight: FontWeight.bold,
             color: AppColors.getTextPrimary(context),
           ),
@@ -338,7 +340,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         subtitle: Text(
           '${material.fileType.toUpperCase()} • ${DateFormat('HH:mm').format(material.createdAt)}',
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 12.sp,
             color: AppColors.getTextSecondary(context),
           ),
         ),
@@ -346,7 +348,7 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           icon: Icon(
             Iconsax.more,
             color: AppColors.getTextSecondary(context),
-            size: 18,
+            size: 18.r,
           ),
           onSelected: (value) {
             if (value == 'delete') {
@@ -371,24 +373,27 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         children: [
           Icon(
             Iconsax.folder_open,
-            size: 80,
+            size: 80.r,
             color: AppColors.getSurface(context),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16.h),
           Text(
             _searchQuery.isNotEmpty
                 ? 'No results for "$_searchQuery"'
                 : 'No materials found',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               color: AppColors.getTextSecondary(context),
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8.h),
           Text(
             'Upload a document to get started!',
-            style: TextStyle(color: AppColors.getTextSecondary(context)),
+            style: TextStyle(
+              color: AppColors.getTextSecondary(context),
+              fontSize: 14.sp,
+            ),
           ),
           if (_searchQuery.isNotEmpty)
             TextButton(
