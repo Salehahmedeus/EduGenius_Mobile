@@ -3,8 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../core/constants/app_colors.dart';
-import '../../../data/models/dashboard_model.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../data/models/dashboard_model.dart';
 
 class PerformanceChart extends StatelessWidget {
   final List<PerformanceTrend> trends;

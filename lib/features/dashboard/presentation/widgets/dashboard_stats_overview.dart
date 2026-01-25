@@ -2,8 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../../../../core/constants/app_colors.dart';
-import '../../../data/models/dashboard_model.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../data/models/dashboard_model.dart';
 import 'dashboard_stat_card.dart';
 
 class DashboardStatsOverview extends StatelessWidget {
