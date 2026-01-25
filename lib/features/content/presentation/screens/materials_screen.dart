@@ -12,6 +12,10 @@ import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/material_model.dart';
 import '../../data/services/content_service.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../widgets/date_divider.dart';
+import '../widgets/empty_materials_view.dart';
+import '../widgets/material_card.dart';
+import '../widgets/material_search_bar.dart';
 
 class MaterialsScreen extends StatefulWidget {
   const MaterialsScreen({super.key});
@@ -172,6 +176,11 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     }
   }
 
+  void _clearSearch() {
+    _searchController.clear();
+    _performSearch("");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,14 +214,20 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       ),
       body: Column(
         children: [
-          _buildSearchBar(),
+          MaterialSearchBar(
+            controller: _searchController,
+            onSubmitted: _performSearch,
+          ),
           Expanded(
             child: _isLoading
                 ? const Center(
                     child: CircularProgressIndicator(color: AppColors.primary),
                   )
                 : _groupedMaterials.isEmpty
-                ? _buildEmptyState()
+                ? EmptyMaterialsView(
+                    searchQuery: _searchQuery,
+                    onClearSearch: _clearSearch,
+                  )
                 : LiquidPullToRefresh(
                     onRefresh: _fetchMaterials,
                     color: AppColors.primary,
@@ -229,8 +244,16 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildDateDivider(label),
-                            ...materials.map((m) => _buildMaterialCard(m)),
+                            DateDivider(label: label),
+                            ...materials.map(
+                              (m) => MaterialCard(
+                                material: m,
+                                onDelete: _deleteMaterial,
+                                onTap: () {
+                                  // Open material or show details
+                                },
+                              ),
+                            ),
                             SizedBox(height: 10.h),
                           ],
                         );
@@ -248,160 +271,6 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
         ),
         icon: const Icon(Iconsax.document_upload, color: Colors.white),
         backgroundColor: AppColors.primary,
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      child: TextField(
-        controller: _searchController,
-        onSubmitted: _performSearch,
-        decoration: InputDecoration(
-          hintText: 'search_materials'.tr(),
-          hintStyle: TextStyle(fontSize: 16.sp),
-          prefixIcon: Icon(Iconsax.search_normal, size: 20.r),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDateDivider(String label) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.h),
-      child: Row(
-        children: [
-          Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.getBorder(context)),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.getTextSecondary(context),
-              ),
-            ),
-          ),
-          Expanded(child: Divider(color: Colors.grey.withOpacity(0.2))),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMaterialCard(MaterialModel material) {
-    final isPdf = material.fileType.toLowerCase().contains('pdf');
-    final iconColor = isPdf ? AppColors.error : AppColors.primary;
-
-    return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      decoration: BoxDecoration(
-        color: AppColors.getSurface(context),
-        border: Border.all(color: AppColors.getBorder(context)),
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-        onTap: () {
-          // Open material or show details
-        },
-        leading: Container(
-          padding: EdgeInsets.all(10.r),
-          decoration: BoxDecoration(
-            color: iconColor.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Icon(
-            isPdf ? Iconsax.document_text : Iconsax.document,
-            color: iconColor,
-            size: 24.r,
-          ),
-        ),
-        title: Text(
-          material.fileName,
-          style: TextStyle(
-            fontSize: 15.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColors.getTextPrimary(context),
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Text(
-          '${material.fileType.toUpperCase()} • ${DateFormat('HH:mm').format(material.createdAt)}',
-          style: TextStyle(
-            fontSize: 12.sp,
-            color: AppColors.getTextSecondary(context),
-          ),
-        ),
-        trailing: PopupMenuButton<String>(
-          icon: Icon(
-            Iconsax.more,
-            color: AppColors.getTextSecondary(context),
-            size: 18.r,
-          ),
-          onSelected: (value) {
-            if (value == 'delete') {
-              _deleteMaterial(material.id);
-            }
-          },
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'delete',
-              child: Text(
-                'delete'.tr(),
-                style: const TextStyle(color: AppColors.error),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Iconsax.folder_open,
-            size: 80.r,
-            color: AppColors.getSurface(context),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            _searchQuery.isNotEmpty
-                ? 'no_results'.tr(args: [_searchQuery])
-                : 'no_materials_found'.tr(),
-            style: TextStyle(
-              fontSize: 18.sp,
-              color: AppColors.getTextSecondary(context),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'upload_first_material'.tr(),
-            style: TextStyle(
-              color: AppColors.getTextSecondary(context),
-              fontSize: 14.sp,
-            ),
-          ),
-          if (_searchQuery.isNotEmpty)
-            TextButton(
-              onPressed: () {
-                _searchController.clear();
-                _performSearch("");
-              },
-              child: Text('clear_search'.tr()),
-            ),
-        ],
       ),
     );
   }
