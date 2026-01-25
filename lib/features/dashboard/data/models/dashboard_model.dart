@@ -27,6 +27,13 @@ class DashboardModel {
       insights: List<String>.from(json['insights'] ?? []),
     );
   }
+
+  static double _parseDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
 }
 
 class DashboardUser {
@@ -66,7 +73,7 @@ class DashboardStats {
     return DashboardStats(
       uploadedCount: json['uploaded_count'] ?? 0,
       quizCount: json['quiz_count'] ?? 0,
-      avgScore: (json['avg_score'] ?? 0).toDouble(),
+      avgScore: DashboardModel._parseDouble(json['avg_score']),
       studySessions: json['study_sessions'] ?? 0,
     );
   }
@@ -150,7 +157,7 @@ class PerformanceTrend {
   factory PerformanceTrend.fromJson(Map<String, dynamic> json) {
     return PerformanceTrend(
       date: json['date'] ?? '',
-      avgScore: (json['avg_score'] ?? 0).toDouble(),
+      avgScore: DashboardModel._parseDouble(json['avg_score']),
     );
   }
 }
@@ -164,7 +171,7 @@ class TopicStrength {
   factory TopicStrength.fromJson(Map<String, dynamic> json) {
     return TopicStrength(
       topic: json['topic'] ?? '',
-      avgScore: (json['avg_score'] ?? 0).toDouble(),
+      avgScore: DashboardModel._parseDouble(json['avg_score']),
     );
   }
 }
