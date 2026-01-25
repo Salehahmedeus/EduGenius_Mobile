@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import '../constants/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CustomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -36,31 +37,31 @@ class CustomNavBar extends StatelessWidget {
               _buildNavItem(
                 context,
                 icon: Iconsax.messages_1,
-                label: 'AI Chat',
+                label: 'chat'.tr(),
                 index: 0,
               ),
               _buildNavItem(
                 context,
                 icon: Iconsax.book,
-                label: 'Content',
+                label: 'materials'.tr(),
                 index: 1,
               ),
               _buildNavItem(
                 context,
                 icon: Iconsax.element_3,
-                label: 'Dashboard',
+                label: 'dashboard'.tr(),
                 index: 2,
               ),
               _buildNavItem(
                 context,
                 icon: Iconsax.note_2,
-                label: 'Quiz',
+                label: 'quiz'.tr(),
                 index: 3,
               ),
               _buildNavItem(
                 context,
                 icon: Iconsax.setting_2,
-                label: 'Settings',
+                label: 'settings'.tr(),
                 index: 4,
               ),
             ],

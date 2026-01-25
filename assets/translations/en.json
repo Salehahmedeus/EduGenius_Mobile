@@ -194,5 +194,11 @@
     "chat_deleted": "Chat deleted",
     "chat_with_ai": "Conversation with AI Tutor",
     "no_chat_history": "No chat history yet",
-    "start_chat_msg": "Start a new conversation with your AI Tutor!"
+    "start_chat_msg": "Start a new conversation with your AI Tutor!",
+    "onboarding_title_1": "Your AI Study Partner",
+    "onboarding_desc_1": "Get personalized help with your studies anytime, anywhere.",
+    "onboarding_title_2": "Smart Knowledge Base",
+    "onboarding_desc_2": "Access a vast library of knowledge tailored to your curriculum.",
+    "onboarding_title_3": "Achieve Academic Success",
+    "onboarding_desc_3": "Boost your grades and learn more effectively with AI."
 }

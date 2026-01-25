@@ -212,56 +212,62 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          MaterialSearchBar(
-            controller: _searchController,
-            onSubmitted: _performSearch,
-          ),
-          Expanded(
-            child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(color: AppColors.primary),
-                  )
-                : _groupedMaterials.isEmpty
-                ? EmptyMaterialsView(
-                    searchQuery: _searchQuery,
-                    onClearSearch: _clearSearch,
-                  )
-                : LiquidPullToRefresh(
-                    onRefresh: _fetchMaterials,
-                    color: AppColors.primary,
-                    backgroundColor: AppColors.getSurface(context),
-                    showChildOpacityTransition: false,
-                    springAnimationDurationInMilliseconds: 500,
-                    child: ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      itemCount: _groupedMaterials.length,
-                      itemBuilder: (context, index) {
-                        String label = _groupedMaterials.keys.elementAt(index);
-                        List<MaterialModel> materials =
-                            _groupedMaterials[label]!;
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            DateDivider(label: label),
-                            ...materials.map(
-                              (m) => MaterialCard(
-                                material: m,
-                                onDelete: _deleteMaterial,
-                                onTap: () {
-                                  // Open material or show details
-                                },
+      body: SafeArea(
+        child: Column(
+          children: [
+            MaterialSearchBar(
+              controller: _searchController,
+              onSubmitted: _performSearch,
+            ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    )
+                  : _groupedMaterials.isEmpty
+                  ? EmptyMaterialsView(
+                      searchQuery: _searchQuery,
+                      onClearSearch: _clearSearch,
+                    )
+                  : LiquidPullToRefresh(
+                      onRefresh: _fetchMaterials,
+                      color: AppColors.primary,
+                      backgroundColor: AppColors.getSurface(context),
+                      showChildOpacityTransition: false,
+                      springAnimationDurationInMilliseconds: 500,
+                      child: ListView.builder(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        itemCount: _groupedMaterials.length,
+                        itemBuilder: (context, index) {
+                          String label = _groupedMaterials.keys.elementAt(
+                            index,
+                          );
+                          List<MaterialModel> materials =
+                              _groupedMaterials[label]!;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DateDivider(label: label),
+                              ...materials.map(
+                                (m) => MaterialCard(
+                                  material: m,
+                                  onDelete: _deleteMaterial,
+                                  onTap: () {
+                                    // Open material or show details
+                                  },
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 10.h),
-                          ],
-                        );
-                      },
+                              SizedBox(height: 10.h),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _pickAndUploadFile,

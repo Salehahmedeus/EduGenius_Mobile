@@ -1,6 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/storage/app_preferences.dart';
@@ -17,29 +17,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingContent> _contents = [
+  // Contents are now dynamic based on localization
+  List<OnboardingContent> get _contents => [
     OnboardingContent(
       image: 'assets/images/onboarding_1.png',
-      title: 'Your AI Study Partner',
-      description: 'Get personalized help with your studies anytime, anywhere.',
+      title: 'onboarding_title_1'.tr(),
+      description: 'onboarding_desc_1'.tr(),
     ),
     OnboardingContent(
       image: 'assets/images/onboarding_2.png',
-      title: 'Smart Knowledge Base',
-      description:
-          'Access a vast library of knowledge tailored to your curriculum.',
+      title: 'onboarding_title_2'.tr(),
+      description: 'onboarding_desc_2'.tr(),
     ),
     OnboardingContent(
       image: 'assets/images/onboarding_3.png',
-      title: 'Achieve Academic Success',
-      description: 'Boost your grades and learn more effectively with AI.',
+      title: 'onboarding_title_3'.tr(),
+      description: 'onboarding_desc_3'.tr(),
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.getBackground(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -75,7 +75,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16.sp,
-                            color: AppColors.grey,
+                            color: AppColors.getTextSecondary(context),
                             height: 1.5,
                           ),
                         ),
@@ -132,7 +132,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       padding: EdgeInsets.all(20.r),
                       minimumSize: Size.zero,
                     ),
-                    child: Icon(Iconsax.arrow_right_3, size: 24.r),
+                    child: Icon(
+                      // RTL handling for arrow icon
+                      context.locale.languageCode == 'ar'
+                          ? Iconsax.arrow_left_2
+                          : Iconsax.arrow_right_3,
+                      size: 24.r,
+                    ),
                   ),
                 ],
               ),

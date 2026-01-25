@@ -51,69 +51,71 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
       appBar: const CustomAppBar(),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.0.w),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 20.h),
-              SizedBox(
-                width: 200.r,
-                height: 200.r,
-                child: Image.asset(
-                  'assets/images/forgot_password_illustration.png',
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20.h),
+                SizedBox(
+                  width: 200.r,
+                  height: 200.r,
+                  child: Image.asset(
+                    'assets/images/forgot_password_illustration.png',
+                  ),
                 ),
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                "forgot_password_title".tr(),
-                style: TextStyle(
-                  fontSize: 26.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
+                SizedBox(height: 24.h),
+                Text(
+                  "forgot_password_title".tr(),
+                  style: TextStyle(
+                    fontSize: 26.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              SizedBox(height: 12.h),
-              Text(
-                "forgot_password_msg".tr(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.getTextSecondary(context),
+                SizedBox(height: 12.h),
+                Text(
+                  "forgot_password_msg".tr(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.getTextSecondary(context),
+                  ),
                 ),
-              ),
-              SizedBox(height: 48.h),
+                SizedBox(height: 48.h),
 
-              // Email Field
-              CustomTextField(
-                controller: _emailController,
-                hintText: "email".tr(),
-                prefixIcon: Iconsax.sms,
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter_email_error'.tr();
-                  }
-                  final emailRegex = RegExp(
-                    r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
-                  );
-                  if (!emailRegex.hasMatch(value)) {
-                    return 'valid_email_error'.tr();
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 32.h),
+                // Email Field
+                CustomTextField(
+                  controller: _emailController,
+                  hintText: "email".tr(),
+                  prefixIcon: Iconsax.sms,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'enter_email_error'.tr();
+                    }
+                    final emailRegex = RegExp(
+                      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+                    );
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'valid_email_error'.tr();
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 32.h),
 
-              // Send Button
-              CustomButton(
-                text: "send_otp".tr(),
-                isLoading: _isLoading,
-                onPressed: _handleSendOtp,
-              ),
-            ],
+                // Send Button
+                CustomButton(
+                  text: "send_otp".tr(),
+                  isLoading: _isLoading,
+                  onPressed: _handleSendOtp,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -124,79 +124,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.background,
       appBar: CustomAppBar(title: 'settings'.tr(), showBackButton: false),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        child: Column(
-          children: [
-            // Header with Profile
-            _buildHeader(isDark),
-            SizedBox(height: 30.h),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: Column(
+            children: [
+              // Header with Profile
+              _buildHeader(isDark),
+              SizedBox(height: 30.h),
 
-            // Group 3: App Settings
-            _buildGroupTitle(isDark, 'appearance'.tr()),
-            _buildGroupContainer(isDark, [
-              _buildSettingItem(
-                isDark,
-                icon: Iconsax.global,
-                iconBg: const Color(0xFF246BFD),
-                title: 'language'.tr(),
-                trailing: _buildBadge(
-                  context.locale.languageCode == 'en'
-                      ? 'english'.tr()
-                      : 'arabic'.tr(),
+              // Group 3: App Settings
+              _buildGroupTitle(isDark, 'appearance'.tr()),
+              _buildGroupContainer(isDark, [
+                _buildSettingItem(
+                  isDark,
+                  icon: Iconsax.global,
+                  iconBg: const Color(0xFF246BFD),
+                  title: 'language'.tr(),
+                  trailing: _buildBadge(
+                    context.locale.languageCode == 'en'
+                        ? 'english'.tr()
+                        : 'arabic'.tr(),
+                  ),
+                  onTap: () => _showLanguageDialog(context),
                 ),
-                onTap: () => _showLanguageDialog(context),
-              ),
-              _buildDivider(isDark),
-              _buildSettingItem(
-                isDark,
-                icon: Iconsax.colorfilter,
-                iconBg: const Color(0xFF47D16E),
-                title: 'dark_mode'.tr(),
-                trailing: ValueListenableBuilder<ThemeMode>(
-                  valueListenable: themeManager,
-                  builder: (context, mode, _) {
-                    return Switch(
-                      value: mode == ThemeMode.dark,
-                      onChanged: (val) => themeManager.toggleTheme(),
-                      activeThumbColor: AppColors.white,
-                      activeTrackColor: AppColors.success,
-                    );
-                  },
+                _buildDivider(isDark),
+                _buildSettingItem(
+                  isDark,
+                  icon: Iconsax.colorfilter,
+                  iconBg: const Color(0xFF47D16E),
+                  title: 'dark_mode'.tr(),
+                  trailing: ValueListenableBuilder<ThemeMode>(
+                    valueListenable: themeManager,
+                    builder: (context, mode, _) {
+                      return Switch(
+                        value: mode == ThemeMode.dark,
+                        onChanged: (val) => themeManager.toggleTheme(),
+                        activeThumbColor: AppColors.white,
+                        activeTrackColor: AppColors.success,
+                      );
+                    },
+                  ),
+                  onTap: () {},
                 ),
-                onTap: () {},
-              ),
-            ]),
-            const SizedBox(height: 24),
+              ]),
+              const SizedBox(height: 24),
 
-            // Group 4: Account & Support
-            _buildGroupTitle(isDark, 'help_center'.tr()),
-            _buildGroupContainer(isDark, [
-              _buildSettingItem(
-                isDark,
-                icon: Iconsax.info_circle,
-                iconBg: const Color(0xFFACACAE),
-                title: 'help_center'.tr(),
-                onTap: () {},
-              ),
-              _buildDivider(isDark),
-              _buildSettingItem(
-                isDark,
-                icon: Iconsax.logout,
-                iconBg: const Color(0xFFF75555),
-                title: 'logout'.tr(),
-                trailing: _isLoggingOut
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : null,
-                onTap: _handleLogout,
-              ),
-            ]),
-            SizedBox(height: 30.h),
-          ],
+              // Group 4: Account & Support
+              _buildGroupTitle(isDark, 'help_center'.tr()),
+              _buildGroupContainer(isDark, [
+                _buildSettingItem(
+                  isDark,
+                  icon: Iconsax.info_circle,
+                  iconBg: const Color(0xFFACACAE),
+                  title: 'help_center'.tr(),
+                  onTap: () {},
+                ),
+                _buildDivider(isDark),
+                _buildSettingItem(
+                  isDark,
+                  icon: Iconsax.logout,
+                  iconBg: const Color(0xFFF75555),
+                  title: 'logout'.tr(),
+                  trailing: _isLoggingOut
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : null,
+                  onTap: _handleLogout,
+                ),
+              ]),
+              SizedBox(height: 30.h),
+            ],
+          ),
         ),
       ),
     );

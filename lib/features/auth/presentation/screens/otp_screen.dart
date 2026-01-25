@@ -151,90 +151,92 @@ class _OtpScreenState extends State<OtpScreen> {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
       appBar: const CustomAppBar(),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.0.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20.h),
-            SizedBox(
-              width: 200.r,
-              height: 200.r,
-              child: Lottie.asset('assets/animations/otp_animation.json'),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              "verification_code".tr(),
-              style: TextStyle(
-                fontSize: 26.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 20.h),
+              SizedBox(
+                width: 200.r,
+                height: 200.r,
+                child: Lottie.asset('assets/animations/otp_animation.json'),
               ),
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              "${'verification_msg'.tr()}\n${_email.isNotEmpty ? _email : 'email'.tr()}",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.getTextSecondary(context),
+              SizedBox(height: 24.h),
+              Text(
+                "verification_code".tr(),
+                style: TextStyle(
+                  fontSize: 26.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
               ),
-            ),
-            SizedBox(height: 48.h),
+              SizedBox(height: 12.h),
+              Text(
+                "${'verification_msg'.tr()}\n${_email.isNotEmpty ? _email : 'email'.tr()}",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppColors.getTextSecondary(context),
+                ),
+              ),
+              SizedBox(height: 48.h),
 
-            // Pinput Field
-            Pinput(
-              length: 6,
-              controller: _otpController,
-              defaultPinTheme: defaultPinTheme,
-              focusedPinTheme: focusedPinTheme,
-              submittedPinTheme: submittedPinTheme,
-              validator: (s) {
-                return s?.length == 6 ? null : 'pin_incorrect'.tr();
-              },
-              pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-              showCursor: true,
-              onCompleted: (pin) => print(pin),
-            ),
+              // Pinput Field
+              Pinput(
+                length: 6,
+                controller: _otpController,
+                defaultPinTheme: defaultPinTheme,
+                focusedPinTheme: focusedPinTheme,
+                submittedPinTheme: submittedPinTheme,
+                validator: (s) {
+                  return s?.length == 6 ? null : 'pin_incorrect'.tr();
+                },
+                pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                showCursor: true,
+                onCompleted: (pin) => print(pin),
+              ),
 
-            SizedBox(height: 24.h),
+              SizedBox(height: 24.h),
 
-            // Timer and Resend
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (!_isResendEnabled)
-                  Text(
-                    "${'resend_in'.tr()} 00:${_start.toString().padLeft(2, '0')}",
-                    style: TextStyle(
-                      color: AppColors.getTextSecondary(context),
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                if (_isResendEnabled)
-                  TextButton(
-                    onPressed: _handleResendOtp,
-                    child: Text(
-                      "resend_code".tr(),
+              // Timer and Resend
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (!_isResendEnabled)
+                    Text(
+                      "${'resend_in'.tr()} 00:${_start.toString().padLeft(2, '0')}",
                       style: TextStyle(
+                        color: AppColors.getTextSecondary(context),
                         fontSize: 14.sp,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-              ],
-            ),
+                  if (_isResendEnabled)
+                    TextButton(
+                      onPressed: _handleResendOtp,
+                      child: Text(
+                        "resend_code".tr(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Verify Button
-            CustomButton(
-              text: "verify".tr(),
-              isLoading: _isLoading,
-              onPressed: _handleVerifyOtp,
-            ),
-          ],
+              // Verify Button
+              CustomButton(
+                text: "verify".tr(),
+                isLoading: _isLoading,
+                onPressed: _handleVerifyOtp,
+              ),
+            ],
+          ),
         ),
       ),
     );

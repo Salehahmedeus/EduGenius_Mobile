@@ -70,125 +70,88 @@ class _LoginScreenState extends State<LoginScreen> {
           (route) => false,
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.0.w),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 20.h),
-              // Logo
-              SizedBox(
-                width: 120.r,
-                height: 120.r,
-                child: Image.asset('assets/images/logo.png'),
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                "Edu Genius",
-                style: TextStyle(
-                  fontSize: 28.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 24.0.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 20.h),
+                // Logo
+                SizedBox(
+                  width: 120.r,
+                  height: 120.r,
+                  child: Image.asset('assets/images/logo.png'),
                 ),
-              ),
-              SizedBox(height: 48.h),
+                SizedBox(height: 16.h),
+                Text(
+                  "Edu Genius",
+                  style: TextStyle(
+                    fontSize: 28.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                SizedBox(height: 48.h),
 
-              // Email Field
-              CustomTextField(
-                controller: _emailController,
-                hintText: "email".tr(),
-                prefixIcon: Iconsax.sms,
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter_email_error'.tr();
-                  }
-                  final emailRegex = RegExp(
-                    r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
-                  );
-                  if (!emailRegex.hasMatch(value)) {
-                    return 'valid_email_error'.tr();
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.h),
-
-              // Password Field
-              CustomTextField(
-                controller: _passwordController,
-                hintText: "password".tr(),
-                isObscure: !_isPasswordVisible,
-                prefixIcon: Iconsax.lock,
-                suffixIcon: _isPasswordVisible
-                    ? Iconsax.eye
-                    : Iconsax.eye_slash,
-                onSuffixIconPressed: () {
-                  setState(() {
-                    _isPasswordVisible = !_isPasswordVisible;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter_password_error'.tr();
-                  }
-                  if (value.length < 6) {
-                    return 'password_length_error'.tr();
-                  }
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 16),
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.forgotPassword);
+                // Email Field
+                CustomTextField(
+                  controller: _emailController,
+                  hintText: "email".tr(),
+                  prefixIcon: Iconsax.sms,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'enter_email_error'.tr();
+                    }
+                    final emailRegex = RegExp(
+                      r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+',
+                    );
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'valid_email_error'.tr();
+                    }
+                    return null;
                   },
-                  child: Text(
-                    "forgot_password".tr(),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                 ),
-              ),
+                SizedBox(height: 16.h),
 
-              // Removed Terms Checkbox
-              SizedBox(height: 24.h),
+                // Password Field
+                CustomTextField(
+                  controller: _passwordController,
+                  hintText: "password".tr(),
+                  isObscure: !_isPasswordVisible,
+                  prefixIcon: Iconsax.lock,
+                  suffixIcon: _isPasswordVisible
+                      ? Iconsax.eye
+                      : Iconsax.eye_slash,
+                  onSuffixIconPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'enter_password_error'.tr();
+                    }
+                    if (value.length < 6) {
+                      return 'password_length_error'.tr();
+                    }
+                    return null;
+                  },
+                ),
 
-              // Login Button
-              CustomButton(
-                text: "login".tr(),
-                isLoading: _isLoading,
-                onPressed: _handleLogin,
-              ),
+                const SizedBox(height: 16),
 
-              SizedBox(height: 24.h),
-
-              // Footer
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "dont_have_account".tr() + " ",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppColors.getTextPrimary(context),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.register);
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.forgotPassword);
                     },
                     child: Text(
-                      "sign_up".tr(),
+                      "forgot_password".tr(),
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: AppColors.primary,
@@ -196,9 +159,48 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+
+                // Removed Terms Checkbox
+                SizedBox(height: 24.h),
+
+                // Login Button
+                CustomButton(
+                  text: "login".tr(),
+                  isLoading: _isLoading,
+                  onPressed: _handleLogin,
+                ),
+
+                SizedBox(height: 24.h),
+
+                // Footer
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "dont_have_account".tr() + " ",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.getTextPrimary(context),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.register);
+                      },
+                      child: Text(
+                        "sign_up".tr(),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

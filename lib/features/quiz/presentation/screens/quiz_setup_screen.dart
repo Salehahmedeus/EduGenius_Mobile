@@ -103,9 +103,11 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     return Scaffold(
       backgroundColor: AppColors.getBackground(context),
       appBar: CustomAppBar(title: 'create_quiz'.tr()),
-      body: _isLoadingMaterials
-          ? const Center(child: CircularProgressIndicator())
-          : _buildContent(),
+      body: SafeArea(
+        child: _isLoadingMaterials
+            ? const Center(child: CircularProgressIndicator())
+            : _buildContent(),
+      ),
       floatingActionButton: SetupStartButton(
         isEnabled: _selectedMaterialIds.isNotEmpty && !_isGeneratingQuiz,
         isGenerating: _isGeneratingQuiz,
