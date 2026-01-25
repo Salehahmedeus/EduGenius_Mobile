@@ -3,6 +3,8 @@ import '../../../../core/network/api_client.dart';
 import '../../../../core/constants/api_endpoints.dart';
 import '../models/quiz_model.dart';
 import '../models/quiz_result_model.dart';
+import '../../../../main.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QuizService {
   final ApiClient _apiClient = ApiClient();
@@ -13,10 +15,17 @@ class QuizService {
     required int difficulty,
   }) async {
     try {
+      // Explicitly send language code for LLM generation
+      final context = navigatorKey.currentContext;
+      final language = context?.locale.languageCode ?? 'en';
+
       final response = await _apiClient.dio.post(
-        ApiEndpoints
-            .quizGenerate, // Make sure this is '/quiz/generate' in your constants
-        data: {'material_ids': materialIds, 'difficulty': difficulty},
+        ApiEndpoints.quizGenerate,
+        data: {
+          'material_ids': materialIds,
+          'difficulty': difficulty,
+          'language': language, // Explicitly tell backend which language to use
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
