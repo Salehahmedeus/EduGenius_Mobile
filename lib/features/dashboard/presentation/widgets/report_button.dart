@@ -6,6 +6,8 @@ import 'package:iconsax/iconsax.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../data/models/progress_report_model.dart';
 
+import '../../../../core/widgets/custom_snackbar.dart';
+
 class ReportButton extends StatefulWidget {
   final Future<ProgressReportModel> Function() onGenerateReport;
 
@@ -68,10 +70,9 @@ class _ReportButtonState extends State<ReportButton> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('report_generation_failed'.tr(args: [e.toString()])),
-          ),
+        CustomSnackbar.showError(
+          context,
+          'report_generation_failed'.tr(args: [e.toString()]),
         );
       }
     } finally {

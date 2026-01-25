@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,6 +13,8 @@ import '../widgets/setup_difficulty_selector.dart';
 import '../widgets/setup_material_list.dart';
 import '../widgets/setup_start_button.dart';
 import 'quiz_taking_screen.dart';
+
+import '../../../../core/widgets/custom_snackbar.dart';
 
 /// Screen for configuring and starting a new quiz
 class QuizSetupScreen extends StatefulWidget {
@@ -49,19 +50,13 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       });
     } catch (e) {
       setState(() => _isLoadingMaterials = false);
-      Fluttertoast.showToast(
-        msg: 'failed_to_load_data'.tr(),
-        backgroundColor: AppColors.error,
-      );
+      CustomSnackbar.showError(context, 'failed_to_load_data'.tr());
     }
   }
 
   Future<void> _generateQuiz() async {
     if (_selectedMaterialIds.isEmpty) {
-      Fluttertoast.showToast(
-        msg: 'select_least_one'.tr(),
-        backgroundColor: AppColors.warning,
-      );
+      CustomSnackbar.showWarning(context, 'select_least_one'.tr());
       return;
     }
 
@@ -90,10 +85,9 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
 
       // 👇 SHOW RAW ERROR IN TOAST
       // This will tell us if it's a "Timeout", "FormatException", or something else
-      Fluttertoast.showToast(
-        msg: 'quiz_gen_error'.tr(args: [e.toString()]),
-        backgroundColor: AppColors.error,
-        toastLength: Toast.LENGTH_LONG, // Keep it on screen longer
+      CustomSnackbar.showError(
+        context,
+        'quiz_gen_error'.tr(args: [e.toString()]),
       );
     }
   }

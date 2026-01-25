@@ -2,12 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../../../core/widgets/custom_snackbar.dart';
 import '../../data/models/question_model.dart';
 import '../../data/models/quiz_model.dart';
 import '../../data/services/quiz_service.dart';
@@ -56,10 +56,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
 
   void _nextQuestion() {
     if (!canProceed) {
-      Fluttertoast.showToast(
-        msg: 'please_select_answer'.tr(),
-        backgroundColor: AppColors.warning,
-      );
+      CustomSnackbar.showWarning(context, 'please_select_answer'.tr());
       return;
     }
 
@@ -209,11 +206,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
         }
       }
 
-      Fluttertoast.showToast(
-        msg: errorMessage,
-        backgroundColor: AppColors.error,
-        toastLength: Toast.LENGTH_LONG,
-      );
+      CustomSnackbar.showError(context, errorMessage);
     }
   }
 

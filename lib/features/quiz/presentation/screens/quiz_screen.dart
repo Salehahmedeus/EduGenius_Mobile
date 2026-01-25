@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,6 +15,8 @@ import '../widgets/quiz_empty_state.dart';
 import 'quiz_review_screen.dart';
 import 'quiz_setup_screen.dart';
 import 'quiz_taking_screen.dart';
+
+import '../../../../core/widgets/custom_snackbar.dart';
 
 /// Main quiz screen showing quiz history and option to create new quiz
 class QuizScreen extends StatefulWidget {
@@ -49,10 +50,7 @@ class _QuizScreenState extends State<QuizScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        Fluttertoast.showToast(
-          msg: 'load_quiz_history_error'.tr(),
-          backgroundColor: AppColors.error,
-        );
+        CustomSnackbar.showError(context, 'load_quiz_history_error'.tr());
       }
     }
   }
@@ -138,9 +136,9 @@ class _QuizScreenState extends State<QuizScreen> {
       );
     } catch (e) {
       if (mounted && Navigator.canPop(context)) Navigator.pop(context);
-      Fluttertoast.showToast(
-        msg: 'quiz_tap_error'.tr(args: [e.toString()]),
-        backgroundColor: AppColors.error,
+      CustomSnackbar.showError(
+        context,
+        'quiz_tap_error'.tr(args: [e.toString()]),
       );
       print("Quiz Tap Error: $e");
     }

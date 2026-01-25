@@ -17,6 +17,8 @@ import '../widgets/recommendation_card.dart';
 import '../widgets/report_button.dart';
 import '../widgets/topic_strength_chart.dart';
 
+import '../../../../core/widgets/custom_snackbar.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -50,8 +52,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${'error_loading_dashboard'.tr()}: $e')),
+        CustomSnackbar.showError(
+          context,
+          '${'error_loading_dashboard'.tr()}: $e',
         );
       }
     }
