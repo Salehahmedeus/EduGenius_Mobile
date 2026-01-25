@@ -94,13 +94,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     DashboardStatsOverview(stats: _dashboardData!.stats),
                     SizedBox(height: 32.h),
 
-                    // Recommendation
-                    if (_dashboardData!.recommendation.hasRecommendation) ...[
-                      RecommendationCard(
-                        recommendation: _dashboardData!.recommendation,
-                      ),
-                      SizedBox(height: 32.h),
-                    ],
+                    // AI Recommendation - Always show
+                    RecommendationCard(
+                      recommendation:
+                          _dashboardData!.recommendation.hasRecommendation
+                          ? _dashboardData!.recommendation
+                          : Recommendation(
+                              hasRecommendation: true,
+                              text:
+                                  'Keep up the great work! Complete more quizzes to get personalized AI recommendations.',
+                              action: '',
+                            ),
+                    ),
+                    SizedBox(height: 32.h),
 
                     // Insights
                     if (_dashboardData!.insights.isNotEmpty) ...[
