@@ -30,9 +30,11 @@ class ApiClient {
 
           // Add Accept-Language header
           final context = navigatorKey.currentContext;
-          if (context != null) {
-            options.headers['Accept-Language'] = context.locale.languageCode;
-          }
+          final languageCode = context?.locale.languageCode ?? 'en';
+          options.headers['Accept-Language'] = languageCode;
+
+          print('🌐 [ApiClient] Request: ${options.uri}');
+          print('🌐 [ApiClient] Accept-Language: $languageCode');
 
           return handler.next(options);
         },
