@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../auth/data/services/auth_service.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -11,6 +10,9 @@ import '../../../../core/widgets/custom_snackbar.dart';
 import '../../../../routes.dart';
 import '../../../auth/data/models/user_model.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../widgets/settings_profile_header.dart';
+import '../widgets/settings_section.dart';
+import '../widgets/settings_tile.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -130,197 +132,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             children: [
               // Header with Profile
-              _buildHeader(isDark),
+              SettingsProfileHeader(user: _user, isLoading: _isLoadingProfile),
               SizedBox(height: 30.h),
 
               // Group 3: App Settings
-              _buildGroupTitle(isDark, 'appearance'.tr()),
-              _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.global,
-                  iconBg: const Color(0xFF246BFD),
-                  title: 'language'.tr(),
-                  trailing: _buildBadge(
-                    context.locale.languageCode == 'en'
-                        ? 'english'.tr()
-                        : 'arabic'.tr(),
+              SettingsSection(
+                title: 'appearance'.tr(),
+                children: [
+                  SettingsTile(
+                    icon: Iconsax.global,
+                    iconBgColor: const Color(0xFF246BFD),
+                    title: 'language'.tr(),
+                    trailing: _buildBadge(
+                      context.locale.languageCode == 'en'
+                          ? 'english'.tr()
+                          : 'arabic'.tr(),
+                    ),
+                    onTap: () => _showLanguageDialog(context),
+                    showDivider: true,
                   ),
-                  onTap: () => _showLanguageDialog(context),
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.colorfilter,
-                  iconBg: const Color(0xFF47D16E),
-                  title: 'dark_mode'.tr(),
-                  trailing: ValueListenableBuilder<ThemeMode>(
-                    valueListenable: themeManager,
-                    builder: (context, mode, _) {
-                      return Switch(
-                        value: mode == ThemeMode.dark,
-                        onChanged: (val) => themeManager.toggleTheme(),
-                        activeThumbColor: AppColors.white,
-                        activeTrackColor: AppColors.success,
-                      );
-                    },
+                  SettingsTile(
+                    icon: Iconsax.colorfilter,
+                    iconBgColor: const Color(0xFF47D16E),
+                    title: 'dark_mode'.tr(),
+                    trailing: ValueListenableBuilder<ThemeMode>(
+                      valueListenable: themeManager,
+                      builder: (context, mode, _) {
+                        return Switch(
+                          value: mode == ThemeMode.dark,
+                          onChanged: (val) => themeManager.toggleTheme(),
+                          activeThumbColor: AppColors.white,
+                          activeTrackColor: AppColors.success,
+                        );
+                      },
+                    ),
+                    onTap: () {},
                   ),
-                  onTap: () {},
-                ),
-              ]),
+                ],
+              ),
               const SizedBox(height: 24),
 
               // Group 4: Account & Support
-              _buildGroupTitle(isDark, 'help_center'.tr()),
-              _buildGroupContainer(isDark, [
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.info_circle,
-                  iconBg: const Color(0xFFACACAE),
-                  title: 'help_center'.tr(),
-                  onTap: () {},
-                ),
-                _buildDivider(isDark),
-                _buildSettingItem(
-                  isDark,
-                  icon: Iconsax.logout,
-                  iconBg: const Color(0xFFF75555),
-                  title: 'logout'.tr(),
-                  trailing: _isLoggingOut
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : null,
-                  onTap: _handleLogout,
-                ),
-              ]),
+              SettingsSection(
+                title: 'help_center'.tr(),
+                children: [
+                  SettingsTile(
+                    icon: Iconsax.info_circle,
+                    iconBgColor: const Color(0xFFACACAE),
+                    title: 'help_center'.tr(),
+                    onTap: () {},
+                    showDivider: true,
+                  ),
+                  SettingsTile(
+                    icon: Iconsax.logout,
+                    iconBgColor: const Color(0xFFF75555),
+                    title: 'logout'.tr(),
+                    trailing: _isLoggingOut
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : null,
+                    onTap: _handleLogout,
+                  ),
+                ],
+              ),
               SizedBox(height: 30.h),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeader(bool isDark) {
-    if (_isLoadingProfile) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final user = _user;
-    final initials = user?.initials ?? 'U';
-    final name = user?.name ?? 'User';
-    final email = user?.email ?? '';
-
-    return Column(
-      children: [
-        SizedBox(height: 16.h),
-        CircleAvatar(
-          radius: 60.r,
-          backgroundColor: AppColors.primary,
-          child: Text(
-            initials,
-            style: GoogleFonts.outfit(
-              fontSize: 40.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-            ),
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Text(
-          name,
-          style: TextStyle(
-            color: AppColors.getTextPrimary(context),
-            fontSize: 24.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          email,
-          style: TextStyle(
-            color: AppColors.getTextSecondary(context),
-            fontSize: 14.sp,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGroupTitle(bool isDark, String title) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
-      child: Text(
-        title.toUpperCase(),
-        style: TextStyle(
-          color: AppColors.getTextSecondary(context),
-          fontSize: 12.sp,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGroupContainer(bool isDark, List<Widget> children) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.getBorder(context)),
-      ),
-      child: Column(children: children),
-    );
-  }
-
-  Widget _buildDivider(bool isDark) {
-    return Divider(
-      height: 1.h,
-      thickness: 1.h,
-      color: AppColors.getBorder(context),
-      indent: 60.w,
-      endIndent: 16.w,
-    );
-  }
-
-  Widget _buildSettingItem(
-    bool isDark, {
-    required IconData icon,
-    required Color iconBg,
-    required String title,
-    Widget? trailing,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-      leading: Container(
-        padding: EdgeInsets.all(8.r),
-        decoration: BoxDecoration(
-          color: iconBg,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: Icon(icon, color: Colors.white, size: 20.r),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: AppColors.getTextPrimary(context),
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      trailing:
-          trailing ??
-          Icon(
-            Iconsax.arrow_right_3,
-            color: AppColors.getTextSecondary(context),
-            size: 18.r,
-          ),
     );
   }
 
