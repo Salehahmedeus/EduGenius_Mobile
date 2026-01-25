@@ -108,20 +108,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 32.h),
 
-                    // Insights
-                    if (_dashboardData!.insights.isNotEmpty) ...[
-                      Text(
-                        'ai_insights'.tr(),
-                        style: GoogleFonts.outfit(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.getTextPrimary(context),
-                        ),
+                    // AI Insights - Always show
+                    Text(
+                      'ai_insights'.tr(),
+                      style: GoogleFonts.outfit(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.getTextPrimary(context),
                       ),
-                      SizedBox(height: 16.h),
-                      InsightsList(insights: _dashboardData!.insights),
-                      SizedBox(height: 32.h),
-                    ],
+                    ),
+                    SizedBox(height: 16.h),
+                    InsightsList(
+                      insights: _dashboardData!.insights.isNotEmpty
+                          ? _dashboardData!.insights
+                          : [
+                              'Start by uploading your study materials to get personalized insights',
+                              'Take quizzes regularly to track your progress',
+                              'Review your quiz results to identify areas for improvement',
+                            ],
+                    ),
+                    SizedBox(height: 32.h),
 
                     // Performance Trend Chart
                     Text(
