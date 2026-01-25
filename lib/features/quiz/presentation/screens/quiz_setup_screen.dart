@@ -91,7 +91,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
       // 👇 SHOW RAW ERROR IN TOAST
       // This will tell us if it's a "Timeout", "FormatException", or something else
       Fluttertoast.showToast(
-        msg: "Error: $e",
+        msg: 'quiz_gen_error'.tr(args: [e.toString()]),
         backgroundColor: AppColors.error,
         toastLength: Toast.LENGTH_LONG, // Keep it on screen longer
       );

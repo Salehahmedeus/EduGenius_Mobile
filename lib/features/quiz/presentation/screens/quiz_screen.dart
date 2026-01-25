@@ -122,7 +122,7 @@ class _QuizScreenState extends State<QuizScreen> {
           score: score,
           totalQuestions: totalQuestions,
           correctAnswers: correctAnswers,
-          feedback: "Review Mode",
+          feedback: "review_mode".tr(),
           details: details,
         );
       }
@@ -139,7 +139,7 @@ class _QuizScreenState extends State<QuizScreen> {
     } catch (e) {
       if (mounted && Navigator.canPop(context)) Navigator.pop(context);
       Fluttertoast.showToast(
-        msg: "Error: $e",
+        msg: 'quiz_tap_error'.tr(args: [e.toString()]),
         backgroundColor: AppColors.error,
       );
       print("Quiz Tap Error: $e");

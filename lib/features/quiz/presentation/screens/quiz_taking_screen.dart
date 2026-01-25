@@ -57,7 +57,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
   void _nextQuestion() {
     if (!canProceed) {
       Fluttertoast.showToast(
-        msg: 'Please select an answer',
+        msg: 'please_select_answer'.tr(),
         backgroundColor: AppColors.warning,
       );
       return;
@@ -200,7 +200,7 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
       setState(() => _isSubmitting = false);
       print("Quiz Submit UI Error: $e");
 
-      String errorMessage = 'Failed to submit quiz.';
+      String errorMessage = 'submit_quiz_error'.tr();
       if (e is DioException) {
         if (e.response?.data != null && e.response?.data['message'] != null) {
           errorMessage = e.response?.data['message'];
@@ -330,9 +330,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               margin: EdgeInsets.only(right: 16.w),
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: widget.quiz.difficultyLabel == 'Easy'
+                color: widget.quiz.difficulty == 1
                     ? AppColors.success.withOpacity(0.1)
-                    : widget.quiz.difficultyLabel == 'Medium'
+                    : widget.quiz.difficulty == 2
                     ? AppColors.warning.withOpacity(0.1)
                     : AppColors.error.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20.r),
@@ -345,9 +345,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
                     style: GoogleFonts.outfit(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
-                      color: widget.quiz.difficultyLabel == 'Easy'
+                      color: widget.quiz.difficulty == 1
                           ? AppColors.success
-                          : widget.quiz.difficultyLabel == 'Medium'
+                          : widget.quiz.difficulty == 2
                           ? AppColors.warning
                           : AppColors.error,
                     ),

@@ -111,7 +111,10 @@ class ChatScreenState extends State<ChatScreen> {
       }
     } catch (e) {
       if (mounted) {
-        CustomSnackbar.showError(context, "Error picking file: $e");
+        CustomSnackbar.showError(
+          context,
+          'error_picking_file'.tr(args: [e.toString()]),
+        );
       }
     }
   }
@@ -121,7 +124,7 @@ class ChatScreenState extends State<ChatScreen> {
     if (text.isEmpty && _attachedFile == null) return;
 
     final userMsg = ChatMessageModel.user(
-      text: text.isEmpty ? "Analyzed file" : text,
+      text: text.isEmpty ? 'analyzed_file_msg'.tr() : text,
     );
 
     setState(() {
@@ -133,7 +136,7 @@ class ChatScreenState extends State<ChatScreen> {
 
     try {
       final response = await _aiService.sendMessage(
-        query: text.isEmpty ? "Please analyze this file" : text,
+        query: text.isEmpty ? 'analyze_file_query'.tr() : text,
         conversationId: _activeConversationId,
         file: _attachedFile,
       );

@@ -46,7 +46,7 @@ class _ReportButtonState extends State<ReportButton> {
                   Icon(Iconsax.document_download, size: 20.r),
                   SizedBox(width: 8.w),
                   Text(
-                    'Generate Progress Report',
+                    'generate_progress_report'.tr(),
                     style: GoogleFonts.outfit(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -69,7 +69,9 @@ class _ReportButtonState extends State<ReportButton> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to generate report: $e')),
+          SnackBar(
+            content: Text('report_generation_failed'.tr(args: [e.toString()])),
+          ),
         );
       }
     } finally {
@@ -110,13 +112,17 @@ class _ReportButtonState extends State<ReportButton> {
               ),
               SizedBox(height: 8.h),
               Text(
-                'Total Quizzes: ${report.totalQuizzes}',
+                'total_quizzes_label'.tr(
+                  args: [report.totalQuizzes.toString()],
+                ),
                 style: GoogleFonts.outfit(
                   color: AppColors.getTextPrimary(context),
                 ),
               ),
               Text(
-                'Average Score: ${report.averageScore.toStringAsFixed(1)}%',
+                'average_score_fmt'.tr(
+                  args: [report.averageScore.toStringAsFixed(1)],
+                ),
                 style: GoogleFonts.outfit(
                   color: AppColors.getTextPrimary(context),
                 ),
@@ -124,7 +130,7 @@ class _ReportButtonState extends State<ReportButton> {
               SizedBox(height: 16.h),
               if (report.strengths.isNotEmpty) ...[
                 Text(
-                  'Strengths',
+                  'strengths'.tr(),
                   style: GoogleFonts.outfit(
                     fontWeight: FontWeight.w600,
                     color: AppColors.success,
@@ -156,7 +162,7 @@ class _ReportButtonState extends State<ReportButton> {
               ],
               if (report.weaknesses.isNotEmpty) ...[
                 Text(
-                  'Areas for Improvement',
+                  'areas_for_improvement'.tr(),
                   style: GoogleFonts.outfit(
                     fontWeight: FontWeight.w600,
                     color: AppColors.warning,
@@ -187,7 +193,9 @@ class _ReportButtonState extends State<ReportButton> {
                 SizedBox(height: 16.h),
               ],
               Text(
-                'Generated: ${report.generatedAt.toString().split('.')[0]}',
+                'generated_at'.tr(
+                  args: [report.generatedAt.toString().split('.')[0]],
+                ),
                 style: GoogleFonts.outfit(
                   fontSize: 10.sp,
                   color: AppColors.grey,
@@ -200,7 +208,7 @@ class _ReportButtonState extends State<ReportButton> {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'Close',
+              'close'.tr(),
               style: GoogleFonts.outfit(color: AppColors.primary),
             ),
           ),

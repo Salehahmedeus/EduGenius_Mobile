@@ -200,5 +200,22 @@
     "onboarding_title_2": "Smart Knowledge Base",
     "onboarding_desc_2": "Access a vast library of knowledge tailored to your curriculum.",
     "onboarding_title_3": "Achieve Academic Success",
-    "onboarding_desc_3": "Boost your grades and learn more effectively with AI."
+    "onboarding_desc_3": "Boost your grades and learn more effectively with AI.",
+    "generate_progress_report": "Generate Progress Report",
+    "report_generation_failed": "Failed to generate report: {}",
+    "total_quizzes_label": "Total Quizzes: {}",
+    "average_score_fmt": "Average Score: {}%",
+    "strengths": "Strengths",
+    "areas_for_improvement": "Areas for Improvement",
+    "generated_at": "Generated: {}",
+    "close": "Close",
+    "search_failed": "Search failed: {}",
+    "error_picking_file": "Error picking file: {}",
+    "review_mode": "Review Mode",
+    "quiz_tap_error": "Quiz Error: {}",
+    "quiz_gen_error": "Quiz Generation Error: {}",
+    "please_select_answer": "Please select an answer",
+    "submit_quiz_error": "Failed to submit quiz.",
+    "analyzed_file_msg": "Analyzed file",
+    "analyze_file_query": "Please analyze this file"
 }

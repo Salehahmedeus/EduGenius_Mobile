@@ -200,5 +200,22 @@
     "onboarding_title_2": "قاعدة معرفية ذكية",
     "onboarding_desc_2": "الوصول إلى مكتبة واسعة من المعرفة مصممة خصيصًا لمنهجك الدراسي.",
     "onboarding_title_3": "حقق النجاح الأكاديمي",
-    "onboarding_desc_3": "حسّن درجاتك وتعلم بفعالية أكبر مع الذكاء الاصطناعي."
+    "onboarding_desc_3": "حسّن درجاتك وتعلم بفعالية أكبر مع الذكاء الاصطناعي.",
+    "generate_progress_report": "إنشاء تقرير التقدم",
+    "report_generation_failed": "فشل إنشاء التقرير: {}",
+    "total_quizzes_label": "إجمالي الاختبارات: {}",
+    "average_score_fmt": "متوسط الدرجة: {}%",
+    "strengths": "نقاط الدعم",
+    "areas_for_improvement": "نقاط التحسين",
+    "generated_at": "تاريخ الإنشاء: {}",
+    "close": "إغلاق",
+    "search_failed": "فشل البحث: {}",
+    "error_picking_file": "خطأ في اختيار الملف: {}",
+    "review_mode": "وضع المراجعة",
+    "quiz_tap_error": "خطأ في الاختبار: {}",
+    "quiz_gen_error": "خطأ في إنشاء الاختبار: {}",
+    "please_select_answer": "يرجى اختيار إجابة",
+    "submit_quiz_error": "فشل تسليم الاختبار.",
+    "analyzed_file_msg": "ملف محلل",
+    "analyze_file_query": "يرجى تحليل هذا الملف"
 }

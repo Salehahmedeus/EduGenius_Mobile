@@ -83,7 +83,10 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        CustomSnackbar.showError(context, "Search failed: $e");
+        CustomSnackbar.showError(
+          context,
+          'search_failed'.tr(args: [e.toString()]),
+        );
       }
     }
   }
@@ -138,7 +141,10 @@ class _MaterialsScreenState extends State<MaterialsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        CustomSnackbar.showError(context, "Error picking file: $e");
+        CustomSnackbar.showError(
+          context,
+          'error_picking_file'.tr(args: [e.toString()]),
+        );
       }
     }
   }

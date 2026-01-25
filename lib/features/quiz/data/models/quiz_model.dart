@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'question_model.dart';
 import 'quiz_result_model.dart';
 
@@ -129,13 +130,13 @@ class QuizModel {
   String get difficultyLabel {
     switch (difficulty) {
       case 1:
-        return 'Easy';
+        return 'easy'.tr();
       case 2:
-        return 'Medium';
+        return 'medium'.tr();
       case 3:
-        return 'Hard';
+        return 'hard'.tr();
       default:
-        return 'Unknown';
+        return 'easy'.tr();
     }
   }
 
