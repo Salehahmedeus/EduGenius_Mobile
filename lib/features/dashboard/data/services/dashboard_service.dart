@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/constants/api_endpoints.dart';
-import '../models/dashboard_home_model.dart';
-import '../models/dashboard_stats_model.dart';
+import '../models/dashboard_model.dart';
 import '../models/progress_report_model.dart';
 
 class DashboardService {
   final ApiClient _apiClient = ApiClient();
 
-  Future<DashboardHomeModel> getDashboardHome() async {
+  Future<DashboardModel> getDashboardHome() async {
     try {
       print(
         "DEBUG: Fetching dashboard home from: ${ApiEndpoints.dashboardHome}",
@@ -19,27 +18,13 @@ class DashboardService {
       print("DEBUG: Dashboard Home Response Data: ${response.data}");
 
       if (response.statusCode == 200) {
-        // Handle Laravel wrapping
         dynamic data = response.data;
-        if (data is Map && data.containsKey('user')) {
-          // It's likely direct object in user example
-        }
-
-        // Sometimes Laravel wraps in {data: ...} but user example shows direct object.
-        // If it is wrapped:
+        // Handle Laravel wrapping { data: { ... } } if present
         if (data is Map && data.containsKey('data')) {
-          // But the example structure has "user", "progress" at root?
-          // Actually user example:
-          // { "user": ..., "progress": ... }
-          // So it might be direct. Let's assume direct for now, or check for 'data'.
-          if (data['data'] != null &&
-              data['data'] is Map &&
-              data['data'].containsKey('user')) {
-            data = data['data'];
-          }
+          data = data['data'];
         }
 
-        return DashboardHomeModel.fromJson(Map<String, dynamic>.from(data));
+        return DashboardModel.fromJson(Map<String, dynamic>.from(data));
       }
       throw DioException(requestOptions: response.requestOptions);
     } on DioException catch (e) {
@@ -50,41 +35,6 @@ class DashboardService {
       rethrow;
     } catch (e) {
       print("DEBUG: Dashboard Home General Error: $e");
-      rethrow;
-    }
-  }
-
-  Future<DashboardStatsModel> getDashboardStats() async {
-    try {
-      print(
-        "DEBUG: Fetching dashboard stats from: ${ApiEndpoints.dashboardStats}",
-      );
-      final response = await _apiClient.dio.get(ApiEndpoints.dashboardStats);
-
-      print("DEBUG: Dashboard Stats Response Status: ${response.statusCode}");
-      print("DEBUG: Dashboard Stats Response Data: ${response.data}");
-
-      if (response.statusCode == 200) {
-        dynamic data = response.data;
-        if (data is Map && data.containsKey('data')) {
-          // Check if 'data' contains 'summary'
-          if (data['data'] is Map && data['data'].containsKey('summary')) {
-            data = data['data'];
-          }
-        }
-        return DashboardStatsModel.fromJson(Map<String, dynamic>.from(data));
-      }
-      throw DioException(requestOptions: response.requestOptions);
-    } on DioException catch (e) {
-      print("DEBUG: Dashboard Stats DioException: ${e.type}");
-      print("DEBUG: Dashboard Stats Error Message: ${e.message}");
-      print(
-        "DEBUG: Dashboard Stats Response Status: ${e.response?.statusCode}",
-      );
-      print("DEBUG: Dashboard Stats Response Data: ${e.response?.data}");
-      rethrow;
-    } catch (e) {
-      print("DEBUG: Dashboard Stats General Error: $e");
       rethrow;
     }
   }

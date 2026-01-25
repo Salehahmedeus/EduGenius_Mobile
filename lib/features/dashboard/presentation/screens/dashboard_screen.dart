@@ -6,8 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
-import '../../data/models/dashboard_home_model.dart';
-import '../../data/models/dashboard_stats_model.dart';
+import '../../data/models/dashboard_model.dart';
 import '../../data/services/dashboard_service.dart';
 import '../../../../core/constants/app_colors.dart';
 
@@ -20,8 +19,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final DashboardService _dashboardService = DashboardService();
-  DashboardHomeModel? _homeData;
-  DashboardStatsModel? _statsData;
+  DashboardModel? _dashboardData;
   bool _isLoading = true;
 
   @override
@@ -32,25 +30,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _loadData() async {
     try {
-      setState(() => _isLoading = true);
+      if (mounted) setState(() => _isLoading = true);
 
-      // Load both in parallel
-      final homeFuture = _dashboardService.getDashboardHome();
-      final statsFuture = _dashboardService.getDashboardStats();
-
-      final results = await Future.wait([homeFuture, statsFuture]);
+      final data = await _dashboardService.getDashboardHome();
 
       if (mounted) {
         setState(() {
-          _homeData = results[0] as DashboardHomeModel;
-          _statsData = results[1] as DashboardStatsModel;
+          _dashboardData = data;
           _isLoading = false;
         });
       }
     } catch (e) {
       if (mounted) {
-        // Fallback: Try loading just home if stats fail or vice versa,
-        // but for now simple error handling
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('${'error_loading_dashboard'.tr()}: $e')),
@@ -66,7 +57,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: CustomAppBar(title: 'dashboard'.tr(), showBackButton: false),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _homeData == null
+          : _dashboardData == null
           ? Center(child: Text("failed_to_load_data".tr()))
           : LiquidPullToRefresh(
               onRefresh: _loadData,
@@ -98,31 +89,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 32.h),
 
                     // Recommendation
-                    if (_homeData!.recommendation.hasRecommendation) ...[
+                    if (_dashboardData!.recommendation.hasRecommendation) ...[
                       _buildRecommendationCard(),
                       SizedBox(height: 32.h),
                     ],
 
-                    // Stats Section Content
-                    if (_statsData != null) ...[
-                      // Insights
-                      if (_statsData!.insights.isNotEmpty) ...[
-                        Text(
-                          'ai_insights'.tr(),
-                          style: GoogleFonts.outfit(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.getTextPrimary(context),
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        _buildInsightsList(),
-                        SizedBox(height: 32.h),
-                      ],
-
-                      // Performance Trend Chart
+                    // Insights
+                    if (_dashboardData!.insights.isNotEmpty) ...[
                       Text(
-                        'performance_trend'.tr(),
+                        'ai_insights'.tr(),
                         style: GoogleFonts.outfit(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -130,12 +105,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      _buildPerformanceChart(),
+                      _buildInsightsList(),
                       SizedBox(height: 32.h),
+                    ],
 
-                      // Topic Strengths
+                    // Performance Trend Chart
+                    Text(
+                      'performance_trend'.tr(),
+                      style: GoogleFonts.outfit(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.getTextPrimary(context),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    _buildPerformanceChart(),
+                    SizedBox(height: 32.h),
+
+                    // Topic Strengths
+                    Text(
+                      'topic_strengths'.tr(),
+                      style: GoogleFonts.outfit(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.getTextPrimary(context),
+                      ),
+                    ),
+                    SizedBox(height: 16.h),
+                    _buildTopicStrengthChart(),
+                    SizedBox(height: 32.h),
+
+                    // Recent Activities
+                    if (_dashboardData!.recentActivities.isNotEmpty) ...[
                       Text(
-                        'topic_strengths'.tr(),
+                        'recent_activities'.tr(),
                         style: GoogleFonts.outfit(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -143,7 +146,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      _buildTopicStrengthChart(),
+                      _buildRecentActivities(),
                       SizedBox(height: 32.h),
                     ],
 
@@ -159,7 +162,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildGreeting() {
-    final user = _homeData!.user;
+    final user = _dashboardData!.user;
     return Row(
       children: [
         CircleAvatar(
@@ -200,13 +203,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildProgressCards() {
-    final progress = _homeData!.progress;
+    final stats = _dashboardData!.stats;
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
             'quizzes'.tr(),
-            '${progress.quizCount}',
+            '${stats.quizCount}',
             Iconsax.task_square,
             AppColors.info,
           ),
@@ -215,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: _buildStatCard(
             'avg_score_label'.tr(),
-            '${progress.averageScore.toStringAsFixed(0)}%',
+            '${stats.avgScore.toStringAsFixed(0)}%',
             Iconsax.chart_21,
             AppColors.success,
           ),
@@ -224,7 +227,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Expanded(
           child: _buildStatCard(
             'uploaded'.tr(),
-            '${progress.uploadedCount}',
+            '${stats.uploadedCount}',
             Iconsax.document_upload,
             AppColors.warning,
           ),
@@ -282,7 +285,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildRecommendationCard() {
-    final rec = _homeData!.recommendation;
+    final rec = _dashboardData!.recommendation;
     return Container(
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
@@ -340,7 +343,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildInsightsList() {
     return Column(
-      children: _statsData!.insights.map((insight) {
+      children: _dashboardData!.insights.map((insight) {
         // Format text: Remove decimals from % and handle **bold**
         String cleanText = insight.replaceAllMapped(
           RegExp(r'(\d+)\.0+%|(\d+\.\d+?)0+%'),
@@ -449,7 +452,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildPerformanceChart() {
-    if (_statsData == null || _statsData!.charts.performanceTrend.isEmpty) {
+    if (_dashboardData == null ||
+        _dashboardData!.charts.performanceTrend.isEmpty) {
       return Container(
         height: 200,
         decoration: BoxDecoration(
@@ -467,7 +471,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     }
 
-    final points = _statsData!.charts.performanceTrend
+    final points = _dashboardData!.charts.performanceTrend
         .asMap()
         .entries
         .map((e) => FlSpot(e.key.toDouble(), e.value.avgScore))
@@ -599,7 +603,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildTopicStrengthChart() {
-    if (_statsData == null || _statsData!.charts.topicStrengths.isEmpty) {
+    if (_dashboardData == null ||
+        _dashboardData!.charts.topicStrengths.isEmpty) {
       return Container(
         height: 200,
         decoration: BoxDecoration(
@@ -617,7 +622,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       );
     }
 
-    final topics = _statsData!.charts.topicStrengths;
+    final topics = _dashboardData!.charts.topicStrengths;
 
     return Container(
       height: 320.h,
@@ -747,6 +752,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }).toList(),
         ),
       ),
+    );
+  }
+
+  Widget _buildRecentActivities() {
+    return Column(
+      children: _dashboardData!.recentActivities.map((activity) {
+        return Container(
+          margin: EdgeInsets.only(bottom: 12.h),
+          padding: EdgeInsets.all(16.r),
+          decoration: BoxDecoration(
+            color: AppColors.getSurface(context),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: AppColors.getBorder(context).withOpacity(0.5),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color:
+                      (activity.type == 'quiz'
+                              ? AppColors.primary
+                              : AppColors.info)
+                          .withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Icon(
+                  activity.type == 'quiz'
+                      ? Iconsax.task_square
+                      : Iconsax.document_upload,
+                  color: activity.type == 'quiz'
+                      ? AppColors.primary
+                      : AppColors.info,
+                  size: 20.r,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      activity.title,
+                      style: GoogleFonts.outfit(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.getTextPrimary(context),
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      activity.timeAgo,
+                      style: GoogleFonts.outfit(
+                        fontSize: 12.sp,
+                        color: AppColors.getTextSecondary(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
