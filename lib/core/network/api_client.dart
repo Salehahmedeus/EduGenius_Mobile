@@ -3,6 +3,7 @@ import '../constants/api_endpoints.dart';
 import '../storage/token_storage.dart';
 import '../../main.dart'; // To access navigatorKey
 import '../../routes.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ApiClient {
   final Dio _dio = Dio(
@@ -26,6 +27,13 @@ class ApiClient {
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
+
+          // Add Accept-Language header
+          final context = navigatorKey.currentContext;
+          if (context != null) {
+            options.headers['Accept-Language'] = context.locale.languageCode;
+          }
+
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
