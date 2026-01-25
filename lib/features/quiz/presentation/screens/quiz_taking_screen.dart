@@ -5,13 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
 
-import '../../data/models/quiz_model.dart';
-import '../../data/models/question_model.dart';
-import '../../data/services/quiz_service.dart';
-import 'quiz_result_screen.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
+import '../../data/models/question_model.dart';
+import '../../data/models/quiz_model.dart';
+import '../../data/services/quiz_service.dart';
+import '../widgets/quiz_progress_bar.dart';
+import '../widgets/quiz_question_view.dart';
+import '../widgets/quiz_submitting_loading.dart';
+import '../widgets/quiz_taking_navigation.dart';
+import 'quiz_result_screen.dart';
 
 /// Screen for taking a quiz - displays questions one at a time
 class QuizTakingScreen extends StatefulWidget {
@@ -353,42 +357,9 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
             ),
           ],
         ),
-        body: _isSubmitting ? _buildSubmittingState() : _buildQuizContent(),
-      ),
-    );
-  }
-
-  Widget _buildSubmittingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 60.r,
-            height: 60.r,
-            child: CircularProgressIndicator(
-              strokeWidth: 3.w,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'submitting_quiz'.tr(),
-            style: GoogleFonts.outfit(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.getTextPrimary(context),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'wait_analyze'.tr(),
-            style: GoogleFonts.outfit(
-              color: AppColors.getTextSecondary(context),
-              fontSize: 14.sp,
-            ),
-          ),
-        ],
+        body: _isSubmitting
+            ? const QuizSubmittingLoading()
+            : _buildQuizContent(),
       ),
     );
   }
@@ -434,7 +405,10 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
     return Column(
       children: [
         // Progress indicator
-        _buildProgressIndicator(),
+        QuizProgressBar(
+          currentIndex: _currentQuestionIndex,
+          totalQuestions: questions.length,
+        ),
 
         // Questions PageView
         Expanded(
@@ -446,271 +420,26 @@ class _QuizTakingScreenState extends State<QuizTakingScreen> {
               setState(() => _currentQuestionIndex = index);
             },
             itemBuilder: (context, index) {
-              return _buildQuestionCard(questions[index]);
+              return QuizQuestionView(
+                question: questions[index],
+                questionIndex: index,
+                selectedAnswer: _answers[questions[index].id],
+                onAnswerSelected: (answer) =>
+                    _selectAnswer(questions[index].id, answer),
+              );
             },
           ),
         ),
 
         // Navigation buttons
-        _buildNavigationButtons(),
+        QuizTakingNavigation(
+          currentIndex: _currentQuestionIndex,
+          isLastQuestion: isLastQuestion,
+          canProceed: canProceed,
+          onPrevious: _previousQuestion,
+          onNext: _nextQuestion,
+        ),
       ],
-    );
-  }
-
-  Widget _buildProgressIndicator() {
-    if (questions.isEmpty) return const SizedBox.shrink();
-    final progress = (_currentQuestionIndex + 1) / questions.length;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.r),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 8.h,
-              backgroundColor: AppColors.getSurface(context),
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuestionCard(QuestionModel question) {
-    final selectedAnswer = _answers[question.id];
-
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(24.r),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Question number badge
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Text(
-              'question_number'.tr(
-                args: [(_currentQuestionIndex + 1).toString()],
-              ),
-              style: GoogleFonts.outfit(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primary,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Question text
-          Text(
-            question.questionText,
-            style: GoogleFonts.outfit(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.getTextPrimary(context),
-              height: 1.4,
-            ),
-          ),
-          SizedBox(height: 24.h),
-
-          // Options
-          ...question.options.asMap().entries.map((entry) {
-            final index = entry.key;
-            final option = entry.value;
-            final isSelected = selectedAnswer == option;
-            final optionLabel = String.fromCharCode(65 + index); // A, B, C, D
-
-            return _buildOptionTile(
-              option: option,
-              label: optionLabel,
-              isSelected: isSelected,
-              onTap: () => _selectAnswer(question.id, option),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOptionTile({
-    required String option,
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      margin: EdgeInsets.only(bottom: 12.h),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? AppColors.primary.withOpacity(0.1)
-            : AppColors.getSurface(context),
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: isSelected
-              ? AppColors.primary
-              : AppColors.grey.withOpacity(0.1),
-          width: isSelected ? 2 : 1,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16.r),
-          onTap: onTap,
-          child: Padding(
-            padding: EdgeInsets.all(16.r),
-            child: Row(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 40.r,
-                  height: 40.r,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.primary
-                        : AppColors.getBackground(context),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.grey.withOpacity(0.2),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      label,
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.sp,
-                        color: isSelected
-                            ? AppColors.white
-                            : AppColors.getTextPrimary(context),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Text(
-                    option,
-                    style: GoogleFonts.outfit(
-                      fontSize: 15.sp,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.w400,
-                      color: AppColors.getTextPrimary(context),
-                    ),
-                  ),
-                ),
-                if (isSelected)
-                  Icon(
-                    Iconsax.tick_circle5,
-                    color: AppColors.primary,
-                    size: 24.r,
-                  ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavigationButtons() {
-    return Container(
-      padding: EdgeInsets.all(24.r),
-      decoration: BoxDecoration(
-        color: AppColors.getBackground(context),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10.r,
-            offset: Offset(0, -5.h),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            // Previous button
-            if (_currentQuestionIndex > 0)
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: _previousQuestion,
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 16.h),
-                    side: BorderSide(color: AppColors.getBorder(context)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Iconsax.arrow_left_2, size: 20.r),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'previous'.tr(),
-                        style: GoogleFonts.outfit(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp,
-                          color: AppColors.getTextPrimary(context),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            if (_currentQuestionIndex > 0) SizedBox(width: 12.w),
-
-            // Next/Submit button
-            Expanded(
-              flex: _currentQuestionIndex > 0 ? 1 : 2,
-              child: ElevatedButton(
-                onPressed: canProceed ? _nextQuestion : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isLastQuestion
-                      ? AppColors.success
-                      : AppColors.primary,
-                  disabledBackgroundColor: AppColors.grey.withOpacity(0.3),
-                  foregroundColor: AppColors.white,
-                  padding: EdgeInsets.symmetric(vertical: 16.h),
-                  elevation: canProceed ? 2 : 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      isLastQuestion ? 'submit_quiz'.tr() : 'next'.tr(),
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.sp,
-                      ),
-                    ),
-                    SizedBox(width: 8.w),
-                    Icon(
-                      isLastQuestion
-                          ? Iconsax.tick_circle
-                          : Iconsax.arrow_right_3,
-                      size: 20.r,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
