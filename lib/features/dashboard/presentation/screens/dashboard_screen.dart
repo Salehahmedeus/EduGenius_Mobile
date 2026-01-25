@@ -102,8 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ? _dashboardData!.recommendation
                             : Recommendation(
                                 hasRecommendation: true,
-                                text:
-                                    'Keep up the great work! Complete more quizzes to get personalized AI recommendations.',
+                                text: 'default_recommendation'.tr(),
                                 action: '',
                               ),
                       ),
@@ -123,9 +122,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         insights: _dashboardData!.insights.isNotEmpty
                             ? _dashboardData!.insights
                             : [
-                                'Start by uploading your study materials to get personalized insights',
-                                'Take quizzes regularly to track your progress',
-                                'Review your quiz results to identify areas for improvement',
+                                'default_insight_1'.tr(),
+                                'default_insight_2'.tr(),
+                                'default_insight_3'.tr(),
                               ],
                       ),
                       SizedBox(height: 32.h),

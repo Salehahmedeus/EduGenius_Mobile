@@ -217,5 +217,9 @@
     "please_select_answer": "Please select an answer",
     "submit_quiz_error": "Failed to submit quiz.",
     "analyzed_file_msg": "Analyzed file",
-    "analyze_file_query": "Please analyze this file"
+    "analyze_file_query": "Please analyze this file",
+    "default_recommendation": "Keep up the great work! Complete more quizzes to get personalized AI recommendations.",
+    "default_insight_1": "Start by uploading your study materials to get personalized insights",
+    "default_insight_2": "Take quizzes regularly to track your progress",
+    "default_insight_3": "Review your quiz results to identify areas for improvement"
 }

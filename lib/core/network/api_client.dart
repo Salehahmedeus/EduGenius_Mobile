@@ -33,8 +33,9 @@ class ApiClient {
           final languageCode = context?.locale.languageCode ?? 'en';
           options.headers['Accept-Language'] = languageCode;
 
-          print('🌐 [ApiClient] Request: ${options.uri}');
-          print('🌐 [ApiClient] Accept-Language: $languageCode');
+          // DEBUG: Print headers to verify they are being sent
+          print('🌐 [ApiClient] Request: ${options.method} ${options.uri}');
+          print('🌐 [ApiClient] Headers: ${options.headers}');
 
           return handler.next(options);
         },
